@@ -9,8 +9,7 @@
 - `main.tex`：前半部分同学原始讲义源码。
 - `大学数学I-导数与微分-中值定理讲义.tex`：导数、微分、中值定理及导数应用部分源码。
 - `高数A习题课讲义.tex`：原讲义模板。
-- `scripts/assemble_full_handout.py`：用于拼接、补充和生成完整讲义的脚本。
-- `machine-learning-visualizations/`：导数、偏导数与梯度下降的可交互可视化示例。
+- `machine-learning-visualizations/`：讲义中机器学习相关例题的可交互可视化实现。
 
 ## 讲义结构
 
@@ -29,7 +28,6 @@
 在仓库根目录运行：
 
 ```bash
-python3 scripts/assemble_full_handout.py
 xelatex -interaction=nonstopmode '大学数学I-完整讲义.tex'
 xelatex -interaction=nonstopmode '大学数学I-完整讲义.tex'
 ```
@@ -44,11 +42,11 @@ xelatex -interaction=nonstopmode '大学数学I-完整讲义.tex'
 machine-learning-visualizations/index.html
 ```
 
-页面包含三个课堂演示：
+页面包含三个与讲义正文对应的课堂演示：
 
-1. 一元梯度下降：观察学习率对收敛、震荡和发散的影响。
-2. 线性回归拟合：观察偏导数如何更新参数 `w,b`。
-3. 凸函数与非凸函数：比较不同损失函数形状下的优化行为。
+1. 讲义例 1：`L(w)=1/2(w-3)^2` 的一元梯度下降。
+2. 讲义例 2：两个样本 `(1,2),(2,3)` 的线性回归损失和偏导数更新。
+3. 讲义例 3：单样本平方损失 `L(w)=1/2(wx-y)^2` 的凸性、导数和二阶导数。
 
 ## 说明
 
