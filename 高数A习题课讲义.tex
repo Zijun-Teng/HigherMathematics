@@ -1,0 +1,4050 @@
+%!TEX program = xelatex
+% 本文档命令
+\documentclass{ctexart}
+\setmainfont{Times New Roman}
+\usepackage{amsmath}
+\usepackage{amsfonts,amsmath,amsthm}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{bbm}
+\usepackage{fancyhdr}
+\usepackage[a4paper,left=2.5cm,right=2.5cm,top=2cm,bottom=2cm]{geometry}
+\usepackage[linkcolor=black,citecolor=black,colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black]{hyperref}
+\usepackage{color}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+\usepackage{diagbox}
+\usepackage{multicol}
+\usepackage{arydshln}
+\usepackage{xparse}
+\usepackage{pgfplots}
+\usepackage{comment}
+\usepackage{graphicx}
+\usepackage{bm}
+% 设置日期格式为英文
+\usetikzlibrary{angles, calc}
+\usetikzlibrary{positioning, shapes.geometric}
+\usetikzlibrary{graphs}
+%——页眉页脚设置——%
+\usepackage{fancyhdr}
+\lhead{\today}
+\rhead{}
+\cfoot{}
+
+%——————————%
+\usepackage{pdfpages}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{listings}
+\usepackage{paralist}
+\usepackage{appendix}
+\usepackage{lastpage}
+\usepackage{longtable,multirow,array}  % 各种基本的表格宏包
+\usepackage{booktabs}  % 三线表宏包
+\usepackage{tabularx}
+\usepackage{xstring}
+\usepackage{tipa}
+\usepackage{tabularx}
+%%upcite
+\newcommand{\upcite}[1]{\textsuperscript{\textsuperscript{\cite{#1}}}}
+%%because
+\newcommand{\bec}{\kern 0.56em\bigcirc \kern -0.85em {\small \because}\kern 0.56em}
+\DeclareMathOperator*{\argmax}{\mathrm{arg\,max}}
+\DeclareMathOperator*{\argmin}{\mathrm{arg\,min}}
+\newcounter{EnvironmentCounter}
+\NewDocumentEnvironment{problem}{O{}}
+{
+    \par\noindent 
+    \refstepcounter{environmentCounter}
+    % 如果#1（即环境的可选参数）不为空，则输出注释，否则仅输出习题号
+    \textbf{问题 \theEnvironmentCounter\IfStrEq{#1}{}{}{ (#1)}}\quad
+}
+{
+    \par\vspace{1em}
+}
+
+\NewDocumentEnvironment{theorem}{O{}}
+{
+    \par\noindent 
+    \refstepcounter{EnvironmentCounter}
+    % 如果#1（即环境的可选参数）不为空，则输出注释，否则仅输出习题号
+    \textbf{定理 \theEnvironmentCounter\IfStrEq{#1}{}{}{ (#1)}}\quad
+}
+{
+    \par\vspace{1em}
+}
+
+\NewDocumentEnvironment{conclusion}{O{}}
+{
+    \par\noindent 
+    \refstepcounter{EnvironmentCounter}
+    % 如果#1（即环境的可选参数）不为空，则输出注释，否则仅输出习题号
+    \textbf{结论 \theEnvironmentCounter\IfStrEq{#1}{}{}{ (#1)}}\quad
+}
+{
+    \par\vspace{1em}
+}
+
+\NewDocumentEnvironment{definition}{O{}}
+{
+    \par\noindent 
+    \refstepcounter{EnvironmentCounter}
+    % 如果#1（即环境的可选参数）不为空，则输出注释，否则仅输出习题号
+    \textbf{定义 \theEnvironmentCounter\IfStrEq{#1}{}{}{ (#1)}}\quad
+}
+{
+    \par\vspace{1em}
+}
+
+\NewDocumentEnvironment{example}{O{}}
+{
+    \par\noindent 
+    \refstepcounter{EnvironmentCounter}
+    % 如果#1（即环境的可选参数）不为空，则输出注释，否则仅输出习题号
+    \textbf{例 \theEnvironmentCounter\IfStrEq{#1}{}{}{ (#1)}}\quad
+}
+{
+    \par\vspace{1em}
+}
+
+\NewDocumentEnvironment{proposition}{O{}}
+{
+    \par\noindent 
+    \refstepcounter{EnvironmentCounter}
+    % 如果#1（即环境的可选参数）不为空，则输出注释，否则仅输出习题号
+    \textbf{性质 \theEnvironmentCounter\IfStrEq{#1}{}{}{ (#1)}}\quad
+}
+{
+    \par\vspace{1em}
+}
+
+\NewDocumentEnvironment{exercise}{O{}}
+{
+    \par\noindent 
+    \refstepcounter{EnvironmentCounter}
+    % 如果#1（即环境的可选参数）不为空，则输出注释，否则仅输出习题号
+    \textbf{练习 \theEnvironmentCounter\IfStrEq{#1}{}{}{ (#1)}}\quad
+}
+{
+    \par\vspace{1em}
+}
+
+\newcommand{\renewEnvironmentCounter}{\setcounter{EnvironmentCounter}{0}}
+\newcommand{\dd}{\mathrm{d}}
+% 很多人发现缺省的浮动参数过于严格了
+% 下面的命令
+\renewcommand{\textfraction}{0.15}
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\bottomfraction}{0.65}
+\renewcommand{\floatpagefraction}{0.60}
+% 将浮动参数重新设置为更宽松的值。
+% ---选自《LaTeX2e插图指南》
+
+% 图表标题名称
+\renewcommand{\figurename}{F$\textsc{igure}$}
+\renewcommand{\tablename}{T$\textsc{able}$}
+\setlength{\belowcaptionskip}{4pt}
+\setlength{\abovecaptionskip}{4pt}  % 设置 caption 与上下文间距
+
+%——新环境定义——%
+\newenvironment{custom}[1]{\par\noindent \textbf{#1}\quad}{\par\vspace{1em}}
+\lstset{
+  language=Matlab,
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  keywordstyle=\color{blue},
+  commentstyle=\color[rgb]{0.13,0.55,0.13},
+  stringstyle=\color[rgb]{0.7,0.15,0.15},
+  numbers=left,
+  stepnumber=1,
+  showstringspaces=false
+}
+\lstset{
+    tabsize=4,  % 将tab替换为两个空格
+    breaklines=true,  % 自动换行
+    basicstyle=\ttfamily,  % 代码字体样式
+}
+
+%—————————%
+
+%——标题页设置——%
+\title{高数A习题课讲义}
+\author{马行健\\ Email: xjma21@m.fudan.edu.cn}
+\date{\today}
+%—————————%
+\graphicspath{{plot/}}  % Place your graphic files in the same directory as your main document
+ \let\itemize\compactitem
+ \let\enditemize\endcompactitem
+\DeclareGraphicsExtensions{.pdf, .jpg, .tif, .png}
+\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+
+\begin{document}
+\maketitle
+\vspace{-2em}
+\textbf{课程教材}\quad 金路，童裕孙，於崇华，张万国\,\,编《高等数学（第五版）》，高等教育出版社
+
+\textbf{参考教材}\quad 金路，徐惠平\,\,编《高等数学同步辅导与复习提高》,复旦大学出版社\ 等
+
+\textbf{期末成绩}\quad 平时作业(10\%)，习题课出勤(10\%)，期中测验(10\%)，期末闭卷考试(70\%)
+
+\rhead{Page \thepage\ of \pageref{LastPage}}
+\renewcommand{\contentsname}{\hspace*{\fill}\Large\bfseries 目\quad 录 \hspace*{\fill}}
+\setcounter{tocdepth}{2}
+\tableofcontents 
+
+
+\clearpage
+\pagestyle{fancy}
+\section{2026年3月6日第一周习题课}
+\subsection{多元函数求极限}
+\begin{definition}[多元函数的极限]
+设$f$是定义于$D\subseteq\mathbb{R}^{n}$上的函数，$x_{0}$是$D$的一个内点或边界点，$A$是常数. 如果对任意给定的$\varepsilon>0$，存在$r>0$使得当$x\in D$且$0<\Vert x-x_{0}\Vert <r$时，都有
+$$|f(x)-A|<\varepsilon,$$
+则称在$D$中$x\to x_{0}$时，$f$以$A$为极限，记作$\lim\limits_{x\to x_{0}}=A$. 此时也称$A$为函数$f$在点$x_{0}$的极限.
+\end{definition}
+
+多元函数在一点处的极限，定义上与一元函数完全类似：要求当 $x\to x_0$ 时，
+$f(x)$ 与某个常数 $A$ 任意接近. 但二者的本质区别在于：一元函数中趋近 $x_0$
+的方式只有“左”“右”两侧，而多元函数中有无穷多个方向、无穷多条曲线都可以趋近
+同一个点. 因而：
+
+(1) 证明多元函数极限存在时，必须能够同时控制所有趋近方式；
+
+(2) 证明多元函数极限不存在时，只需找到两种趋近方式得到不同结果即可.
+
+在一元函数的框架下，取极限的“自由度”并没有多元函数中这么大，因此大家在初学多元函数极限时很容易出现不理解的情况. 求多元函数极限时常用的方法有：直接估计与夹逼方法、极坐标（或球坐标）代换、整体代换、Taylor 公式、以及取特殊路径证伪极限存在等，我们给出下面几个例子指出多元函数极限的计算手段.
+
+\begin{example}
+求极限
+$$\lim\limits_{(x,y)\to(0,0)}{(x^{2}+y^{2})\sin{\frac{1}{x^{2}+y^{2}}}}$$
+\end{example}
+
+\begin{custom}{分析}
+当$(x,y)\to(0,0)$时，自然有$x^{2}+y^{2}\to 0$，而这时原式变成无穷小量乘以有界量的形式，故极限为$0$.
+\end{custom}
+
+\begin{custom}{解}
+注意到可以放缩
+$$|(x^{2}+y^{2})\sin{\frac{1}{x^{2}+y^{2}}}-0|\leqslant|x^{2}+y^{2}||\sin{\frac{1}{x^{2}+y^{2}}}-0|\leqslant x^{2}+y^{2}$$
+因此取$\delta=\sqrt{\varepsilon}$，则对任意$\varepsilon>0$，在$0<\Vert x\Vert<\delta$时有
+$$|(x^{2}+y^{2})\sin{\frac{1}{x^{2}+y^{2}}}-0|<\varepsilon$$
+故极限为0.$\hfill{\square}$
+\end{custom}
+
+在求极限时，与一元情形一样，可以利用夹逼准则.
+\begin{example}
+求极限$$\lim\limits_{(x,y)\to(0,0)}{\frac{\sin{(x^{2}y+y^{4})}}{x^{2}+y^{2}}}.$$
+\end{example}
+
+\begin{custom}{分析}
+注意到分母是无穷小量，不能直接变成有限量乘以无穷小量的形式，但注意到$|\sin{x}|\leqslant |x|$，从而可以做估计.
+\end{custom}
+
+\begin{custom}{解}
+利用提到的不等式，有
+$$0\leqslant \left|\frac{\sin{(x^{2}y+y^{4})}}{x^{2}+y^{2}}-0\right|\leqslant \left|\frac{x^{2}y+y^{4}}{x^{2}+y^{2}}\right|\leqslant \frac{x^{2}}{x^{2}+y^{2}}\times |y|+\frac{y^{2}}{x^{2}+y^{2}}\times y^{2}\leqslant |y|+y^{2}\to 0.$$
+从而由夹逼准则知极限为$0$，其中用到了三角不等式以及$\frac{x^{2}}{x^{2}+y^{2}}\leqslant 1$.$\hfill{\square}$
+\end{custom}
+
+此外，我们通常会遇到分式求极限，此时可以考虑做极坐标代换把问题转化为一元极限问题.当然，这样会引申出另一个问题：这样的代换是否合理？请大家思考.
+
+\begin{example}
+求极限
+$$\lim\limits_{(x,y)\to(0,0)}{\frac{x^{3}+y^{3}}{x^{2}+y^{2}}}$$
+\end{example}
+
+\begin{custom}{解}
+令$x=\rho\cos{\theta},y=\rho\sin{\theta}$，则
+$$\lim\limits_{(x,y)\to(0,0)}{\frac{x^{3}+y^{3}}{x^{2}+y^{2}}}=\lim\limits_{\rho\to 0}{\frac{\rho^{3}(\cos^{3}\theta+\sin^{3}\theta)}{\rho^{2}}}=\lim\limits_{\rho\to 0}\rho(\cos^{3}\theta+\sin^{3}\theta)=0$$
+这里最后是有界量乘以无穷小量的形式.$\hfill{\square}$
+\end{custom}
+
+当然，我们也可以将要求极限的式子放缩成我们希望的形式，然后利用整体代换的方法去研究. 当然，这里同样会引申出代换是否合理的问题.
+
+\begin{example}
+求极限
+$$\lim\limits_{(x,y)\to(0,0)}{\frac{\sqrt{x^{2}+y^{2}}-\sin{\sqrt{x^{2}+y^{2}}}}{(x^{2}+y^{2})^{\frac{3}{2}}}}$$
+\end{example}
+
+\begin{custom}{解}
+做代换$\rho=\sqrt{x^{2}+y^{2}}$，则问题变为一元函数极限，结合正弦函数在$x=0$处的Taylor公式知结果为$\frac{1}{6}$.$\hfill{\square}$
+\end{custom}
+
+\begin{exercise}
+求极限
+$$\lim\limits_{(x,y)\to(0,0)}{x^{2}\ln{(x^{2}+y^{2})}}.$$
+\end{exercise}
+
+\begin{custom}{解}
+令 $t=x^2+y^2$，则当 $(x,y)\to(0,0)$ 时有 $t\to 0^+$，且$0\leqslant x^2\leqslant x^2+y^2=t.$
+因此
+$$0\leqslant |x^2\ln(x^2+y^2)|\leqslant t|\ln t|.$$
+由一元函数极限
+$$\lim\limits_{t\to 0^+}t|\ln t|=0$$
+可知原极限为 $0$.$\hfill{\square}$
+\end{custom}
+
+\begin{exercise}
+求极限
+$$\lim\limits_{(x,y)\to(0,0)}{x\ln{(x^{2}+y^{2})}}.$$
+\end{exercise}
+
+\begin{custom}{解}
+令 $r=\sqrt{x^2+y^2}$，则当 $(x,y)\to(0,0)$ 时有 $r\to 0^+$，并且 $|x|\leqslant r$.
+于是
+$$|x\ln(x^2+y^2)|
+\leqslant r|\ln(r^2)|
+=2r|\ln r|.$$
+由一元函数极限
+$$\lim\limits_{r\to 0^+}r|\ln r|=0$$
+可知原极限为 $0$.$\hfill{\square}$
+\end{custom}
+
+此外，当遇到分式时，可以利用代换$y=kx$或者$y=x^{2}$等符合极限要求的变换（例如在$(x,y)\to(\sqrt{2},2)$时可以考虑代换$y=x^{2}$以及$y=x^{4}-x^{2}$等等），极限存在的必要条件时这里的代换得出的一元函数极限结果均相等. 但是需要注意，这只是一个必要条件.
+
+\begin{exercise}
+证明极限不存在：
+$$\lim\limits_{(x,y)\to(0,0)}{\frac{x^{2}y^{2}}{x^{2}y^{2}+(x-y)^{2}}}.$$
+\end{exercise}
+
+\begin{custom}{解}
+沿路径 $y=x$ 趋于 $(0,0)$ 时，
+$$\frac{x^2y^2}{x^2y^2+(x-y)^2}
+=\frac{x^4}{x^4}=1\qquad (x\neq 0).$$
+故沿该路径的极限为 $1$.
+
+另一方面，沿路径 $y=0$ 趋于 $(0,0)$ 时，
+$$\frac{x^2y^2}{x^2y^2+(x-y)^2}
+=\frac{0}{x^2}=0\qquad (x\neq 0).$$
+故沿该路径的极限为 $0$.
+
+由于沿两条路径得到的极限不同，因此原极限不存在.$\hfill{\square}$
+\end{custom}
+
+\begin{exercise}
+证明极限不存在：
+$$\lim\limits_{(x,y)\to(0,0)}{\frac{x\ln(1+xy)}{x+y}}.$$
+\end{exercise}
+
+\begin{custom}{提示}
+考虑$y=x^{\alpha}-x$，代入后用一元函数Taylor公式.
+\end{custom}
+
+\begin{custom}{解}
+先沿路径 $y=0$ 趋于 $(0,0)$，有
+$$\frac{x\ln(1+xy)}{x+y}
+=\frac{x\ln 1}{x}=0\qquad (x\neq 0),$$
+故沿该路径的极限为 $0$.
+
+再取路径 $y=x^3-x$，则当 $x\to 0$ 时 $(x,y)\to(0,0)$，并且
+$$x+y=x^3,\qquad xy=x(x^3-x)=x^4-x^2.$$
+于是
+$$\frac{x\ln(1+xy)}{x+y}
+=\frac{x\ln(1+x^4-x^2)}{x^3}
+=\frac{\ln(1+x^4-x^2)}{x^2}.$$
+由一元函数 Taylor 公式或等价无穷小，有$\ln(1+t)=t+o(t)\qquad (t\to 0)$，取 $t=x^4-x^2$，得
+$$\frac{\ln(1+x^4-x^2)}{x^2}
+=\frac{x^4-x^2+o(x^2)}{x^2}
+=-1+x^2+o(1)\to -1.$$
+
+沿两条路径得到的极限分别为 $0$ 与 $-1$，不相等，因此原极限不存在.$\hfill{\square}$
+\end{custom}
+
+
+代换 $y=kx$、$y=x^2$、$y=x^\alpha-x$ 等，本质上都是选取特殊路径；它们非常适合
+用来证明极限不存在，但一般只给出极限存在的必要条件. 极坐标代换 $x=\rho\cos\theta,\ y=\rho\sin\theta$ 时，若代换后所得表达式与 $\theta$无关，或虽然含有 $\theta$，但可由一个只依赖于 $\rho$ 的无穷小统一控制，则可以用它证明极限存在；否则不能只看 $\rho\to 0$ 就下结论. 例如
+$$\frac{x^2}{x^2+y^2}=\cos^2\theta,$$
+仍依赖于 $\theta$，故极限不存在.
+
+\clearpage
+\subsection{多元函数的连续性与导数}
+多元函数的连续性基于多元函数的极限；此外，多元函数的可微（存在线性主部，也就是有全微分）和可导（各偏导数存在）并不完全等价，因此对于初学者有些困难. 我们首先给出定义.
+\begin{definition}[多元函数的连续]
+设 $f:D\subseteq\mathbb{R}^n\to\mathbb{R}$，$x_0\in D$.
+若
+$$\lim\limits_{x\to x_0}f(x)=f(x_0),$$
+则称函数 $f$ 在点 $x_0$ 处连续.
+\end{definition}
+
+判断多元函数在一点连续，常用的方法有：
+
+(1) 直接由定义：证明 $\lim\limits_{x\to x_0}f(x)=f(x_0)$；
+
+(2) 利用连续函数的四则运算与复合仍连续；
+
+(3) 对分段函数，重点考察分界处极限是否存在且等于函数值；
+
+(4) 若函数在该点可微，则函数必连续；
+
+(5) 对向量值函数，可逐分量判断连续性.
+
+需要特别注意：偏导数存在、方向导数存在，都不能单独推出连续.
+
+\begin{definition}{向量值函数的极限与连续}
+设 $F=(f_1,\cdots,f_m):D\subseteq\mathbb{R}^n\to\mathbb{R}^m$，
+$A=(A_1,\cdots,A_m)\in\mathbb{R}^m$，则
+$$\lim\limits_{x\to x_0}F(x)=A
+\Longleftrightarrow
+\lim\limits_{x\to x_0}f_i(x)=A_i\quad(i=1,\cdots,m).$$
+特别地，$F$ 在 $x_0$ 处连续，当且仅当每个分量函数 $f_i$ 在 $x_0$ 处连续.
+
+这是因为必要性可由$|f_i(x)-A_i|\leqslant \Vert F(x)-A\Vert$得到；充分性可由$\Vert F(x)-A\Vert\leqslant |f_1(x)-A_1|+\cdots+|f_m(x)-A_m|$得到.
+\end{definition}
+
+\begin{definition}
+设$n$元函数$u=f(x)$在点$x_{0}=(x_{1}^{0},\cdots,x_{n}^{0})$的某个邻域上有定义，如果有一个关于$\Delta x=(\Delta x_{1},\cdots,\Delta x_{n})$的线性函数$k$，使得
+$$f(x_{0}+\Delta x)-f(x_{0})=k(\Delta x)+o(\Vert \Delta x\Vert),$$
+则称函数$f$在点$x_{0}$处可微（有全微分），并称$k(\Delta x)$为$f$在点$x_{0}$的全微分，记作$\mathrm{d}u$，即存在$a_{1},\cdots,a_{n}$使得$\mathrm{d}u=k(\Delta x)=a_{1}\Delta x_{1}+\cdots+a_{n}\Delta x_{n}$.
+\end{definition}
+
+\begin{definition}
+设$n$元函数$u=f(x)$在点$x_{0}=(x_{1}^{0},\cdots,x_{n}^{0})$的某个邻域上有定义，如果极限
+$$\lim\limits_{\Delta x_{1}\to 0}{\frac{f(x_{1}^{0}+\Delta x_{1},x_{2}^{0},\cdots,x_{n}^{0})-f(x_{1}^{0},x_{2}^{0},\cdots,x_{n}^{0})}{\Delta x_{1}}}$$
+存在，则称此极限值为函数$f$在$x_{0}$处对$x_{1}$（第一个分量）的偏导数，记作$\left.\frac{\partial u}{\partial x_{1}}\right|_{x_{0}}$或$\frac{\partial u}{\partial x_{1}}(x_{0})$或$f^{\prime}_{x_{1}}(x_{0})$. 类似对其它分量定义偏导数.
+\end{definition}
+
+事实上，如果观察上面两个定义，有同学会自然觉得如果偏导数都存在，那么函数就有全微分，事实上这是不够的. 简单来讲，全微分中蕴含了变量的组合，可以理解为在$n$维坐标系中都对；而各阶偏导数只保证了在坐标轴方向上可导，没有蕴含变量间的信息.
+
+\begin{custom}{关系总结}
+多元函数在一点处，概念之间有如下关系：
+
+(1) 可微 $\Rightarrow$ 连续；
+
+(2) 可微 $\Rightarrow$ 各偏导数存在；
+
+(3) 若各偏导数在该点某邻域内存在，并且在该点连续，则函数在该点可微.
+
+但这些命题的逆命题一般都不成立，即：连续不一定有偏导数、各偏导数存在不一定连续、连续且各偏导数存在不一定可微、可微也不一定偏导连续.
+\end{custom}
+
+我们通过如下四个经典例子，给大家介绍可能不同的情况.
+
+\begin{example}
+证明：$f(x,y)=|x|+|y|$在$(0,0)$处连续，但不可导，从而也不可微.
+\end{example}
+
+\begin{custom}{解}
+有$|f(x,y)-f(0,0)|=|x|+|y|\leqslant \sqrt{2}\sqrt{x^2+y^2}\to 0,$故 $f$ 在 $(0,0)$ 处连续.
+
+但
+$$\frac{\partial f}{\partial x}(0,0)
+=\lim\limits_{h\to 0}\frac{f(h,0)-f(0,0)}{h}
+=\lim\limits_{h\to 0}\frac{|h|}{h}$$
+不存在，所以函数在 $(0,0)$ 处并非各偏导数都存在，从而不可导，也不可微.$\hfill{\square}$
+\end{custom}
+
+\begin{example}
+证明：$f(x,y)=\left\{\begin{aligned}&\frac{xy}{x^{2}+y^{2}},&& (x,y)\neq (0,0)\\&0, &&(x,y)=(0,0)\\\end{aligned}\right.$在$(0,0)$处可导，但不连续.
+\end{example}
+
+\begin{custom}{解}
+由定义，$f(h,0)=0,\qquad f(0,h)=0,$故
+$$\frac{\partial f}{\partial x}(0,0)=0,\qquad
+\frac{\partial f}{\partial y}(0,0)=0.$$
+所以函数在 $(0,0)$ 处各偏导数存在.
+
+但沿路径 $y=x$ 有
+$$f(x,x)=\frac{x^2}{2x^2}=\frac12\qquad (x\neq 0),$$
+故当 $(x,y)\to(0,0)$ 时，$f(x,y)$ 不趋于 $0=f(0,0)$，因此函数在 $(0,0)$ 处不连续.$\hfill{\square}$
+\end{custom}
+
+\begin{example}
+证明：$f(x,y)=\left\{\begin{aligned}&\frac{xy}{\sqrt{x^{2}+y^{2}}},&& (x,y)\neq (0,0)\\&0, &&(x,y)=(0,0)\\\end{aligned}\right.$在$(0,0)$处连续且可导，但不可微.
+\end{example}
+
+\begin{custom}{解}
+由不等式 $2|xy|\leqslant x^2+y^2$，有
+$$|f(x,y)|=\frac{|xy|}{\sqrt{x^2+y^2}}
+\leqslant \frac12\sqrt{x^2+y^2}\to 0,$$
+故函数在 $(0,0)$ 处连续.
+
+又有$f(h,0)=0,\qquad f(0,h)=0,$从而
+$$\frac{\partial f}{\partial x}(0,0)=0,\qquad
+\frac{\partial f}{\partial y}(0,0)=0.$$
+所以函数在 $(0,0)$ 处各偏导数存在.
+
+若函数在 $(0,0)$ 处可微，则其全微分只能为 $0$，于是应有
+$$\frac{f(x,y)-f(0,0)}{\sqrt{x^2+y^2}}\to 0.$$
+但沿路径 $y=x=t$ 有
+$$\frac{f(t,t)}{\sqrt{2t^2}}
+=\frac{t^2/\sqrt{2t^2}}{\sqrt{2t^2}}
+=\frac12\qquad (t\neq 0),$$
+不趋于 $0$，故函数在 $(0,0)$ 处不可微.$\hfill{\square}$
+\end{custom}
+
+\begin{example}
+证明：$f(x,y)=\left\{\begin{aligned}&(x^{2}+y^{2})\sin{\frac{1}{x^{2}+y^{2}}},&& (x,y)\neq (0,0)\\&0, &&(x,y)=(0,0)\\\end{aligned}\right.$在$(0,0)$处可微，但偏导数不连续.
+\end{example}
+
+\begin{custom}{解}
+设 $r=\sqrt{x^2+y^2}$，则$|f(x,y)-f(0,0)|=|r^2\sin(1/r^2)|\leqslant r^2.$
+
+因此
+$$\frac{|f(x,y)-f(0,0)|}{\sqrt{x^2+y^2}}
+\leqslant r\to 0.$$
+故函数在 $(0,0)$ 处可微，且全微分为 $0$.
+
+下面说明偏导数不连续. 对 $(x,y)\neq (0,0)$，有
+$$\frac{\partial f}{\partial x}(x,y)
+=2x\sin\frac1{x^2+y^2}
+-\frac{2x}{x^2+y^2}\cos\frac1{x^2+y^2}.$$
+而
+$$\frac{\partial f}{\partial x}(0,0)
+=\lim\limits_{h\to 0}\frac{h^2\sin(1/h^2)}{h}=0.$$
+取
+$$x_n=\frac1{\sqrt{2n\pi}},\qquad y_n=0,$$
+则 $(x_n,y_n)\to(0,0)$，并且
+$$\frac{\partial f}{\partial x}(x_n,0)
+=2x_n\sin(2n\pi)-\frac{2}{x_n}\cos(2n\pi)
+=-\frac{2}{x_n}\to -\infty.$$
+故 $\dfrac{\partial f}{\partial x}$ 在 $(0,0)$ 处不连续.$\hfill{\square}$
+\end{custom}
+
+\clearpage
+\renewEnvironmentCounter
+\section{2026年3月20日习题课}
+\subsection{可微、方向导数与梯度}
+\begin{custom}{思考题}
+多元函数在一点$P$可微和该函数在点$P$沿某个方向$\tau$的方向导数之间有什么关系？
+\end{custom}
+
+\begin{custom}{答}
+设$f:\mathbb{R}^n\to\mathbb{R}$在点$P$可微，$\tau$为一个单位向量. 由可微的定义，
+\[
+f(P+h)=f(P)+\nabla f(P)\cdot h+o(\Vert h\Vert ).
+\]
+令$h=t\tau$，则
+\[
+f(P+t\tau)-f(P)=t\,\nabla f(P)\cdot \tau+o(|t|).
+\]
+两边除以$t$并令$t\to 0$，就得到
+\[
+D_\tau f(P)=\nabla f(P)\cdot \tau.
+\]
+
+因此，{\bf 若$f$在$P$可微，则$f$在$P$沿任意方向的方向导数都存在，且都由梯度与方向向量的内积给出.} 但反过来一般不成立：即使沿每个方向的方向导数都存在，函数也未必可微.
+\end{custom}
+
+\begin{custom}{思考题}
+对一个给定函数，如何确定函数值变化最快的方向以及相应的变化率？
+\end{custom}
+
+\begin{custom}{答}
+若$f$在点$P$可微，并取$\tau$为单位向量，则
+\[
+D_\tau f(P)=\nabla f(P)\cdot \tau.
+\]
+由Cauchy--Schwarz不等式，
+\[
+D_\tau f(P)=\nabla f(P)\cdot \tau\le \Vert \nabla f(P)\Vert \,\Vert \tau\Vert =\Vert \nabla f(P)\Vert .
+\]
+当且仅当$\tau$与$\nabla f(P)$同向时取到最大值. 因而：
+
+(1) 函数值增长最快的方向是梯度方向
+\[
+\tau=\frac{\nabla f(P)}{\Vert \nabla f(P)\Vert }\qquad (\nabla f(P)\neq 0) ;
+\]
+
+(2) 最大变化率为$\Vert \nabla f(P)\Vert$;
+
+(3) 函数值减小最快的方向是
+\[
+-\frac{\nabla f(P)}{\Vert \nabla f(P)\Vert },
+\]
+相应变化率为$-\Vert \nabla f(P)\Vert$.
+
+若$\nabla f(P)=0$，则一阶近似下所有方向的方向导数都为$0$，此时不存在由一阶导数区分出来的“最快方向”. 
+\end{custom}
+
+\subsection{隐函数存在定理}
+在数学上，我们经常会得到两个或多个变量的方程，比如开普勒方程$y-x-\varepsilon \sin{y}=0(0<\varepsilon<1)$，我们很难得到$y=f(x)$形式的解析表达式，但是我们都能理解$y,x$之间是存在一定的依赖关系的. 因此，由方程/方程组确定的多个变量之间满足的“隐函数”关系就非常有研究的价值.
+
+我们这里直接给出几个隐函数存在定理的形式，并进行一些解释.
+\begin{theorem}[二元函数的隐函数存在定理]
+设二元函数$F(x,y)$在点$P_{0}(x_{0},y_{0})$的某邻域$O(P_{0},r)$上有定义，并且满足\\
+(1)$F(x_{0},y_{0})=0$;\\
+(2)在$O(P_{0},r)$中，$F$的偏导数$F_{x}^{\prime},F_{y}^{\prime}$连续；\\
+(3)$F_{y}^{\prime}\neq 0$，\\
+则存在$\delta>0$和在$(x_{0}-\delta,x_{0}+\delta)$中唯一确定的一元函数$f$，使得\\
+(1)$F(x,f(x))=0,\forall x\in (x_{0}-\delta,x_{0}+\delta)$且$y_{0}=f(x_{0})$；\\
+(2)$f$在$(x_{0}-\delta,x_{0}+\delta)$上可微，且
+$$\frac{\mathrm{d}f}{\mathrm{d}x}=-\frac{F^{\prime}_{x}}{F^{\prime}_{y}}.$$
+\end{theorem}
+
+我们来对上面的定理进行一些解释. 
+
+首先，定理的条件(1)实际上是把$F(x_{0},y_{0})=0$视作一个方程，而结论中$(1)$是说这个方程在$P_{0}$点附近有唯一解$y=f(x)$满足$F(x,f(x))=0$，在这样的意义下，我们可以把隐函数存在定理理解为告诉我们什么条件下（主要是定理中条件(2)(3)）关于多个变量（在这里是两个）的方程是有解的，以及这个解的性质如何（在这里体现为局部唯一性以及定理结论(2)关于导数的条件）.
+
+其次，定理的结论(2)在条件(2)(3)的情况下是自动的，因为在结论(1)得到后，对方程$F(x,f(x))=0,\forall x\in(x_{0}-\delta,x_{0}+\delta)$由对$x$的任意性可在两边关于$x$求导，由链式法则有
+$$\left.F_{x}^{\prime}(x,y)\right|_{y=f(x)}+\left.F_{y}^{\prime}(x,y)\right|_{y=f(x)}f^{\prime}(x)=0,$$
+从而自动有结论(2)成立，此时上述定理右侧的式子中的偏导数应当理解为上式中的含义.
+
+定理的结论(2)在几何意义上也可以理解. 方程$F(x,y)=0$定义了一条过$P_{0}(x_{0},y_{0})$的二元曲线，现在我们已经在点$P_{0}(x_{0},y_{0})$的局部给出了方程的解，那么这里这个解实际上是包含在这条曲线里的. 而由条件(2)(3)给的光滑性，我们在点$P_{0}(x_{0},y_{0})$处的微小扰动，会使得这个解在曲线上微小扰动，那么这个解$y=f(x)$的运动只能是与曲线相切的，否则在扰动后就会离开曲线.
+
+最后，我们需要强调的是，隐函数存在定理给出解的存在区域是有限的，并且在证明中给出的区域实际上是很小的. 至于这个解可以在多大的范围内存在，在常微分方程中给出了解的延展定理等，研究这些问题. 这里只介绍二元的情形，而对多元的情形$F(x_{1},\cdots,x_{n},y)=0$，我们也可以得到类似结论，即可以在给定点附近确定一个$n$元的隐函数$y=f(x_{1},\cdots,x_{n})$，定理叙述如下：
+\begin{theorem}
+设$n+1$元函数$F$在点$P_{0}(x_{1}^{0},\cdots,x_{n}^{0},y_{0})$的某邻域$O(P_{0},r)$上有定义，并且满足\\
+(1)$F(x_{1}^{0},\cdots,x_{n}^{0},y_{0})=0$；\\
+(2)在$O(P_{0},r)$中，$F$的各个一阶偏导数$F_{x_{i}}^{\prime},i=1,\cdots,n; F_{y}^{\prime}$均连续；\\
+(3)$F_{y}^{\prime}(x_{1}^{0},\cdots,x_{n}^{0},y_{0})\neq 0,$\\
+则存在$\delta>0$和在$x_{0}=(x_{1}^{0},\cdots,x_{n}^{0})$的$\delta$邻域上有定义的$n$元函数$f$使得\\
+(1)$F(x_{1},\cdots,x_{n},f(x_{1},\cdots,x_{n}))=0,\forall(x_{1},\cdots,x_{n})\in O(x_{0},\delta)$，且$y_{0}=f(x_{1}^{0},\cdots,x_{n}^{0})$；\\
+(2)$f$在$O(x_{0},\delta)$上可微，而且
+$$(\frac{\partial f}{\partial x_{1}},\cdots,\frac{\partial f}{\partial x_{n}})=-\frac{1}{F_{y}^{\prime}}(F_{x_{1}}^{\prime},\cdots,F_{x_{n}}^{\prime}).$$
+\end{theorem}
+
+有的同学会有疑问：如果多元函数的偏导数不连续或者函数压根不可微怎么办？看上去很多时候似乎也可以得到结果？事实上，隐函数存在定理可以减弱至连续的情形，但需要加上一些单调的条件保证解的唯一性，参考\cite[命题20.1.2]{XHM}，在高数A的范围内一般让大家研究的都是偏导数连续的情况.
+
+接下来我们来看多元函数组的情形.
+\begin{theorem}
+设有$m$个$n+m$元函数$F_{1},\cdots,F_{m}$，它们在点$P_{0}(x_{1}^{0},\cdots,x_{n}^{0},y_{1}^{0},\cdots,y_{m}^{0})$的某邻域$O(P_{0},r)$上有定义，且\\
+(1)$F_{i}(x_{1}^{0},\cdots,x_{n}^{0},y_{1}^{0},\cdots,y_{m}^{0})=0,i=1,\cdots,m$；\\
+(2)在$O(P_{0},r)$中每个$F_{i}$的$n+m$个一阶偏导数均连续；\\
+(3)Jacobi矩阵的行列式
+$$\left.\mathrm{det}\frac{\partial (F_{1},\cdots,F_{m})}{\partial (y_{1},\cdots,y_{m})}\right|_{P_{0}}\neq 0,$$
+则存在$\delta>0$和在$x_{0}=(x_{1}^{0},\cdots,x_{n}^{0})$的$\delta$邻域上定义的$m$个$n$元函数$f_{i}(i=1,\cdots,m)$，使得\\
+(1)$F_{i}(x_{1},\cdots,x_{n},f_{1}(x_{1},\cdots,x_{n}),\cdots,f_{m}(x_{1},\cdots,x_{n}))=0,\forall (x_{1},\cdots,x_{n})\in O(x_{0},\delta)$，且
+$$y_{i}^{0}=f_{i}(x_{1}^{0},\cdots,x_{n}^{0}),i=1,\cdots,m;$$
+(2)函数$f_{i},i=1,\cdots,m$在$O(x_{0},\delta)$上可微，并且
+$$\left(\frac{\partial (f_{1},\cdots,f_{m})}{\partial (x_{1},\cdots,x_{n})}\right)_{m\times n}=-\left(\frac{\partial(F_{1},\cdots,F_{m})}{\partial (y_{1},\cdots,y_{m})}\right)_{m\times m}^{-1}\left(\frac{\partial (F_{1},\cdots,F_{m})}{\partial (x_{1},\cdots,x_{n})}\right)_{m\times n}.$$
+\end{theorem}
+
+直观地，我们令所有$x_{i}$分量组成$x$，所有$y_{j}$分量组成$y$. 当$x_{0}$固定时，$F_{i}(x_{0},y)=0$可以看作一个$m-1$维超平面（$y$对应$m$维空间，但施加了一个约束），分别固定除$y_{1},y_{k}$之外的分量，利用二元情形的隐函数存在定理，可以知道这个超平面在$y$处的“切平面”有$m-1$个线性无关的分量$$\left(1,0,\cdots,0,-\frac{\frac{\partial F_{i}}{\partial y_{1}}(x_{0},y)}{\frac{\partial F_{i}}{\partial y_{k}}(x_{0},y)},\cdots,0\right),k=2,\cdots,m$$
+其中由Jacobi矩阵可逆，不妨设$\frac{\partial F_{i}}{\partial y_{1}}\neq 0$.
+
+现在有$m$个这样的超平面，并且同时经过$y_{0}$点. 想象3维空间中的三个互不平行的平面交于一点的情形（事实上可以理解为一个0维空间），现在$m$个这样的方程$F_{i}(x_{0},y)$确定了一个解$y_{0}$，且这个解只和函数$F_{i}(x_{0},y)$的参数$x_{0}$有关. 在$x_{0}$变化时，由函数的光滑性保证了
+$$y_{i}=f_{i}(x_{1},\cdots,x_{n}),i=1,\cdots,n,$$
+即$y$的分量可以表示为$x$的函数.
+
+观察上面的讨论，我们发现并没有完全用到Jacobi矩阵可逆的条件，事实上我们的推断“$m$个这样的方程$F_{i}(x_{0},y)$确定了一个解$y_{0}$，且这个解只和函数$F_{i}(x_{0},y)$的参数$x_{0}$有关.”需要用到这个条件. 请大家思考如何使用.
+
+\begin{custom}{提示}
+考虑这些切平面的法向量.
+\end{custom}
+
+再进一步，考虑特殊情况，我们可以得到逆映射定理.
+\begin{theorem}[逆映射定理]
+设有$n$个$n$元函数$f_{i},i=1,\cdots,n$在点$x_{0}=(x_{1}^{0},\cdots,x_{n}^{0})$的邻域$O(x_{0},r)$上有定义，且\\
+(1)$y_{i}^{0}=f_{i}(x_{1}^{0},\cdots,x_{n}^{0}),i=1,\cdots,n$；\\
+(2)在$O(P_{0},r)$中的每一个$f_{i}$的各个一阶偏导数连续；\\
+(3)Jacobi矩阵$\left.\frac{\partial (f_{1},\cdots,f_{n})}{\partial (x_{1},\cdots,x_{n})}\right|_{x_{0}}$可逆，\\
+则存在$\delta>0$和在$y_{0}=(y_{1}^{0},\cdots,y_{n}^{0})$的邻域$O(y_{0},\delta)$上定义的$n$个$n$元函数$g_{i},i=1,\cdots,n$使得\\
+(1)$y_{i}=f_{i}(g_{1}(y_{1},\cdots,y_{n}),\cdots,g_{n}(y_{1},\cdots,y_{n})),(y_{1},\cdots,y_{n})\in O(y_{0},\delta)$，且
+$$x_{i}^{0}=g_{i}(y_{1}^{0},\cdots,y_{n}^{0}),i=1,\cdots,n$$
+(2)函数$g_{i},i=1,\cdots,n$在$O(y_{0},\delta)$中可微，且
+$$\frac{\partial (g_{1},\cdots,g_{n})}{\partial (y_{1},\cdots,y_{n})}=\left(\frac{\partial (f_{1},\cdots,f_{n})}{\partial (x_{1},\cdots,x_{n})}\right)^{-1}$$
+\end{theorem}
+为此，只需要令$F_{i}(y,x)=f_{i}(x)-y_{i},i=1,\cdots,n$后用隐函数存在定理即可.
+
+\subsection{隐函数存在定理的计算}
+隐函数存在定理的相关计算在高数中非常重要，本节中将给出几个重要的计算例. 求隐函数（隐函数组）的导数（或偏导数）的主要方法，包括
+
+(1) {\bf 直接对约束方程求导.}\,这是最基本的方法. 例如由$F(x,y)=0$确定$y=f(x)$时，直接对$x$求导就得到$F_{x}^{\prime}+F_{y}^{\prime} y^{\prime}=0,$
+从而
+\[
+y'=-\frac{F_x'}{F_y'}.
+\]
+
+(2) {\bf 直接套用隐函数存在定理给出的导数公式.}\,若$F(x,y,z)=0$确定$z=z(x,y)$，则
+\[
+z_x'=-\frac{F_x'}{F_z'},\qquad z_y'=-\frac{F_y'}{F_z'}.
+\]
+若是方程组$F(X,Y)=0$，把$Y$看成$X$的函数，则矩阵形式统一写成
+\[
+F_X+F_Y\,Y_X=0,
+\]
+于是
+\[
+Y_X=-F_Y^{-1}F_X.
+\]
+
+(3) {\bf 把所有未知量一起看成隐函数，再解线性方程组.}\,这在隐函数组、变量代换、以及含中间变量的题目中尤其方便. 本质上仍然是链式法则加上线性方程组的求解.
+
+总之，几乎所有“隐函数求导”问题，本质上都可以归结为：{\bf 先求导，再解线性方程组.}
+
+求隐函数的高阶偏导数时，原则仍然不变，我们{\bf 先求出一阶导数，再继续对约束方程求导}.
+
+例如若$F(x,y)=0$确定$y=y(x)$，则先有
+\[
+y'=-\frac{F_x}{F_y}.
+\]
+再对$F_x+F_y y'=0$求导，得
+\[
+F_{xx}+2F_{xy}y'+F_{yy}(y')^2+F_y y''=0,
+\]
+从而
+\[
+y''=-\frac{F_{xx}+2F_{xy}y'+F_{yy}(y')^2}{F_y}.
+\]
+
+再如若$F(x,y,z)=0$确定$z=z(x,y)$，则
+\[
+z_x=-\frac{F_x}{F_z},\qquad z_y=-\frac{F_y}{F_z},
+\]
+继续求导可得
+\[
+z_{xx}=-\frac{F_{xx}+2F_{xz}z_x+F_{zz}z_x^2}{F_z},
+\]
+\[
+z_{xy}=-\frac{F_{xy}+F_{xz}z_y+F_{yz}z_x+F_{zz}z_xz_y}{F_z},
+\]
+\[
+z_{yy}=-\frac{F_{yy}+2F_{yz}z_y+F_{zz}z_y^2}{F_z}.
+\]
+
+如果是隐函数组，则对一阶导数满足的线性方程组再次求导，再解新的线性方程组即可.
+
+\begin{example}
+此即\cite[例题20.1.1]{XHM}. 证明：在点$(1,1)$的某邻域内存在唯一的连续可微函数$y=f(x)$满足$f(1)=1$,$xf(x)+2\ln{x}+3\ln{f(x)}-1=0$，并求$f^{\prime}(x)$.
+\end{example}
+
+\begin{custom}{解}
+令$F(x,y)=xy+2\ln{x}+3\ln{y}-1$，逐项验证隐函数存在定理的条件，应用隐函数存在定理后有
+$$f^{\prime}(x)=-\frac{xy^{2}+2y}{x^{2}y+3x},$$
+至此得到了答案.$\hfill{\square}$
+\end{custom}
+
+\begin{example}
+此即\cite[例题20.1.3]{XHM}. 设$z=f(x,y)$是由方程$F(x-y,y-z)=0$确定的隐函数，试求$z_{x}^{\prime},z_{y}^{\prime},z_{xy}^{\prime\prime}$.
+\end{example}
+
+\begin{custom}{解}
+为避免歧义，记函数$F(u,v)$对两个变量的导数分别为$F_{1}=\frac{\partial F}{\partial u},F_{2}=\frac{\partial F}{\partial v}$. 两边对$x$求导即得
+$$F_{1}-z^{\prime}_{x}F_{2}=0,$$
+从而$z^{\prime}_{x}=\frac{F_{1}}{F_{2}}$.
+
+类似地，对$y$求导得
+$$-F_{1}+F_{2}-z^{\prime}_{y}F_{2}=0,$$
+从而$z^{\prime}_{y}=\frac{F_{2}-F_{1}}{F_{2}}$.
+
+进一步，记$F_{11}=\frac{\partial}{\partial u}\frac{\partial F}{\partial u},F_{12}=\frac{\partial}{\partial v}\frac{\partial F}{\partial u}$，其它两个二阶偏导数同理. 对$z^{\prime\prime}{xy}$，对$z^{\prime}_{x}$满足的方程两边进一步对$y$求导，则
+$$-F_{11}+F_{12}(1-z^{\prime}_{y})-[z^{\prime\prime}_{xy}F_{2}+[-F_{21}+F_{22}(1-z^{\prime}_{y})]z^{\prime}_{x}]=0.$$
+代入后解得$z^{\prime\prime}_{xy}=\frac{1}{F_{2}^{3}}(2F_{1}F_{2}F_{12}-F_{2}^{2}F_{11}-F_{1}^{2}F_{22})$.$\hfill{\square}$
+\end{custom}
+
+\begin{custom}{注}
+(1)值得一提的是，在求解$z^{\prime\prime}_{xy}$时，初学者容易得到式子$F_{12}-(z^{\prime\prime}_{xy}F_{2}+z^{\prime}_{x}F_{22})=0$，这是错误的，原因是这里$F_{1},F_{2}$都需要理解为在$(x-y,y-z)$处的导数. 或者如果觉得仍然难以理解的话，可以放慢速度，令$G(x,y,z)=F(x-y,y-z)$，然后对$G(x,y,z)$用隐函数存在定理并计算导数，这样一定会发现需要考虑$(x-y,y-z)$这个因素.\\
+(2)上面的求导过程也可以直接应用隐函数存在定理，比如对$z^{\prime}_{y}$，\cite{XHM}中指出
+$$z^{\prime}_{y}=-\frac{F_{y}}{F_{z}}=\frac{-F_{1}+F_{2}}{-F_{2}},$$
+得到了相同的结果. 这里$F_{1}$表示对函数$F$的第一个位置求偏导，$F_{y}$表示$\frac{\partial F}{\partial y}$，两者含义不同.
+\end{custom}
+
+
+\begin{example}
+此即\cite[例题20.2.2]{XHM}. 设$u(x,y)$是由方程组$u=f(x,y,z,t),g(y,z,t)=0,h(z,t)=0$所确定的函数，其中$f,g,h$均连续可微，且Jacobi矩阵$\frac{\partial (g,h)}{\partial(z,t)}$可逆，求$\frac{\partial u}{\partial y}$.
+\end{example}
+
+\begin{custom}{解1}
+首先，考虑
+$$(*)\left\{\begin{aligned}g(y,z,t)&=0,\\h(z,t)&=0,\\\end{aligned}\right.$$
+注意到Jacobi矩阵$\frac{\partial (g,h)}{\partial(z,t)}$可逆，因此由隐函数存在定理可确定$z,t$为$y$的函数，因此可以表示$u=f(x,y,z(y),t(y))$，进而
+$$\frac{\partial u}{\partial y}=f_{2}+f_{3}z^{\prime}(y)+f_{4}t^{\prime}(y),$$
+
+为求$z^{\prime}(y),t^{\prime}(y)$，在式$(*)$中对$y$求导，即有
+$$g_{1}+g_{2}z^{\prime}(y)+g_{3}t^{\prime}(y)=0,h_{1}z^{\prime}(y)+h_{2}t^{\prime}(y)=0.$$
+从而解得
+$$z^{\prime}(y)=-g_{1}h_{2}\left(\frac{D(g,h)}{D(z,t)}\right)^{-1},t^{\prime}(y)=g_{1}h_{1}\left(\frac{D(g,h)}{D(z,t)}\right)^{-1}$$
+代入得
+$$\frac{\partial u}{\partial y}=f_{2}-g_{1}(f_{3}h_{2}-f_{4}h_{1})\left(\frac{D(g,h)}{D(z,t)}\right)^{-1},$$
+其中$\frac{D(g,h)}{D(z,t)}$为Jacobi矩阵的行列式（书上记号）.$\hfill{\square}$
+\end{custom}
+
+\begin{custom}{解2}
+可以整体考虑，事实上所有的求导数的问题都可以转化为解线性方程组的问题.考虑方程组
+$$(\dagger)\left\{\begin{aligned}F(x,y,z,t,u)&=0,\\ g(y,z,t)&=0,\\h(z,t)&=0,\\\end{aligned}\right.$$
+其中$F(x,y,z,u,t)=u-f(x,y,z,t)$. 注意到
+$$\frac{D(F,g,h)}{D(u,z,t)}=\frac{D(g,h)}{D(z,t)}\neq 0,$$
+这里因为$\frac{D(F,g,h)}{D(u,z,t)}$的第一列只有$(1,1)$元素非零，行列式容易计算.
+
+从而可将$u,z,t$视为$x,y$的函数，然后在$(\dagger)$中对$y$求导数，有
+$$\left\{\begin{aligned}u^{\prime}_{y}-f^{\prime}_{y}-f^{\prime}_{z}z^{\prime}_{y}-f^{\prime}_{t}t^{\prime}_{y}&=0,\\ g^{\prime}_{y}+g^{\prime}_{z}z^{\prime}_{y}+g^{\prime}_{t}t^{\prime}_{y}&=0,\\ h^{\prime}_{z}z^{\prime}_{y}+h^{\prime}_{t}t^{\prime}_{y}&=0.\\\end{aligned}\right.$$
+求解方程组即可.$\hfill{\square}$
+\end{custom}
+
+
+\begin{exercise}
+此即\cite[例题20.2.3]{XHM}. 设$z=z(x,y)$由球变换$x=\cos{\phi}\cos{\psi},y=\cos{\phi}\sin{\psi},z=\sin{\phi}$确定，求$\frac{\partial^{2}z}{\partial x^{2}}$.
+\end{exercise}
+
+\begin{custom}{解}
+由球变换立刻得到$x^2+y^2+z^2=1$. 因此在$z\neq 0$的点附近，可以把$z$看成$x,y$的隐函数，满足
+\[
+F(x,y,z)=x^2+y^2+z^2-1=0.
+\]
+对$x$求偏导，得$2x+2z z_x=0,$于是
+\[
+z_x=-\frac{x}{z}.
+\]
+
+再对$x$求偏导，得$2+2z_x^2+2z z_{xx}=0,$
+所以
+\[
+z_{xx}=-\frac{1+z_x^2}{z}
+=-\frac{1+\dfrac{x^2}{z^2}}{z}
+=-\frac{x^2+z^2}{z^3}.
+\]
+又由$x^2+y^2+z^2=1$
+知
+\[
+x^2+z^2=1-y^2,
+\]
+故
+\[
+\boxed{
+z_{xx}=-\frac{1-y^2}{z^3}
+}.
+\]
+
+若取上半球$z=\sqrt{1-x^2-y^2}$，则还可写成
+\[
+\boxed{
+z_{xx}=-\frac{1-y^2}{(1-x^2-y^2)^{3/2}}
+}.
+\]
+\hfill$\square$
+\end{custom}
+
+\begin{exercise}
+考察叶形线方程$F(x,y)=x^{3}+y^{3}-3xy=0$，其在何处存在隐函数？这个结果说明，如果一个曲线$F(x,y)=0$自交，则在交叉点处，两个偏导数有什么特征，为什么？
+\end{exercise}
+
+\subsection{变量代换问题的计算}
+\begin{example}
+此即\cite[例题20.3.1]{XHM}. 在方程$(\frac{\partial u}{\partial x})^{2}+(\frac{\partial u}{\partial y})^{2}=u$中做极坐标变换$x=r\cos{\theta},y=r\sin{\theta}$，求方程在变换后的形式.
+\end{example}
+
+\begin{custom}{解1}
+把函数$u(x,y)$看作$u(r\cos{\theta},r\sin{\theta})$，则
+$$\begin{aligned}u^{\prime}_{r}&=u^{\prime}_{x}\cos{\theta}+u^{\prime}_{y}\sin{\theta},\\
+u^{\prime}_{\theta}&=r(-u^{\prime}_{x}\sin{\theta}+u^{\prime}_{y}\cos{\theta}).\\\end{aligned}$$
+解方程组有
+$$\begin{aligned}u^{\prime}_{x}&=\frac{1}{r}(ru^{\prime}_{r}\cos{\theta}-u^{\prime}_{\theta}\sin{\theta}),\\
+u^{\prime}_{y}&=\frac{1}{r}(ru^{\prime}_{r}\sin{\theta}+u^{\prime}_{\theta}\cos{\theta})\\\end{aligned}$$
+从而代入得
+$$u_{r}^{2}+\frac{1}{r^{2}}u_{\theta}^{2}=u.$$
+这里省略了上标，为避免和平方冲突.$\hfill{\square}$
+\end{custom}
+
+\begin{custom}{解2}
+把函数$u(r,\theta)$看作$u(\sqrt{x^{2}+y^{2}},\arctan{\frac{y}{x}})$，则
+$$\begin{aligned}u^{\prime}_{x}&=u^{\prime}_{r}\frac{x}{r}-u^{\prime}_{\theta}\frac{y}{r^{2}},\\ u^{\prime}_{y}&=u^{\prime}_{r}\frac{y}{r}+u^{\prime}_{\theta}\frac{x}{r^{2}}.\\\end{aligned}$$
+因此
+$$u_{x}^{2}+u_{y}^{2}=u_{r}^{2}+\frac{1}{r^{2}}u_{\theta}^{2}$$
+从而得到
+$$u_{r}^{2}+\frac{1}{r^{2}}u_{\theta}^{2}=u.$$
+这里省略了上标，为避免和平方冲突.$\hfill{\square}$
+\end{custom}
+
+\begin{custom}{注}
+这两种方法都能得到正确的结果，但是请读者注意，两种方法的含义是不同的. 具体来说，能分别写函数$u(x,y)$和$u(r,\theta)$的原因是我们一开始对方程的理解不同，前者是在$x-y$坐标系，而后者已经看成在$r-\theta$坐标系中研究问题.
+\end{custom}
+
+\begin{example}
+此即\cite[例题20.3.3]{XHM}. 通过代换$x=t,y=\frac{t}{1+tu},z=\frac{t}{1+tv}$，试把方程
+$$(**)x^{2}z^{\prime}_{x}+y^{2}z^{\prime}_{y}=z^{2}$$
+变为以$v$为因变量，$t,u$为自变量的形式.
+
+换句话说，设函数$z=z(x,y)$满足方程$(**)$，做自变量代换$x=t,y=\frac{t}{1+tu}$，再做因变量代换$z=\frac{t}{1+tv}$得到函数$v(t,u)$，要求$v=v(t,u)$满足的方程.
+\end{example}
+
+\begin{custom}{解1}
+直接求$z^{\prime}_{x},z^{\prime}_{y}$，记$g(t,v)=\frac{t}{1+tv}$，则
+$$\begin{aligned}z^{\prime}_{x}&=g^{\prime}_{t}t^{\prime}_{x}+g^{\prime}_{v}(v^{\prime}_{t}t^{\prime}_{x}+v^{\prime}_{u}u^{\prime}_{x}),\\
+z^{\prime}_{y}&=g^{\prime}_{t}t^{\prime}_{y}+g^{\prime}_{v}(v^{\prime}_{t}t^{\prime}_{y}+v^{\prime}_{u}u^{\prime}_{y}).\\\end{aligned}$$
+从代换中反解
+$$t=x,u=\frac{1}{y}-\frac{1}{x},$$
+则可将各一阶偏导数代入，有
+$$\begin{aligned}z^{\prime}_{x}&=g^{\prime}_{t}+g^{\prime}_{v}(v^{\prime}_{t}+\frac{1}{x^{2}}v^{\prime}_{u}),\\
+z^{\prime}_{y}&=-\frac{1}{y^{2}}g^{\prime}_{v}v^{\prime}_{u}.\\\end{aligned}$$
+
+代入$(**)$有
+$$x^{2}\left[g^{\prime}_{t}+g^{\prime}_{v}v^{\prime}_{t}\right]=z^{2}$$
+化简得$v^{\prime}_{t}=0$.$\hfill{\square}$
+\end{custom}
+
+\begin{custom}{解2}
+本题中可以直接反解$v$，得到
+$v=\frac{1}{z}-\frac{1}{t}$，经计算可得
+$$\begin{aligned}v^{\prime}_{t}&=-\frac{1}{z^{2}}\left[z^{\prime}_{x}+\frac{1}{(1+tu)^{2}}z^{\prime}_{y}\right]+\frac{1}{t^{2}},\\
+v^{\prime}_{u}&=\frac{1}{z^{2}}\cdot \frac{t^{2}}{(1+tu)^{2}}z^{\prime}_{y}.\\\end{aligned}$$
+反解$z^{\prime}_{x},z^{\prime}_{y}$得到
+$$\begin{aligned}
+z^{\prime}_{x}&=z^{2}\left(\frac{1}{t^{2}}-v^{\prime}_{t}\right)-\frac{z^{2}}{t^{2}}v^{\prime}_{u},\\
+z^{\prime}_{y}&=\frac{z^{2}(1+tu)^{2}}{t^{2}}v^{\prime}_{u}.
+\\\end{aligned}$$
+代回化简得$v^{\prime}_{t}=0$.$\hfill{\square}$
+\end{custom}
+
+\begin{exercise}
+此即\cite[例题20.3.2]{XHM}. 通过代换$x=uv,y=\frac{1}{2}(u^{2}-v^{2})$，变换方程
+$$\left(\frac{\partial z}{\partial x}\right)^{2}+\left(\frac{\partial z}{\partial y}\right)^{2}=\frac{1}{\sqrt{x^{2}+y^{2}}}.$$
+\end{exercise}
+
+\begin{exercise}
+此即\cite[20.3.3节练习题2]{XHM}. 引入$r=\sqrt{x^{2}+y^{2}},\phi=\arctan{\frac{y}{x}}$，变换微分式
+$$w=x\frac{\mathrm{d}^{2}y}{\mathrm{d}t^{2}}-y\frac{\mathrm{d^{2}x}}{\mathrm{d}t^{2}}.$$
+\end{exercise}
+
+\begin{exercise}
+此即\cite[20.3.3节练习题3]{XHM}. 以$\xi=x+y,\eta=x-y$为新的自变量，变换微分式
+$$F=(z+e^{x})\frac{\partial z}{\partial x}+(z+e^{y})\frac{\partial z}{\partial y}-(z^{2}-e^{x+y}).$$
+\end{exercise}
+
+
+\clearpage
+\renewEnvironmentCounter
+\section{2026年4月3日习题课}
+\subsection{条件极值与Lagrange乘数法}
+在无约束情形下，我们讨论函数$f(x,y)$在某个开区域中的极值，比较的是该点附近所有自变量的取值；而在条件极值问题中，自变量并不能任意变化，而只能限制在给定条件所确定的曲线或曲面上活动. 因而，条件极值与无条件极值的差别，主要只是在“允许比较的点”的范围不同，但二者所追求的，仍然都是函数在局部范围内的最大值或最小值.
+
+\begin{definition}
+设函数$f(x,y)$在曲线
+$$\varphi(x,y)=0$$
+上有定义，点$P_{0}(x_{0},y_{0})$满足$\varphi(x_{0},y_{0})=0$. 若存在$P_{0}$的某个邻域$U$，使得对一切满足$\varphi(x,y)=0$且$(x,y)\in U$的点，都有
+$$f(x,y)\leqslant f(x_{0},y_{0}),$$
+则称$f$在条件$\varphi(x,y)=0$下于点$P_{0}$取得条件极大值；类似地，也可定义条件极小值.
+\end{definition}
+
+\begin{custom}{注}
+(1)若$f$在某点取得无条件极大（小）值，并且该点恰好满足所给约束，那么它当然也取得对应的条件极大（小）值；反过来则未必成立，因为条件极值只要求在约束所确定的点集内进行比较.\\
+(2)因此，同一个函数在整个平面上可能没有极值，但在某条曲线或某个曲面上却可以有条件极值.
+\end{custom}
+
+对于可微函数，求条件极值最常用的方法是Lagrange乘数法.
+
+\begin{theorem}
+设$f(x,y),\varphi(x,y)$在点$P_{0}(x_{0},y_{0})$的某邻域内有连续偏导数，且$P_{0}$是函数$f$在条件$\varphi(x,y)=0$下的一个条件极值点. 若
+$$\nabla\varphi(x_{0},y_{0})\neq 0,$$
+则存在常数$\lambda$，使得
+$$\left\{\begin{aligned}
+f_{x}(x_{0},y_{0})+\lambda\varphi_{x}(x_{0},y_{0})&=0,\\
+f_{y}(x_{0},y_{0})+\lambda\varphi_{y}(x_{0},y_{0})&=0,\\
+\varphi(x_{0},y_{0})&=0.
+\end{aligned}\right.$$
+\end{theorem}
+
+\begin{custom}{注}
+把目标函数与约束函数按乘子作线性组合，得到
+$$L(x,y,\lambda)=f(x,y)+\lambda\varphi(x,y),$$
+这就是Lagrange函数. 若约束写成$\varphi(x,y)=c$，则更常写为
+$$L(x,y,\lambda)=f(x,y)+\lambda(\varphi(x,y)-c).$$
+若有多个约束$\varphi_{1}=0,\cdots,\varphi_{m}=0$，则只需引入多个乘子，写成
+$$L=f+\lambda_{1}\varphi_{1}+\cdots+\lambda_{m}\varphi_{m}.$$
+\end{custom}
+
+\begin{custom}{注}
+在各个相关函数可微的条件下，求条件极值通常按如下顺序进行：\\
+(1)先把约束写成$g(x,y)=0$的形式，并构造Lagrange函数$L=f+\lambda g$；\\
+(2)联立方程
+$$L_{x}=0,\quad L_{y}=0,\quad g=0$$
+求出全部驻点；\\
+(3)对求得的点代回原函数，比较函数值，从而判定条件极大值与条件极小值；\\
+(4)若约束曲线上还有使$\nabla g=0$的奇异点，也需要单独检验.\\
+在高数中常见的问题里，按照上述步骤列方程并比较函数值，通常就足以解决大部分条件极值问题.
+\end{custom}
+
+\begin{example}
+求函数$f(x,y)=xy$在条件$x^{2}+y^{2}=1$下的极值.
+\end{example}
+
+\begin{custom}{解}
+作Lagrange函数
+$$L(x,y,\lambda)=xy+\lambda(x^{2}+y^{2}-1).$$
+于是有方程组
+$$\left\{\begin{aligned}
+y+2\lambda x&=0,\\
+x+2\lambda y&=0,\\
+x^{2}+y^{2}-1&=0.
+\end{aligned}\right.$$
+由前两个方程消去$\lambda$，得到
+$$x^{2}=y^{2},$$
+故只需分两种情形讨论：\\
+(1)当$y=x$时，由约束$x^{2}+y^{2}=1$知
+$$x=y=\pm \frac{1}{\sqrt{2}},$$
+此时
+$$f(x,y)=xy=\frac{1}{2}.$$\\
+(2)当$y=-x$时，由约束得
+$$x=\pm \frac{1}{\sqrt{2}},\quad y=\mp \frac{1}{\sqrt{2}},$$
+此时
+$$f(x,y)=xy=-\frac{1}{2}.$$
+
+从而函数$f(x,y)=xy$在条件$x^{2}+y^{2}=1$下的条件极大值为$\frac{1}{2}$，条件极小值为$-\frac{1}{2}$.$\hfill{\square}$
+\end{custom}
+
+\begin{custom}{注}
+这个例子很能说明条件极值与无条件极值之间的联系：函数$xy$在整个$\mathbb{R}^{2}$上并没有极大值和极小值，但当自变量限制在单位圆周上时，它就有了条件极值.
+\end{custom}
+
+\subsection{重积分的概念和性质}
+我们已经知道，一元函数的积分可以理解为函数$f(x)$的自变量在区间变化时，函数图像和$x$轴围成的曲边梯形的面积. 利用这样的想法，我们可以很容易地把问题推广到一个$n$元函数$f(x_{1},\cdots,x_{n})$，本质上没有任何区别，考虑$n$维欧氏空间$\mathbb{R}^{n}$的一个区域$\Omega$，我们可以研究函数图像和$n$维区域围成的柱状面积. 由此，模仿一元函数的积分的定义，我们可以给出如下的定义，注意，在高数书上为了方便大家理解分了二维和三维，事实上可以定义如下的统一框架而没有任何额外的困难：
+
+\begin{definition}
+设$\Omega$是$\mathbb{R}^{n}$中的一个有界（闭）区域，$f$是$\Omega$上的一个有界函数，把$\Omega$分割为$n$个内部互不相交的（闭）子区域$\Delta \Omega_{i}(i=1,\cdots,m)$，将分划(Partition)记为$\mathfrak{D}=\{\Delta\Omega_{i}\}_{i=1}^{m}$. 记$\Delta\Omega_{i}$的直径为$d_{i}$，满足
+$$d_{i}=\max_{x,y\in\Omega_{i}}{\Vert x-y\Vert}$$
+进一步地，记$\Vert\mathfrak{D}\Vert=\max\limits_{i=1,\cdots,m}{\{d_{i}\}}$，并记$\Delta\Omega_{i}$的$n$维体积为$\Delta\sigma_{i}$. 在各$\Delta\Omega_{i}$中取点集$\mathcal{P}=\{P_{i}\}_{i=1}^{m}$满足$P_{i}(x^{i}_{1},\cdots,x^{i}_{n})\in\Delta\Omega_{i},i=1,\cdots,m$，作和式
+$$S(\mathfrak{D},\mathcal{P},f)=\sum_{i=1}^{m}{f(P_{i})\Delta\sigma_{i}},$$
+如果当$\Vert\mathfrak{D}\Vert\to 0$时，有$S(\mathfrak{D},\mathcal{P},f)$的极限存在，且与分划$\mathfrak{D}$以及取点$\mathcal{P}$无关，则称和式$S(\mathfrak{D},\mathcal{P},f)$的极限$I$为$f$在$\Omega$上的Riemann积分，简称积分，记作$\int_{\Omega}{f\mathrm{d}\sigma}$，即
+$$\int_{\Omega}{f\mathrm{d}\sigma}=I(f)=\lim\limits_{\Vert\mathfrak{D}\Vert\to 0}{S(\mathfrak{D},\mathcal{P},f)}$$
+称$\Omega$为积分区域，$f$为被积函数.
+\end{definition}
+
+\begin{custom}{注}
+(1)高数中要求区域$\Omega$的闭性只是为了在这里方便讨论，此外，不一定需要将$\Omega$分割成闭子区域，但是这里为了使用最大值而不是上确界来表示直径，需要用到子区域的闭性来保证最大值的存在性.\\
+(2)这里的极限初学者可能仍然有些疑惑，事实上可以用$\varepsilon-\delta$语言做如下叙述：
+$$\forall \varepsilon>0,\exists \delta>0,\,\mathrm{s.t.}\,\forall\,\mathrm{Partition}\,\mathfrak{D}=\{\Delta\Omega_{i}\}_{i=1}^{m},\Vert\mathfrak{D}\Vert<\delta,\forall \mathcal{P}=\{P_{i}\in\Delta\Omega_{i}\}:|S(\mathfrak{D},\mathcal{P},f)-I|<\varepsilon.$$
+(3)有同学可能注意到，我上面写了$I(f)$，这里表示这个极限和$f$有关. 当然也可以理解为，在给定区域$\Omega$上的积分是被积函数$f$的“函数”.这里实际上变成了定义在所有Riemann可积的函数上的“函数的函数”，在数学上一般称为泛函. 泛函分析是数学的一门重要学科，积分算子在其中非常常见，在现实中也有较多应用.\\
+(4)一般来说，我们使用直角坐标比较多，在直角坐标系中，可以记$\mathrm{d}\sigma=\mathrm{d}x_{1}\cdots\mathrm{d}x_{n}$.
+(5)当$n=2$且$f(x,y)\geqslant 0$时，二重积分
+$$\iint_{\Omega}{f(x,y)\mathrm{d}\sigma}$$
+可以理解为以$\Omega$为底、以$z=f(x,y)$为顶的曲顶柱体的体积；特别地，当$f\equiv 1$时，它给出的就是区域$\Omega$的面积.\\
+(6)当$n=3$时，若$f(x,y,z)$表示某个物体在点$(x,y,z)$处的密度函数，则三重积分
+$$\iiint_{\Omega}{f(x,y,z)\mathrm{d}\sigma}$$
+表示该物体在区域$\Omega$上的总质量. 因而，二重积分的几何意义与三重积分的物理意义都十分自然.\\
+(7)从定义和性质上看，二重积分、三重积分与定积分并没有本质区别，都是“分割、取样、求和、取极限”的过程；线性性、有限可加性、保序性和积分中值定理的形式也都与一元积分完全类似. 不同之处主要只在于积分区域、变量个数以及相应的几何背景.
+\end{custom}
+
+接下来，我们根据上面的定义，很容易得到如下性质，此处仅作列举.
+
+\begin{proposition}
+(1)[线性性]\,若$f,g$是$\Omega$上的可积函数，$\alpha,\beta$为常数，则
+$$\int_{\Omega}{(\alpha f+\beta g)\mathrm{d}\sigma}=\alpha\int_{\Omega}{f\mathrm{d}\sigma}+\beta\int_{\Omega}{g\mathrm{d}\sigma}.$$
+(2)[有限可加性]\,设$\Omega=\bigcup_{i=1}^{m}{\Omega_{i}}$是$m$个内部互不相交的（闭）区域的并，$f$是$\Omega$上的可积函数，则
+$$\int_{\Omega}{f\mathrm{d}\sigma}=\sum_{i=1}^{m}{\int_{\Omega_{i}}{f\mathrm{d}\sigma}}.$$
+(3)[保序性]\,若$\Omega$上的两个可积函数$f,g$满足$f\leqslant g$，则
+$$\int_{\Omega}{f\mathrm{d}\sigma}\leqslant \int_{\Omega}{g\mathrm{d}\sigma}.$$
+(4)[积分中值定理]\, 若$f$是$\Omega$上的连续函数，则必存在$P\in\Omega$使得
+$$\int_{\Omega}{f\mathrm{d}\sigma}=f(P)\cdot m(\Omega),$$
+其中$m(\Omega)$为$\Omega$的面积，可以表示为
+$$m(\Omega)=\int_{\Omega}{1\mathrm{d}\Omega}.$$
+\end{proposition}
+
+我们来看借助重积分的定义和意义来进行计算的习题.
+
+\begin{example}
+此即\cite[第八章第一节习题1]{JC}. 设平面闭区域$\Omega=\{(x,y)\mid x^{2}+y^{2}\leqslant r^{2}\}$，利用二重积分的几何意义求
+$$\iint_{\Omega}{\sqrt{r^{2}-x^{2}-y^{2}}\mathrm{d}\sigma}.$$
+\end{example}
+
+\begin{custom}{解}
+用对称性分析. 对于$x^{2}+y^{2}=c,0\leqslant c\leqslant r$的地方，被积函数为常值函数$\sqrt{r^{2}-c^{2}}$，函数图像对应半径为$r$的上半球面，从而容易发现积分式的意义为半径为$r$的上半球的体积$V$.
+
+利用球体体积公式的已知结论，得到结果为$\frac{2}{3}\pi r^{3}$.$\hfill{\square}$
+\end{custom}
+
+\begin{custom}{注}
+之后将使用坐标变换和累次积分的方法严格计算这个结果.
+\end{custom}
+
+\begin{example}
+此即\cite[第八章第一节习题5]{JC}. 设$f$是三元连续函数，试求极限
+$$\lim\limits_{r\to 0}{\frac{1}{r^{3}}\iiint_{\Omega_{r}}{f(x,y,z)\mathrm{d}\sigma}},$$
+其中$\Omega_{r}=\{(x,y,z)\mid (x-a)^{2}+(y-b)^{2}+(z-c)^{2}\leqslant r^{2}\}$.
+\end{example}
+
+\begin{custom}{分析}
+由$f$的连续性，容易知道在$r\to 0$时，被积函数的取值会与$f(a,b,c)$相当接近，而积分区域是一个以$(a,b,c)$为球心，$r$为半径的球，从而积分结果应当与$\frac{4}{3}\pi r^{3}$相当接近.
+\end{custom}
+
+\begin{custom}{解}
+由$f$的连续性，对任意$\delta>0$，有个$r>0$使得$\forall (x,y,z)\in\Omega_{r}$时，有$|f(x,y,z)-f(a,b,c)|\leqslant \delta$，也即$f(a,b,c)-\delta\leqslant f(x,y,z)\leqslant f(a,b,c)+\delta$.
+
+从而由积分的保序性，有
+$$\iiint_{\Omega_{r}}{(f(a,b,c)-\delta)\mathrm{d}\sigma}\leqslant\iiint_{\Omega_{r}}{f(x,y,z)\mathrm{d}\sigma}\leqslant\iiint_{\Omega_{r}}{(f(a,b,c)+\delta)\mathrm{d}\sigma}.$$
+利用$f(a,b,c)\pm \delta$是常值函数化简，得到
+$$\frac{4}{3}\pi f(a,b,c)-\frac{4}{3}\pi\delta\leqslant \frac{1}{r^{3}}\iiint_{\Omega_{r}}{f(x,y,z)\mathrm{d}\sigma}\leqslant \frac{4}{3}\pi f(a,b,c)+\frac{4}{3}\pi\delta,$$
+于是对任意$\varepsilon>0$，取$\delta<\frac{3}{4\pi}$，对应一个$r>0$，使得
+$$\left|\frac{1}{r^{3}}\iiint_{\Omega_{r}}{f(x,y,z)\mathrm{d}\sigma}-\frac{4}{3}\pi f(a,b,c)\right|<\delta$$
+从而依定义，极限存在为$\frac{4}{3}\pi f(a,b,c)$.$\hfill{\square}$
+\end{custom}
+
+
+此外，对称性的应用在重积分的计算中也非常重要。利用对称性时，不能只看积分区域是否对称，还要同时看被积函数在相应变换下是保持不变还是改变符号；只有区域与函数的对称性彼此配合，才能真正起到简化计算的作用. 这里做一个简单总结，仅以二重积分为例：
+
+当区域关于坐标轴对称时，比如积分区域$D$关于$y$轴对称，则\\
+(1)若$f(x,y)$关于$x$为奇函数，即$f(-x,y)\equiv -f(x,y)$时，积分为零.\\
+(2)若$f(x,y)$关于$x$为偶函数，即$f(-x,y)\equiv f(x,y)$时，积分为$2\iint_{\{x\geqslant 0\}\cap D}{f(x,y)\mathrm{d}x\mathrm{d}y}$.\\
+(3)特别地，若积分区域关于$x,y$轴均对称，且$f(x,y)$关于$x,y$均为偶函数，则积分为
+$$4\iint_{\{x\geqslant 0,y\geqslant 0\}\cap D}{f(x,y)\mathrm{d}x\mathrm{d}y}.$$
+
+当区域关于直线$y=x$对称时，即$(x,y)\in D$可推出$(y,x)\in D$，则\\
+(1)若$f(x,y)$满足$f(x,y)=f(y,x)$，则
+$$\iint_{D\cap\{y\leqslant x\}}{f(x,y)\mathrm{d}x\mathrm{d}y}=\iint_{D\cap\{y\geqslant x\}}{f(x,y)\mathrm{d}x\mathrm{d}y}.$$
+(2)若$f(x,y)$满足$f(x,y)=-f(y,x)$，则积分为零.
+
+当区域关于原点对称时，即$(x,y)\in D$可推出$(-x,-y)\in D$，则\\
+(1)若$f(x,y)$满足$f(-x,-y)=-f(x,y)$，则积分为零.\\
+(2)若$f(x,y)$满足$f(-x,-y)=f(x,y)$，则积分为
+$$2\iint_{D\cap\{x\geqslant 0\}}{f(x,y)\mathrm{d}x\mathrm{d}y}\,\text{或}\,2\iint_{D\cap\{y\geqslant 0\}}{f(x,y)\mathrm{d}x\mathrm{d}y}$$
+
+当然，上面所有的非零表达式都可以利用对称性选择不同子区域，写成其它形式. 因此，在二重积分中利用对称性的基本思路并不复杂：先看区域，再看被积函数，最后决定是把积分化为零，还是化为某个子区域上的若干倍积分. 这类方法在计算上往往十分有效.
+
+\begin{example}
+计算
+$$I=\iint_{D}{\frac{x-y}{1+x+y}\mathrm{d}x\mathrm{d}y},D=[0,1]\times [0,1].$$
+\end{example}
+
+\begin{custom}{解}
+注意到$f(y,x)=-f(x,y)$即可.
+\end{custom}
+
+\begin{example}
+计算
+$$I=\iint_{D}{|x-y|\mathrm{d}x\mathrm{d}y},D=[0,1]\times [0,1].$$
+\end{example}
+
+\begin{custom}{解}
+注意到若记$g(x,y)=|x-y|$，则$g(y,x)=g(x,y)$. 而积分区域也关于$y=x$对称，因此
+$$I=2\iint_{D\cap\{y\leqslant x\}}{|x-y|\mathrm{d}x\mathrm{d}y}.$$
+在子区域$y\leqslant x$上，有
+$$I=2\int_{0}^{1}{\int_{0}^{x}(x-y)\mathrm{d}y}\mathrm{d}x.$$
+容易得到结果为$\frac{1}{3}$.$\hfill{\square}$
+\end{custom}
+
+\subsection{重积分化为累次积分}
+上一小节中指出了重积分的定义和性质，但是利用定义、性质或者几何意义能够计算的情形较少，并且通常过程较繁杂. 很容易想到使用“分步”积分的累次积分方法，将重积分化为累次积分，从而使用一元函数的积分的方法，来对重积分进行计算.
+
+重积分$\int_{\Omega}{f\mathrm{d}\sigma}$的值等于以有界闭区域$\Omega$为底，$z=f(x_{1},\cdots,x_{n})$为顶的曲顶柱体的体积，事实上，我们也可以一步一步将问题做如下转化：有界闭区域$\Omega$的每个坐标分量都有界（这一点容易理解，也可以用坐标分量的投影函数在有界闭区域上有界得到），进一步地，我们不妨设在区域$\Omega$中，分量$a\leqslant x_{n}\leqslant b$，从而我们可以用平面$x_{n}=c$去截这个曲边柱体，得到面积$A(c),a\leqslant c\leqslant b$，然后再将面积$A(c)$积分，得到结果. 这个过程可以写为
+$$\int_{\Omega}{f(x_{1},\cdots,x_{n})\mathrm{d}x_{1}\cdots\mathrm{d}x_{n}}=\int_{a}^{b}{A(x)\mathrm{d}x_{n}}$$
+其中
+$$A(x)=\int_{\Gamma(x)}{f(x_{1},\cdots,x_{n-1},x)\mathrm{d}x_{1}\cdots\mathrm{d}x_{n-1}}.$$
+这里$\Gamma(x)=\{y=(y_{1},\cdots,y_{n-1},x)\in \Omega\}$是$\Omega$中满足$x_{n}=x$的截面.
+
+重复上述操作，我们就可以将重积分化为累次积分
+$$\int_{\Omega}{f(x_{1},\cdots,x_{n})\mathrm{d}x_{1}\cdots\mathrm{d}x_{n}}=\int_{a_{n}}^{b_{n}}{\mathrm{d}x_{n}\int_{a_{n-1}(x_{n})}^{b_{n-1}(x_{n})}{\mathrm{d}x_{n-1}\cdots\int_{a_{1}(x_{2},\cdots,x_{n})}^{b_{1}(x_{2},\cdots,x_{n})}{f(x_{1},\cdots,x_{n})\mathrm{d}x_{1}}}}$$
+
+\begin{custom}{注}
+在二重积分的实际计算中，怎样把积分化为适当的累次积分，关键在于先看积分区域在坐标轴方向上的投影.\\
+若区域适合写成
+$$D=\{(x,y)\mid a\leqslant x\leqslant b,\varphi_{1}(x)\leqslant y\leqslant \varphi_{2}(x)\},$$
+则通常先对$y$积分；若区域适合写成
+$$D=\{(x,y)\mid c\leqslant y\leqslant d,\psi_{1}(y)\leqslant x\leqslant \psi_{2}(y)\},$$
+则通常先对$x$积分. 选取次序时，一般遵循三个原则：边界尽量简单、分段尽量少、内层积分尽量容易计算. 有些区域从一个方向看只需一段，而从另一个方向看却必须分成几段，这时往往就应当优先选取前一种写法.
+\end{custom}
+
+\begin{exercise}
+此即\cite[22.2.4练习题1]{XHM}试把累次积分
+$$I=\int_{0}^{\frac{R}{\sqrt{1+R^{2}}}}{\mathrm{d}x\int_{0}^{Rx}{f(x,y)\mathrm{d}y}}+\int_{\frac{R}{\sqrt{1+R^{2}}}}^{R}{\mathrm{d}x\int_{0}^{\sqrt{R^{2}-x^{2}}}{f(x,y)\mathrm{d}y}}$$
+改写成先对$x$再对$y$的累次积分.
+\end{exercise}
+
+\begin{custom}{解}
+记积分区域为$D$，则
+$$D=\left\{(x,y)\,\middle|\,0\leqslant x\leqslant \frac{R}{\sqrt{1+R^{2}}},\,0\leqslant y\leqslant Rx\right\}
+\cup
+\left\{(x,y)\,\middle|\,\frac{R}{\sqrt{1+R^{2}}}\leqslant x\leqslant R,\,0\leqslant y\leqslant \sqrt{R^{2}-x^{2}}\right\}.$$
+容易看出，$D$正是第一象限中由直线$y=Rx$、圆周$x^{2}+y^{2}=R^{2}$及$x$轴围成的区域. 直线与圆周的交点为
+$$\left(\frac{R}{\sqrt{1+R^{2}}},\frac{R^{2}}{\sqrt{1+R^{2}}}\right).$$
+因此，当固定$y$时，$x$的取值范围为
+$$\frac{y}{R}\leqslant x\leqslant \sqrt{R^{2}-y^{2}},$$
+而$y$的变化范围为
+$$0\leqslant y\leqslant \frac{R^{2}}{\sqrt{1+R^{2}}}.$$
+从而
+$$I=\int_{0}^{\frac{R^{2}}{\sqrt{1+R^{2}}}}{\mathrm{d}y\int_{\frac{y}{R}}^{\sqrt{R^{2}-y^{2}}}{f(x,y)\mathrm{d}x}}.\hfill{\square}$$
+\end{custom}
+
+当然，一个自然的问题是上述对于坐标分量的操作顺序可能会导致结果不同？简单地，如果被积函数是连续函数，那么累次积分的结果与上述操作的顺序无关，也即将重积分化为累次积分的行为是合理的.对于反例，我们给一个例子，请感兴趣的同学思考.
+
+\begin{custom}{思考题}
+此即\cite[例题22.2.2]{XHM}.\,设函数$f(x,y)$定义在$A=[0,1]\times[0,1]$这个矩形区域上，满足
+$$f(x,y)=\left\{\begin{aligned}&1, &&x\in\mathbb{R}\setminus\mathbb{Q}\\ &2y, &&x\in \mathbb{Q}\\\end{aligned}\right.$$
+则\\
+(1)用定义说明重积分$\iint_{A}{f(x,y)\mathrm{d}x\mathrm{d}y}$不可积；\\
+(2)累次积分$\int_{0}^{1}{\mathrm{d}x\int_{0}^{1}{f(x,y)\mathrm{d}y}}$存在而$\int_{0}^{1}{\mathrm{d}y\int_{0}^{1}{f(x,y)\mathrm{d}x}}$不存在.
+\end{custom}
+
+接下来，我们使用一个例子来说明选取坐标的顺序对于问题的求解难度有很大影响.
+\begin{example}
+此即\cite[例题22.2.1]{XHM}.\, 设$A=[0,1]\times[0,1]$，求
+$$I=\iint_{A}{\frac{y\mathrm{d}x\mathrm{d}y}{(1+x^{2}+y^{2})^{\frac{3}{2}}}}.$$
+\end{example}
+
+\begin{custom}{解}
+先对$y$再对$x$积分，得到
+$$\begin{aligned}I&=\int_{0}^{1}{\mathrm{d}x\int_{0}^{1}{\frac{y\mathrm{d}y}{(1+x^{2}+y^{2})^{\frac{3}{2}}}}}\\
+&=\int_{0}^{1}{\left(\frac{1}{\sqrt{x^{2}+1}}-\frac{1}{\sqrt{x^{2}+2}}\right)\mathrm{d}x}=\ln{\frac{2+\sqrt{2}}{1+\sqrt{3}}}.\\\end{aligned}$$
+若先对$x$再对$y$积分，则
+$$I=\int_{0}^{1}{\mathrm{d}y\int_{0}^{1}{\frac{y\mathrm{d}x}{(1+x^{2}+y^{2})^{\frac{3}{2}}}}}.$$
+把$y$看成常数，有
+$$\int_{0}^{1}{\frac{\mathrm{d}x}{(1+x^{2}+y^{2})^{\frac{3}{2}}}}
+=\left.\frac{x}{(1+y^{2})\sqrt{1+x^{2}+y^{2}}}\right|_{0}^{1}
+=\frac{1}{(1+y^{2})\sqrt{2+y^{2}}}.$$
+于是
+$$I=\int_{0}^{1}{\frac{y\mathrm{d}y}{(1+y^{2})\sqrt{2+y^{2}}}}.$$
+令
+$$u=\sqrt{2+y^{2}},$$
+则
+$$u\mathrm{d}u=y\mathrm{d}y,\qquad 1+y^{2}=u^{2}-1,$$
+从而
+$$I=\int_{\sqrt{2}}^{\sqrt{3}}{\frac{\mathrm{d}u}{u^{2}-1}}
+=\frac12\left.\ln\left|\frac{u-1}{u+1}\right|\right|_{\sqrt{2}}^{\sqrt{3}}
+=\ln\frac{2+\sqrt{2}}{1+\sqrt{3}}.$$
+这与先对$y$再对$x$积分所得结果一致.$\hfill{\square}$
+\end{custom}
+
+\subsection{重积分的变量代换}
+一般地，我们有如下的变量代换定理：
+\begin{theorem}
+在区域$\Omega$中将坐标$(x_{1},\cdots,x_{n})$用区域$\Omega^{\prime}$中的坐标$(y_{1},\cdots,y_{n})$参数化，设
+$$x_{1}=x_{1}(y_{1},\cdots,y_{n}),\cdots,x_{n}=x_{n}(y_{1},\cdots,y_{n}),(y_{1},\cdots,y_{n})\in\Omega^{\prime}$$
+满足\\
+(1)$\Omega$与$\Omega^{\prime}$是一一对应；\\
+(2)$x_{1},\cdots,x_{n}$在$\Omega^{\prime}$上关于各个变元有连续偏导数，并且逆变换$y_{1}(x_{1},\cdots,x_{n}),\cdots,y_{n}(x_{1},\cdots,x_{n})$在$\Omega$上对各个变元也有连续偏导数；\\
+(3)代换的Jacobi行列式$\frac{D(x_{1},\cdots,x_{n})}{D(y_{1},\cdots,y_{n})}$在$\Omega^{\prime}$内没有零点，则
+$$\int_{\Omega}{f(x_{1},\cdots,x_{n})\mathrm{d}x_{1}\cdots\mathrm{d}x_{n}}=\int_{\Omega}{f(x_{1}(y_{1},\cdots,y_{n}),\cdots,x_{n}(y_{1},\cdots,y_{n}))\left|\frac{D(x_{1},\cdots,x_{n})}{D(y_{1},\cdots,y_{n})}\right|\mathrm{d}y_{1}\cdots\mathrm{d}y_{n}}.$$
+\end{theorem}
+\begin{custom}{注}
+变量代换并不是为了“换而换”，它的目的通常有两个：一是把积分区域化为更容易描述的区域，二是把被积函数化为更容易积分的形式. 因而，在二重积分中选择变量代换时，通常应同时检查以下几点：\\
+(1)代换之后的新区域是否更简单；\\
+(2)被积函数连同Jacobi行列式之后是否更容易处理；\\
+(3)代换是否是一一对应的，新的变量范围是否清楚；\\
+(4)Jacobi行列式在所考虑区域内是否不为零.
+\end{custom}
+
+例如当区域或被积函数具有$x^{2}+y^{2}$型的对称性时，极坐标代换往往是最自然的选择. 此代换对于关于$x^{2}+y^{2}$有对称性的函数特别有用，比如考虑二重积分
+$$\iint_{\Omega}{f(\sqrt{x^{2}+y^{2}})\mathrm{d}x\mathrm{d}y}$$
+令$x=r\cos{\theta},y=r\sin{\theta}$，则
+$$\begin{aligned}\iint_{\Omega}{f(\sqrt{x^{2}+y^{2}})\mathrm{d}x\mathrm{d}y}&=\iint_{\Omega^{\prime}}{f(r)r\mathrm{d}r\mathrm{d}\theta}\\\end{aligned}$$
+事实上将问题简化为了一元函数积分.
+
+当然，在有需要时，我们也可以做广义极坐标代换$x=ar\cos{\theta},y=br\sin{\theta}$. 我们来看下面这一例题：
+
+\begin{example}
+此即\cite[例题22.2.7]{XHM}. 求由曲线$\left(\frac{x^{2}}{a^{2}}+\frac{y^{2}}{b^{2}}\right)^{2}=\frac{x^{2}}{a^{2}}-\frac{y^{2}}{b^{2}}$所围的面积.
+\end{example}
+
+\begin{custom}{解}
+应用广义极坐标代换$x=a\rho\cos{\theta},y=b\rho\sin{\theta}$，则积分区域的边界变为$\rho^{2}=\cos{2\theta}$，从而所求区域$D$的面积变为
+$$S=\iint_{D}{1\mathrm{d}x\mathrm{d}y}=4\int_{0}^{\frac{\pi}{4}}{\mathrm{d}\theta\int_{0}^{\sqrt{\cos{2\theta}}}{ab\rho\mathrm{d}\rho}}=ab.$$
+\end{custom}
+
+注意上面事实上用到了对称性，在重积分中对称性的应用十分重要，能够极大地减少计算量.
+
+常见的三重积分变换有柱坐标变换和球坐标变换.
+
+(1)柱坐标变换$\left\{\begin{aligned}x&=\rho\cos{\theta},\\y&=\rho\sin{\theta},\\z&=z,\\\end{aligned}\right.\,(0\leqslant \rho<+\infty, 0\leqslant\theta<2\pi,z\in\mathbb{R})$，将空间直角坐标系中的三重积分化为如下形式：
+$$\iiint_{\Omega}{f(x,y,z)\mathrm{d}x\mathrm{d}y\mathrm{d}z}=\iiint_{\Omega^{\prime}}{f(\rho\cos{\theta},\rho\sin{\theta},z)\rho\mathrm{d}\rho\mathrm{d}\theta\mathrm{d}z}.$$
+
+柱坐标变换主要运用在三重积分的被积函数含有$x^{2}+y^{2}$项的情况，本质上，可以把柱坐标变换理解为专注在某两个分量的对称性上做极坐标变换来简化计算.
+
+(2)球坐标变换$\left\{\begin{aligned}x&=\rho\sin{\varphi}\cos{\theta},\\y&=\rho\sin{\varphi}\sin{\theta},\\z&=\rho\cos{\varphi},\\\end{aligned}\right.\,(0\leqslant\rho<+\infty,0\leqslant\theta<2\pi,0\leqslant\varphi\leqslant\pi)$，将空间直角坐标系中的三重积分化为如下形式：
+$$\iiint_{\Omega}{f(x,y,z)\mathrm{d}x\mathrm{d}y\mathrm{d}z}=\iiint_{\Omega^{\prime}}{f(\rho\sin{\varphi}\cos{\theta},\rho\sin{\varphi}\sin{\theta},\rho\cos{\varphi})\rho^{2}\sin{\varphi}\mathrm{d}\rho\mathrm{d}\theta\mathrm{d}z}$$
+
+一般来说，球坐标变换会用在积分区域是球心在远点、过原点而球心在坐标轴上的球体、顶点在原点并以某坐标轴为转轴的圆锥体或者被积函数中出现类似$x^{2}+y^{2}+z^{2}$的对称性的三重积分. 如果区域并不完全满足前面的说法，可以先做一个平移或旋转使得区域满足前面的要求/
+
+在上述球坐标变换中，$\rho$代表半径,$\theta$表示经度，$\varphi$表示维度，当然，球坐标变换的选择不唯一，但为了不构成混淆，在平时练习中只取一种球坐标变换方式.
+
+\begin{example}
+此即\cite[第八章第一节习题1]{JC}. 设平面闭区域$\Omega=\{(x,y)\mid x^{2}+y^{2}\leqslant r^{2}\}$，利用二重积分的几何意义求
+$$\iint_{\Omega}{\sqrt{r^{2}-x^{2}-y^{2}}\mathrm{d}\sigma}.$$
+\end{example}
+
+\begin{custom}{解}
+考虑极坐标变换，积分变为
+$$\iint_{\Omega}{\sqrt{r^{2}-x^{2}-y^{2}}\mathrm{d}x\mathrm{d}y}=\iint_{\Omega^{\prime}}{\sqrt{r^{2}-\rho^{2}}\rho\mathrm{d}\rho\mathrm{d}\theta}$$
+其中区域$\Omega^{\prime}=\{0\leqslant \rho\leqslant r,0\leqslant \theta< 2\pi\}$. 进一步地，将此积分转化为累次积分，就有
+$$\int_{0}^{2\pi}{\mathrm{d}\theta\int_{0}^{r}{\sqrt{r^{2}-\rho^{2}}\rho\mathrm{d}\rho}}$$
+剩下的工作是做一次一元函数积分.
+$$\begin{aligned}\int_{0}^{r}{\sqrt{r^{2}-\rho^{2}}\mathrm{d}\rho}&=\frac{1}{2}\int_{0}^{r^{2}}{\sqrt{r^{2}-u}\mathrm{d}u}\\
+&=-\frac{1}{3}\left.(r^{2}-u)^{\frac{3}{2}}\right|_{0}^{r^{2}}\\
+&=\frac{1}{3}r^{3}\\\end{aligned}$$
+代入有
+$$\iint_{\Omega}{\sqrt{r^{2}-x^{2}-y^{2}}\mathrm{d}x\mathrm{d}y}=\int_{0}^{2\pi}{\frac{1}{3}r^{3}\mathrm{d}\theta}=\frac{2}{3}r^{3}.$$
+此即我们之前通过几何意义得到的结果，当然我们之前假设球体体积公式已知.$\hfill{\square}$
+\end{custom}
+
+\begin{example}
+此即\cite[例题22.3.1]{XHM}.求积分
+$$I_{i}=\iiint_{\Omega_{i}}{z^{2}\mathrm{d}x\mathrm{d}y\mathrm{d}z},i=1,2$$
+其中$\Omega_{1}$是球心为原点，半径为$R$的球，$\Omega_{2}$是$\Omega_{1}$和球$\{x^{2}+y^{2}+z^{2}\leqslant 2Rz\}$的公共部分.
+\end{example}
+
+\begin{exercise}
+计算
+$$I=\iiint_{x^{2}+4y^{2}+9z^{2}\leqslant 4x+8y+6z}{(x^{2}+y^{2}+z^{2})\mathrm{d}x\mathrm{d}y}\mathrm{d}z.$$
+\end{exercise}
+
+\begin{exercise}
+此即\cite[例题22.3.2]{XHM}. 求$I=\iiint_{\Omega}{(x+y)\mathrm{d}x\mathrm{d}y\mathrm{d}z}$，其中$\Omega$为
+$$x=0,x=1,x^{2}+1=\frac{y^{2}}{a^{2}}+\frac{z^{2}}{b^{2}}$$
+所围成的区域.
+\end{exercise}
+
+\begin{exercise}
+此即\cite[例题22.2.9]{XHM}. 求$I=\iint_{\Omega}{(x+y)\mathrm{d}x\mathrm{d}y}$，其中$\Omega$是由$y^{2}=2x,x+y=4,x+y=12$围成的区域.
+\end{exercise}
+
+
+\clearpage
+\renewEnvironmentCounter
+\section{2026年4月17日习题课}
+\subsection{反常重积分}
+
+下面只以二重积分为例说明，三重积分的情形完全类似. 在一元积分里，如果积分区间无界，或者被积函数在积分区间上无界，那么就需要把定积分理解成极限；反常重积分也是同样的道理，只不过这里的极限是通过区域的逼近来完成的. 通常而言，讨论反常重积分时大致有两类情形：一类是积分区域无界，另一类是被积函数在区域内某些点附近无界. 真正计算时，首先仍然应该回到定义，把它写成某个极限；但是在判定收敛性时，往往更重要的是比较、估计以及恰当的变量代换.
+
+对于无界区域上的积分，常取一列有界闭区域
+$$D_{1}\subset D_{2}\subset\cdots\subset D,\qquad \bigcup_{n=1}^{\infty}D_{n}=D,$$
+然后考察极限
+$$\lim_{n\to\infty}\iint_{D_{n}}f(x,y)\mathrm{d}x\mathrm{d}y.$$
+若极限存在，就称$\iint_{D}f(x,y)\mathrm{d}x\mathrm{d}y$收敛. 对于非负函数，这样的处理尤其自然，因为随着区域扩大，积分单调增加；而对于一般变号函数，则最好优先考虑绝对收敛，即先看
+$$\iint_{D}|f(x,y)|\mathrm{d}x\mathrm{d}y$$
+是否收敛. 一旦绝对收敛，拆区域、换积分次序以及化为累次积分时都会稳妥得多.
+
+对于有界区域上的无界函数，处理思路其实并没有本质差别. 如果$f$在$D$内某一点、某条曲线或者某个边界点附近无界，那么就先把这些“坏点”附近挖去，记剩下的部分为$D_{\varepsilon}$，再考察
+$$\lim_{\varepsilon\to 0^{+}}\iint_{D_{\varepsilon}}f(x,y)\mathrm{d}x\mathrm{d}y.$$
+从这个角度看，无界区域上的反常积分，是在“无穷远处”出了问题；无界函数的反常积分，则是在某些瑕点附近出了问题. 二者的定义方式和讨论方法其实是平行的：都是先避开出问题的部分，再看极限是否存在.
+
+实际判定收敛性时，最常用的方法还是比较判别法.
+\begin{theorem}[比较判别法]
+此即\cite[22.4.2节中的比较判别法]{XHM}. 设$D$为无界区域，其边界由有限条光滑或逐段光滑曲线组成，函数$f,g$在$D$的任一可求面积的有界子区域上均可积. 若$g$非负，则有：
+
+(1) 如果对一切$(x,y)\in D$都有
+$$|f(x,y)|\leqslant g(x,y),$$
+且$\iint_{D}{g(x,y)\mathrm{d}x\mathrm{d}y}$收敛，那么$\iint_{D}{f(x,y)\mathrm{d}x\mathrm{d}y}$也收敛；
+
+(2) 如果对一切$(x,y)\in D$都有
+$$|f(x,y)|\geqslant g(x,y),$$
+且$\iint_{D}{g(x,y)\mathrm{d}x\mathrm{d}y}$发散，那么$\iint_{D}{f(x,y)\mathrm{d}x\mathrm{d}y}$也发散.
+\end{theorem}
+
+因而很多时候，判敛的关键并不在于把原积分精确算出来，而在于把它和熟悉的模型积分比较起来. 当函数在无穷远处或者瑕点附近有比较清楚的主导项时，也常常使用等价比较，把原函数换成一个更简单但同阶的函数.
+
+在平面上，最常见的模型来自极坐标.如果被积函数在无穷远处大致像$r^{-p}$，那么由于$\mathrm{d}x\mathrm{d}y=r\mathrm{d}r\mathrm{d}\theta$，问题通常会化为考察
+$$\int_{A}^{\infty}r^{1-p}\mathrm{d}r;$$
+如果被积函数在原点附近大致像$r^{-p}$，则对应于考察
+$$\int_{0}^{\delta}r^{1-p}\mathrm{d}r.$$
+因此在二维情形下，像$r^{-p}$这样的函数在无穷远处可积，通常要求$p>2$；而在孤立奇点附近可积，通常要求$p<2$. 这两个结论本身并不难记，更重要的是要意识到：只要区域或者函数具有圆对称、锥对称或者齐次结构，极坐标、柱坐标之类的变量代换往往就能立刻把反常重积分化成熟悉的一元反常积分.
+\begin{theorem}[Cauchy判别法]
+此即\cite[22.4.2节中的Cauchy判别法]{XHM}. 设$D$为无界区域，其边界由有限条光滑或逐段光滑曲线组成，函数$f$在$D$内的任一可求面积的有界子区域上可积，记
+$$r=\sqrt{x^{2}+y^{2}}.$$
+则有：
+
+(1) 如果对充分大的$r$，总有
+$$|f(x,y)|\leqslant \frac{C}{r^{p}},\qquad p>2,$$
+则广义积分$\iint_{D}{f(x,y)\mathrm{d}x\mathrm{d}y}$收敛；
+
+(2) 如果$D$内含有一个顶点在原点的无穷扇形
+$$D'=\{(r,\theta)\mid \alpha\leqslant \theta\leqslant \beta,\ r\geqslant r_{0}\},$$
+且在$D'$上有
+$$|f(x,y)|\geqslant \frac{C}{r^{p}},\qquad p\leqslant 2,$$
+则广义积分$\iint_{D}{f(x,y)\mathrm{d}x\mathrm{d}y}$发散.
+\end{theorem}
+
+\begin{example}
+此即\cite[例题22.4.1]{XHM}. 计算
+$$\iint_{\mathbb{R}^{2}}{e^{-(x^{2}+y^{2})}\mathrm{d}x\mathrm{d}y},$$
+并求Poisson积分
+$$\int_{-\infty}^{+\infty}{e^{-x^{2}}\mathrm{d}x}.$$
+\end{example}
+
+\begin{custom}{解}
+被积函数为$e^{-r^{2}}$. 当$r\to+\infty$时，它比任何$\frac{1}{r^{p}}$ $(p>2)$都更快地趋于零，因此广义二重积分收敛.
+
+取同心圆族
+$$\Omega_{\rho}=\{(x,y)\mid x^{2}+y^{2}\leqslant \rho^{2}\},$$
+则
+$$\begin{aligned}
+\iint_{\mathbb{R}^{2}}{e^{-(x^{2}+y^{2})}\mathrm{d}x\mathrm{d}y}
+&=\lim_{\rho\to+\infty}\iint_{\Omega_{\rho}}{e^{-(x^{2}+y^{2})}\mathrm{d}x\mathrm{d}y}\\
+&=\lim_{\rho\to+\infty}\int_{0}^{2\pi}{\mathrm{d}\theta\int_{0}^{\rho}{e^{-r^{2}}r\mathrm{d}r}}\\
+&=\lim_{\rho\to+\infty}\pi(1-e^{-\rho^{2}})=\pi.
+\end{aligned}$$
+
+另一方面，若取正方形族
+$$\Omega_{l}=\{(x,y)\mid -l\leqslant x\leqslant l,\ -l\leqslant y\leqslant l\},$$
+则
+$$\begin{aligned}
+\iint_{\mathbb{R}^{2}}{e^{-(x^{2}+y^{2})}\mathrm{d}x\mathrm{d}y}
+&=\lim_{l\to+\infty}\iint_{\Omega_{l}}{e^{-(x^{2}+y^{2})}\mathrm{d}x\mathrm{d}y}\\
+&=\lim_{l\to+\infty}\left(\int_{-l}^{l}{e^{-x^{2}}\mathrm{d}x}\right)\left(\int_{-l}^{l}{e^{-y^{2}}\mathrm{d}y}\right)\\
+&=\left(\int_{-\infty}^{+\infty}{e^{-x^{2}}\mathrm{d}x}\right)^{2}.
+\end{aligned}$$
+因此
+$$\int_{-\infty}^{+\infty}{e^{-x^{2}}\mathrm{d}x}=\sqrt{\pi}.$$
+于是我们得到了答案.$\hfill{\square}$
+\end{custom}
+
+
+另外，如果积分区域本身适合写成累次积分，或者已经先看出了绝对收敛，那么也常常先对其中一个变量积分，把问题化成一元反常积分. 这时虽然形式上是在算累次积分，但真正起作用的仍然是一元反常积分的判敛方法.
+
+\begin{example}
+此即\cite[例题22.4.2]{XHM}. 讨论广义二重积分
+$$I=\iint_{D}{\frac{\mathrm{d}x\mathrm{d}y}{(x+y)^{p}}},$$
+其中
+$$D=\{(x,y)\mid 0\leqslant x\leqslant 1,\ x+y\geqslant 1\}.$$
+当积分收敛时，求积分的值.
+\end{example}
+
+\begin{custom}{解}
+由于被积函数恒正，因此可以取一列趋于$D$的有界区域
+$$D_{n}=\{(x,y)\mid 0\leqslant x\leqslant 1,\ 1\leqslant x+y\leqslant n\}.$$
+记
+$$I_{n}=\iint_{D_{n}}{\frac{\mathrm{d}x\mathrm{d}y}{(x+y)^{p}}}.$$
+作变量代换
+$$x=u,\qquad x+y=v,$$
+则雅可比行列式为$1$. 从而
+$$I_{n}=\int_{0}^{1}{\mathrm{d}u\int_{1}^{n}{\frac{\mathrm{d}v}{v^{p}}}}.$$
+
+当$p\neq 1$时，
+$$I_{n}=\frac{1}{1-p}(n^{1-p}-1).$$
+当$p=1$时，
+$$I_{n}=\ln n.$$
+由此可见，当且仅当$p>1$时，极限$\lim_{n\to\infty}I_{n}$存在，此时
+$$I=\iint_{D}{\frac{\mathrm{d}x\mathrm{d}y}{(x+y)^{p}}}=\frac{1}{p-1}.$$
+于是我们得到了结果.$\hfill{\square}$
+\end{custom}
+
+当然，有时直接比较并不方便，这时就可以先把积分区域分成“有问题”的部分与“没有问题”的部分. 没有问题的部分只对应普通重积分；真正决定收敛性的，往往只是无穷远处的一小块区域，或者瑕点附近的一个小邻域. 因而在做题时，不妨先问自己：到底是哪里出了问题？先把决定收敛性的部分抓出来，后面的估计和比较往往就会简单很多.
+
+\begin{example}
+此即\cite[例题22.4.3]{XHM}. 证明广义二重积分
+$$\iint_{\substack{x\geqslant 1\\ y\geqslant 1}}{\frac{x^{2}-y^{2}}{(x^{2}+y^{2})^{2}}\mathrm{d}x\mathrm{d}y}$$
+发散.
+\end{example}
+
+\begin{custom}{解}
+考虑原积分区域中的无穷扇形
+$$D'=\left\{(r,\theta)\mid \arctan{\frac{1}{3}}\leqslant \theta\leqslant \arctan{\frac{1}{2}},\ r\geqslant \sqrt{10}\right\}.$$
+在$D'$上有$2y\leqslant x\leqslant 3y$且$x\geqslant 1,y\geqslant 1$，因而
+$$4y^{2}\leqslant x^{2}\leqslant 9y^{2},\qquad 3y^{2}\leqslant x^{2}-y^{2}\leqslant 8y^{2},\qquad 5y^{2}\leqslant x^{2}+y^{2}\leqslant 10y^{2}.$$
+于是
+$$x^{2}-y^{2}\geqslant 3y^{2}=\frac{3}{10}\cdot 10y^{2}\geqslant \frac{3}{10}(x^{2}+y^{2}),$$
+从而
+$$\left|\frac{x^{2}-y^{2}}{(x^{2}+y^{2})^{2}}\right|
+=\frac{x^{2}-y^{2}}{(x^{2}+y^{2})^{2}}
+\geqslant \frac{3}{10(x^{2}+y^{2})}
+=\frac{3}{10r^{2}}.$$
+由Cauchy判别法可知，原广义二重积分发散.$\hfill{\square}$
+\end{custom}
+
+\begin{exercise}
+此即\cite[22.4.4练习题1(1)]{XHM}. 讨论广义积分
+$$\iint_{\mathbb{R}^{2}}{\frac{\mathrm{d}x\mathrm{d}y}{(1+|x|^{p})(1+|y|^{q})}}$$
+的收敛性.
+\end{exercise}
+
+\begin{exercise}
+此即\cite[22.4.4练习题1(2)]{XHM}. 讨论广义积分
+$$\iint_{|x|+|y|\geqslant 1}{\frac{\mathrm{d}x\mathrm{d}y}{|x|^{p}+|y|^{q}}}$$
+的收敛性.
+\end{exercise}
+
+
+\subsection{两类曲线积分的计算}
+曲线积分主要分成两类：第一类曲线积分通常主要对应标量在曲线上的累计，而第二类曲线积分类比力沿曲线做的功. 这两类积分看上去形式相近，但真正计算时最先要分清的是它们对曲线方向的态度并不一样：第一类曲线积分中的$\mathrm{d}s$是弧长微元，始终取正，因此同一条曲线沿正向、反向各走一遍，积分值并不会改变；第二类曲线积分中的$\mathrm{d}x,\mathrm{d}y,\mathrm{d}z$则会随着方向改变符号，所以方向一旦反过来，积分也会整体变号. 这个差别看起来只是记号上的不同，但在参数化时会直接影响后面的计算.
+
+通常而言，计算曲线积分首先需要明确积分曲线，然后选择合适的参数化进行计算. 对于第一类曲线积分，只要参数能够把曲线完整且不重复地表示出来即可；定积分的上下限也只需要与所取参数区间对应，保证参数从下限变化到上限时，曲线恰好被走完一遍. 如果题目给了起点和终点，那么把参数从起点对应的值积到终点对应的值，书写上会更自然；但即使把参数方向反过来，只要$\mathrm{d}s$仍按弧长来取，最后结果并不会改变. 当然，在面对一些特别的情形时，可以使用对称性来极大地简化计算.
+
+
+\begin{example}
+此即\cite[例题24.1.1]{XHM}. 求$I=\oint_{C}{x^{2}\mathrm{d}s}$,其中$C$为
+$$\left\{\begin{aligned}x^{2}+y^{2}+z^{2}&=R^{2}\\ x+y+z&=0\\\end{aligned}\right.$$
+\end{example}
+
+\begin{custom}{解1}
+显然$C$是空间中的圆周，它在$xOy$平面上的投影是一个椭圆，投影上的点$(x,y,0)$通过$z=-(x+y)$唯一确定了这个圆. 进一步，将$z=-(x+y)$代入$x^{2}+y^{2}+z^{2}=R^{2}$可得
+$$x^{2}+xy+y^{2}=\frac{1}{2}R^{2}\Leftrightarrow \left(\frac{\sqrt{3}}{2}x\right)^{2}+\left(\frac{x}{2}+y\right)^{2}=\frac{1}{2}R^{2}$$
+因此可做参数化
+$$\frac{\sqrt{3}}{2}x=\frac{R}{\sqrt{2}}\cos{t}, \frac{x}{2}+y=\frac{R}{\sqrt{2}}\sin{t},t\in[0,2\pi]$$
+从而
+$$x(t)=\sqrt{\frac{2}{3}}R\cos{t},y(t)=\frac{R}{\sqrt{2}}\sin{t}-\frac{R}{\sqrt{6}}\cos{t},t\in[0,2\pi],$$
+代入得$z(t)=-\frac{R}{\sqrt{6}}\cos{t}-\frac{R}{\sqrt{2}}\sin{t},t\in[0,2\pi].$
+
+由此，考虑$\mathrm{d}s$有
+$$\mathrm{d}s=\sqrt{[x^{\prime}(t)]^{2}+[y^{\prime}(t)]^{2}+[z^{\prime}(t)]^{2}}=R\mathrm{d}t$$
+于是计算积分有
+$$\oint_{C}{x^{2}\mathrm{d}s}=\int_{0}^{2\pi}{\frac{2}{3}R^{3}\cos^{2}{t}\mathrm{d}t}=\frac{2}{3}\pi R^{3}.$$
+于是我们得到了结果.$\hfill{\square}$
+\end{custom}
+
+\begin{custom}{解2}
+注意到随意交换$x,y,z$在约束中的位置，不会改变曲线$C$，从而
+$$\oint_{C}{x^{2}\mathrm{d}s}=\oint_{C}{y^{2}\mathrm{d}s}=\oint_{C}{z^{2}\mathrm{d}s}.$$
+于是
+$$\oint_{C}{x^{2}\mathrm{d}s}=\frac{1}{3}\oint_{C}{(x^{2}+y^{2}+z^{2})\mathrm{d}s}=\frac{1}{3}R^{2}\oint_{C}{\mathrm{d}s}=\frac{2}{3}\pi R^{3}.$$
+这里求曲线的长只需要用高中立体几何的知识即可.$\hfill{\square}$
+\end{custom}
+
+\begin{example}
+此即\cite[例题24.1.2]{XHM}. 求曲线$\Gamma$从$O(0,0,0)$到$A(x_{0},y_{0},z_{0})$的弧长，其中$a>0,x_{0}>0$且
+$$\Gamma:\left\{\begin{aligned}(x-y)^{2}&=a(x+y)\\ x^{2}-y^{2}&=\frac{9}{8}z^{2}\\\end{aligned}\right..$$
+\end{example}
+
+\begin{custom}{解}
+利用变形求解曲线上的点满足的条件，在第一式两边同时乘以$(x-y)$，将第二式代入有
+$$x-y=\frac{\sqrt[3]{9a}}{2}z^{\frac{2}{3}}.$$
+再代入第二式有
+$$x+y=\frac{3}{4}\sqrt[3]{\frac{3}{a}}z^{\frac{4}{3}}.$$
+其中$a$是题目中的常数，至此可以将$z$看成可变化的参数，从而
+$$x=\frac{1}{2}\left(\frac{3}{4}\sqrt[3]{\frac{3}{a}}z^{\frac{4}{3}}+\frac{\sqrt[3]{9a}}{2}z^{\frac{2}{3}}\right),y=\frac{1}{2}\left(\frac{3}{4}\sqrt[3]{\frac{3}{a}}z^{\frac{4}{3}}-\frac{\sqrt[3]{9a}}{2}z^{\frac{2}{3}}\right)$$
+微分后有
+$$\mathrm{d}x=\frac{1}{2}\left(\sqrt[3]{\frac{3}{a}}z^{\frac{1}{3}}+\sqrt[3]{\frac{a}{3}}z^{-\frac{1}{3}}\right)\mathrm{d}z,\mathrm{d}y=\frac{1}{2}\left(\sqrt[3]{\frac{3}{a}}z^{\frac{1}{3}}-\sqrt[3]{\frac{a}{3}}z^{-\frac{1}{3}}\right)\mathrm{d}z$$
+于是
+$$\mathrm{d}s=\frac{\sqrt{2}}{2}\left(\sqrt[3]{\frac{3}{a}}z^{\frac{1}{3}}+\sqrt[3]{\frac{a}{3}}z^{-\frac{1}{3}}\right)\mathrm{d}z=\sqrt{2}\mathrm{d}x$$
+因此
+$$\int_{\Gamma}{\mathrm{d}s}=\sqrt{2}x_{0}$$
+于是我们得到了答案.$\hfill{\square}$
+\end{custom}
+
+\begin{exercise}
+此即\cite[24.1.3练习题1(1)]{XHM}.计算第一类曲线积分
+$$\int_{C}{(x^{\frac{4}{3}}+y^{\frac{4}{3}})\mathrm{d}s},$$
+其中$C$为星形线$x^{\frac{2}{3}}+y^{\frac{2}{3}}=a^{\frac{2}{3}}$.
+\end{exercise}
+
+\begin{exercise}
+此即\cite[24.1.3练习题1(3)]{XHM}.计算第一类曲线积分
+$$\int_{C}{|y|\mathrm{d}s},$$
+其中$C$为双扭线$(x^{2}+y^{2})^{2}=a^{2}(x^{2}-y^{2})$.
+\end{exercise}
+
+
+在某种意义上来说，第二类曲线积分的计算量更小，因为做了合适的参数化之后可以立即转化为一元积分，而不用再多计算一个$\mathrm{d}s$. 不过也正因为如此，它对曲线的定向非常敏感：参数增加的方向必须与题目给定的方向一致，这样定积分的上下限也就随之确定了；换句话说，当参数从下限走到上限时，点应该沿着题目要求的方向在曲线上运动. 如果同一条曲线被写成反向的参数方程，那么要么交换积分上下限，要么在结果前面添一个负号，本质上说的是同一件事情.
+
+有时空间曲线的参数方程不容易写出或者写出比较复杂，但是通过一些观察可以发现投影非常简单，那么就可以考虑使用如下结论. 这里还要注意，投影后的平面曲线并不是随便取向的，而是由原来空间曲线的定向自然诱导出来的；这一点一旦弄清，积分上下限也就不会出错了.
+
+\begin{theorem}
+此即\cite[命题24.2.1]{XHM}. 设逐段光滑曲线$\Gamma$在光滑曲面$z=f(x,y)$上，曲线在$xOy$平面上的投影为$\gamma$，函数$P(x,y,z)$在$\Gamma$上连续，则
+$$\int_{\Gamma}{P(x,y,z)\mathrm{d}x}=\int_{\gamma}{P(x,y,f(x,y))\mathrm{d}x},$$
+其中$\gamma$的定向由$\Gamma$的定向确定.
+\end{theorem}
+
+\begin{example}
+此即\cite[例题24.2.1]{XHM}. 计算积分
+$$I=\int_{C}{(x^{2}+2xy)\mathrm{d}y},$$
+其中$C$表示逆时针方向上的上半椭圆$\frac{x^{2}}{a^{2}}+\frac{y^{2}}{b^{2}}=1$.
+\end{example}
+
+\begin{custom}{解}
+用椭圆的参数表达式$x=a\cos{t},y=b\sin{t}$即得
+$$I=\int_{0}^{\pi}{(a^{2}\cos^{2}{t}+2ab\cos{t}\sin{t})b\cos{t}\mathrm{d}t}=\frac{4}{3}ab^{2}.$$
+于是我们得到了答案.$\hfill{\square}$
+\end{custom}
+
+\begin{example}
+此即\cite[例题24.2.2]{XHM}. 计算积分
+$$I=\int_{\Gamma}{y^{2}\mathrm{d}x+z^{2}\mathrm{d}y+x^{2}\mathrm{d}z}$$
+其中$a>0$且
+$$\Gamma:\left\{\begin{aligned}x^{2}+y^{2}+z^{2}&=a^{2},\\ x^{2}+y^{2}&=ax,\\ z&\geqslant 0,\\\end{aligned}\right.$$
+给予曲线$\Gamma$从$x$正方向往负方向看的逆时针定向.
+\end{example}
+
+\begin{custom}{解}
+由第二式考虑柱坐标代换并代入第一式有
+$$x=a\cos^{2}{\theta},y=a\cos{\theta}\sin{\theta},z=a|\sin{\theta}|,-\frac{\pi}{2}\leqslant \theta\leqslant\frac{\pi}{2}.$$
+{\color{red}（思考为什么不使用$x=\frac{a}{2}+\frac{a}{2}\cos{\theta},y=\frac{a}{2}\sin{\theta},z=z$来做柱坐标代换.）}\\
+根据定向有
+$$I=\int_{-\frac{\pi}{2}}^{\frac{\pi}{2}}{[a^{2}\cos^{2}{\theta}\sin^{2}{\theta}\cdot 2a\cos{\theta}(-\sin{\theta})+a^{2}\sin^{2}{\theta}\cdot a(\cos^{2}{\theta}-\sin^{2}{\theta})+a^{2}\cos^{4}{\theta}\cdot z^{\prime}(\theta)]\mathrm{d}\theta}.$$
+注意第一项是奇函数，第三项也是奇函数，于是只需要积第二项，从而
+$$I=\int_{-\frac{\pi}{2}}^{\frac{\pi}{2}}{a^{3}\sin^{2}{\theta}(\cos^{2}{\theta}-\sin^{2}{\theta})\mathrm{d}\theta}=-\frac{\pi}{4}a^{3}.$$
+于是我们得到了答案.$\hfill{\square}$
+\end{custom}
+
+当然，两类曲线积分事实上有非常密切的关系. 若把曲线的有向弧长微元记为$\mathrm{d}r=\tau\mathrm{d}s$，其中$\tau$是沿指定方向的单位切向量，则
+$$\int_{\Gamma}{F(x)\cdot\mathrm{d}r}=\int_{\Gamma}{(F(x)\cdot\tau)\mathrm{d}s}.$$
+这说明第二类曲线积分本质上仍然是在做“第一类曲线积分”，只不过被积的标量不再是原来给定的函数，而是向量场$F$在曲线切向方向上的投影. 因此如果切向量与三个坐标轴的夹角的余弦值分别为$\cos{\alpha},\cos{\beta},\cos{\gamma}$，则
+$$\int_{\Gamma}{P\mathrm{d}x+Q\mathrm{d}y+R\mathrm{d}z}=\int_{\Gamma}{(P\cos{\alpha}+Q\cos{\beta}+R\cos{\gamma})\mathrm{d}s}.$$
+从这个公式也可以看出，第一类曲线积分不涉及定向，是因为它只沿弧长累加；第二类曲线积分一旦反向，单位切向量$\tau$就会变号，从而整个积分也随之变号. 反过来看，如果第一类曲线积分中的被积函数本身恰好可以解释为某个向量场在切向方向上的分量，那么也可以借用第二类曲线积分的技巧. 因而这两类积分并不是彼此孤立的两套概念，而只是从不同角度描述沿曲线累积这件事情. 上面的变换方法在某些特定时候可能会得到比较好的效果.
+
+
+\clearpage
+\renewEnvironmentCounter
+\section{2026年4月24日习题课}
+
+曲面积分的计算很大程度上和曲线积分是类似的：核心都是把曲面参数化，或把曲面投影到某个坐标平面上，再转化为普通的二重积分。区别在于，曲线只有一个参数，而曲面通常需要两个参数；同时，曲面还多出一个必须时刻留意的问题：第一类曲面积分不涉及方向，第二类曲面积分必须先指定曲面的侧.
+
+\subsection{第一类曲面积分}
+
+第一类曲面积分
+\[
+\iint_{S} f(x,y,z)\mathrm{d}S
+\]
+可以理解为把曲面上每一点的标量密度 $f$ 按照面积元素累加起来. 当 $f\equiv 1$ 时，它就是曲面面积；当 $f=\rho(x,y,z)$ 是面密度时，它就是薄曲面的质量；进一步还可以用来计算质心、转动惯量等量. 例如
+\[
+m=\iint_{S}\rho(x,y,z)\mathrm{d}S,
+\]
+而质心坐标由
+\[
+\bar{x}=\frac{1}{m}\iint_{S}x\rho(x,y,z)\mathrm{d}S,\quad
+\bar{y}=\frac{1}{m}\iint_{S}y\rho(x,y,z)\mathrm{d}S,\quad
+\bar{z}=\frac{1}{m}\iint_{S}z\rho(x,y,z)\mathrm{d}S
+\]
+给出.
+
+因此，计算第一类曲面积分时，关键是写出 $\mathrm{d}S$. 若曲面由参数方程
+\[
+\boldsymbol{r}(u,v)=(x(u,v),y(u,v),z(u,v)),\quad (u,v)\in D
+\]
+给出，则
+\[
+\mathrm{d}S=\left|\boldsymbol{r}_{u}\times \boldsymbol{r}_{v}\right|\mathrm{d}u\mathrm{d}v
+=\sqrt{EG-F^{2}}\mathrm{d}u\mathrm{d}v,
+\]
+其中
+\[
+E=x_{u}^{2}+y_{u}^{2}+z_{u}^{2},\quad
+F=x_{u}x_{v}+y_{u}y_{v}+z_{u}z_{v},\quad
+G=x_{v}^{2}+y_{v}^{2}+z_{v}^{2}.
+\]
+若曲面由显式方程给出，则有更直接的公式：
+\[
+z=z(x,y),\ (x,y)\in D_{xy}\quad\Longrightarrow\quad
+\mathrm{d}S=\sqrt{1+z_{x}^{2}+z_{y}^{2}}\mathrm{d}x\mathrm{d}y.
+\]
+类似地，
+\[
+x=x(y,z)\quad\Longrightarrow\quad
+\mathrm{d}S=\sqrt{1+x_{y}^{2}+x_{z}^{2}}\mathrm{d}y\mathrm{d}z,
+\]
+\[
+y=y(z,x)\quad\Longrightarrow\quad
+\mathrm{d}S=\sqrt{1+y_{z}^{2}+y_{x}^{2}}\mathrm{d}z\mathrm{d}x.
+\]
+若曲面由隐式方程 $F(x,y,z)=0$ 给出，也可通过投影来写面积元素. 例如当 $F_{z}\neq 0$ 时，可把 $z$ 看成 $x,y$ 的函数，于是
+\[
+\mathrm{d}S=\frac{\sqrt{F_{x}^{2}+F_{y}^{2}+F_{z}^{2}}}{|F_{z}|}\mathrm{d}x\mathrm{d}y.
+\]
+这类公式的本质都是同一件事：用投影区域上的小面积去近似曲面上的小面积，并补上倾斜造成的伸缩因子. 具体做题时，可以先从曲面方程的形式判断应采用哪一种方法. 如果曲面已经写成 $z=z(x,y)$，通常直接投影到 $xOy$ 平面；如果写成 $x=x(y,z)$ 或 $y=y(z,x)$，则相应投影到 $yOz$ 或 $zOx$ 平面. 如果曲面本身具有明显的旋转对称性，例如球面、锥面、柱面，则参数方程往往更自然. 若曲面由隐式方程给出，则可以先判断哪个偏导数不为零，再把它局部看成显式曲面来处理.
+
+\begin{example}
+求平面 $x+y+z=a\ (a>0)$ 在第一卦限内所截三角形的面积.
+\end{example}
+
+\begin{custom}{解}
+将平面写成
+\[
+z=a-x-y.
+\]
+它在 $xOy$ 平面上的投影区域为$D=\{(x,y):x\geqslant 0,\ y\geqslant 0,\ x+y\leqslant a\}.$
+又$z_{x}=-1,z_{y}=-1,$故
+$$\mathrm{d}S=\sqrt{1+z_{x}^{2}+z_{y}^{2}}\mathrm{d}x\mathrm{d}y
+=\sqrt{3}\mathrm{d}x\mathrm{d}y.$$
+于是所求面积为
+$$S=\iint_{S}\mathrm{d}S
+=\sqrt{3}\iint_{D}\mathrm{d}x\mathrm{d}y
+=\sqrt{3}\cdot \frac{a^{2}}{2}
+=\frac{\sqrt{3}}{2}a^{2}.$$
+至此我们得到了答案.$\hfill{\square}$
+\end{custom}
+
+\begin{example}
+设半径为 $a$ 的球面
+\[
+S:x^{2}+y^{2}+z^{2}=a^{2}
+\]
+上面密度为 $\rho(x,y,z)=z^{2}$，求该球面的质量.
+\end{example}
+
+\begin{custom}{解}
+这是第一类曲面积分的典型物理意义：曲面上每一点的面密度为 $\rho$，则质量为
+\[
+m=\iint_{S}\rho \mathrm{d}S.
+\]
+用球面参数方程
+\[
+x=a\sin\varphi\cos\theta,\quad
+y=a\sin\varphi\sin\theta,\quad
+z=a\cos\varphi,
+\]
+其中$0\leqslant \varphi\leqslant \pi,\quad 0\leqslant \theta\leqslant 2\pi.$ 球面面积元素为
+\[
+\mathrm{d}S=a^{2}\sin\varphi \mathrm{d}\varphi\mathrm{d}\theta.
+\]
+故
+\[
+\begin{aligned}
+m
+&=\int_{0}^{2\pi}\int_{0}^{\pi}a^{2}\cos^{2}\varphi\cdot a^{2}\sin\varphi
+\mathrm{d}\varphi\mathrm{d}\theta\\
+&=2\pi a^{4}\int_{0}^{\pi}\cos^{2}\varphi\sin\varphi \mathrm{d}\varphi\\
+&=2\pi a^{4}\int_{-1}^{1}u^{2}\mathrm{d}u\\
+&=\frac{4\pi}{3}a^{4}.
+\end{aligned}
+\]
+\end{custom}
+
+上面的两个例子分别说明了第一类曲面积分在面积和质量中的作用. 实际上，面积、质量和质心的计算使用的是同一套方法：先把 $\mathrm{d}S$ 化为平面区域上的面积元素，再把相应的函数放进积分中.
+
+\begin{example}
+此即\cite[例题25.1.2]{XHM}. 求上半球面
+$$
+z=\sqrt{a^{2}-x^{2}-y^{2}}
+$$
+被柱面
+\[
+x^{2}+y^{2}=ax
+\]
+截取部分的面积与质心坐标，其中 $a>0$.
+\end{example}
+
+\begin{custom}{解}
+记所求曲面为 $S$. 它在 $xOy$ 平面上的投影区域为
+\[
+D=\{(x,y):x^{2}+y^{2}\leqslant ax\}.
+\]
+用极坐标表示，即
+\[
+-\frac{\pi}{2}\leqslant \theta\leqslant \frac{\pi}{2},\qquad
+0\leqslant r\leqslant a\cos\theta.
+\]
+由于
+\[
+z=\sqrt{a^{2}-x^{2}-y^{2}},
+\]
+有
+\[
+z_{x}=-\frac{x}{z},\qquad z_{y}=-\frac{y}{z}.
+\]
+于是
+\[
+\mathrm{d}S
+=\sqrt{1+z_{x}^{2}+z_{y}^{2}}\mathrm{d}x\mathrm{d}y
+=\frac{a}{\sqrt{a^{2}-x^{2}-y^{2}}}\mathrm{d}x\mathrm{d}y.
+\]
+所以曲面面积为
+\[
+\begin{aligned}
+A&=\iint_{S}\mathrm{d}S=a\iint_{D}\frac{\mathrm{d}x\mathrm{d}y}{\sqrt{a^{2}-x^{2}-y^{2}}}\\
+&=a\int_{-\frac{\pi}{2}}^{\frac{\pi}{2}}
+\int_{0}^{a\cos\theta}
+\frac{r}{\sqrt{a^{2}-r^{2}}}\mathrm{d}r\mathrm{d}\theta=a^{2}\int_{-\frac{\pi}{2}}^{\frac{\pi}{2}}
+(1-|\sin\theta|)\mathrm{d}\theta\\
+&=(\pi-2)a^{2}.
+\end{aligned}
+\]
+由关于 $xOz$ 平面的对称性可知
+\[
+\bar{y}=0.
+\]
+下面计算 $\bar{x}$. 有
+\[
+\iint_{S}x\mathrm{d}S
+=a\iint_{D}\frac{x}{\sqrt{a^{2}-x^{2}-y^{2}}}\mathrm{d}x\mathrm{d}y.
+\]
+用极坐标并利用关于 $x$ 轴的对称性，得
+\[
+\iint_{S}x\mathrm{d}S=2a\int_{0}^{\frac{\pi}{2}}\cos\theta
+\int_{0}^{a\cos\theta}
+\frac{r^{2}}{\sqrt{a^{2}-r^{2}}}\mathrm{d}r\mathrm{d}\theta=\frac{2}{3}a^{3}.
+\]
+因此
+\[
+\bar{x}
+=\frac{1}{A}\iint_{S}x\mathrm{d}S
+=\frac{2a}{3(\pi-2)}.
+\]
+再计算 $\bar{z}$. 注意到
+\[
+z\mathrm{d}S
+=\sqrt{a^{2}-x^{2}-y^{2}}\cdot
+\frac{a}{\sqrt{a^{2}-x^{2}-y^{2}}}\mathrm{d}x\mathrm{d}y
+=a\mathrm{d}x\mathrm{d}y.
+\]
+所以
+\[
+\iint_{S}z\mathrm{d}S
+=a\iint_{D}\mathrm{d}x\mathrm{d}y.
+\]
+而 $D$ 是半径为 $\frac{a}{2}$ 的圆盘，故
+\[
+\iint_{S}z\mathrm{d}S
+=a\cdot \frac{\pi a^{2}}{4}
+=\frac{\pi a^{3}}{4}.
+\]
+于是
+\[
+\bar{z}
+=\frac{1}{A}\iint_{S}z\mathrm{d}S
+=\frac{\pi a}{4(\pi-2)}.
+\]
+综上，质心坐标为
+\[
+\left(
+\frac{2a}{3(\pi-2)},\ 0,\ \frac{\pi a}{4(\pi-2)}
+\right).
+\]
+至此我们得到了结果.$\hfill{\square}$
+\end{custom}
+
+这个例子中，面积、$\iint_S x\mathrm{d}S$ 和 $\iint_S z\mathrm{d}S$ 的计算本质上没有区别，只是被积函数不同. 因此第一类曲面积分的题目往往可以先统一化为
+\[
+\iint_{D} f(x,y,z(x,y))\sqrt{1+z_x^2+z_y^2}\mathrm{d}x\mathrm{d}y,
+\]
+再根据投影区域的形状选择直角坐标或极坐标.
+
+\begin{example}
+此即\cite[例题25.1.1]{XHM}. 设$S$为$z=\sqrt{x^{2}+y^{2}}$被$x^{2}+y^{2}=2ax$割下的部分，求
+\[
+I=\iint_{S}{(x^{2}y^{2}+y^{2}z^{2}+z^{2}x^{2})\mathrm{d}S}.
+\]
+\end{example}
+
+\begin{custom}{解}
+这里曲面已经写成显式形式$z=\sqrt{x^{2}+y^{2}}$，故先用投影法计算. 有
+\[
+z_{x}^{\prime}=\frac{x}{z},\qquad z_{y}^{\prime}=\frac{y}{z}.
+\]
+于是
+\[
+\sqrt{1+(z_{x}^{\prime})^{2}+(z_{y}^{\prime})^{2}}
+=\sqrt{1+\frac{x^{2}+y^{2}}{z^{2}}}
+=\sqrt{2}.
+\]
+又因为在曲面上 $z^{2}=x^{2}+y^{2}$，所以
+\[
+x^{2}y^{2}+y^{2}z^{2}+z^{2}x^{2}
+=x^{2}y^{2}+(x^{2}+y^{2})^{2}.
+\]
+投影区域为$D=\{(x,y):x^{2}+y^{2}\leqslant 2ax\}.$
+因此
+\[
+I=\sqrt{2}\iint_{D}\left[x^{2}y^{2}+(x^{2}+y^{2})^{2}\right]\mathrm{d}x\mathrm{d}y.
+\]
+用极坐标
+\[
+x=r\cos\theta,\quad y=r\sin\theta,
+\]
+则圆 $x^{2}+y^{2}=2ax$ 化为
+\[
+r=2a\cos\theta,
+\]
+其中
+\[
+-\frac{\pi}{2}\leqslant \theta\leqslant \frac{\pi}{2},\quad
+0\leqslant r\leqslant 2a\cos\theta.
+\]
+于是
+\[
+\begin{aligned}
+I
+&=\sqrt{2}\int_{-\frac{\pi}{2}}^{\frac{\pi}{2}}
+\int_{0}^{2a\cos\theta}
+\left(r^{4}\cos^{2}\theta\sin^{2}\theta+r^{4}\right)r\mathrm{d}r\mathrm{d}\theta\\
+&=\sqrt{2}\int_{-\frac{\pi}{2}}^{\frac{\pi}{2}}
+\left(1+\cos^{2}\theta\sin^{2}\theta\right)
+\left.\frac{r^{6}}{6}\right|_{0}^{2a\cos\theta}
+\mathrm{d}\theta\\
+&=\frac{\sqrt{2}}{6}(2a)^{6}
+\int_{-\frac{\pi}{2}}^{\frac{\pi}{2}}
+\cos^{6}\theta
+\left(1+\cos^{2}\theta\sin^{2}\theta\right)
+\mathrm{d}\theta\\
+&=\frac{\sqrt{2}}{6}(2a)^{6}
+\cdot \frac{87\pi}{256}\\
+&=\frac{29}{8}\sqrt{2}\pi a^{6}.
+\end{aligned}
+\]
+至此我们得到了答案.$\hfill{\square}$
+\end{custom}
+
+这里的关键不在于积分本身有多复杂，而在于先在曲面方程上化简被积函数. 凡是题目给出“曲面 $S$ 上满足某个方程”，都应该优先尝试用曲面方程代换，例如本题中用 $z^{2}=x^{2}+y^{2}$ 消去 $z^{2}$. 这样常常能把三元表达式化成投影平面上的二元表达式.
+
+\begin{example}
+求
+\[
+\iint_{S}z\mathrm{d}S,
+\]
+其中 $S$ 为抛物面 $z=x^{2}+y^{2}$ 被平面 $z=1$ 截下的部分.
+\end{example}
+
+\begin{custom}{解}
+曲面写成$z=x^{2}+y^{2},$投影区域为$D=\{(x,y):x^{2}+y^{2}\leqslant 1\}.$
+又
+$z_{x}=2x,\qquad z_{y}=2y,$
+故
+$$
+\mathrm{d}S=\sqrt{1+4x^{2}+4y^{2}}\mathrm{d}x\mathrm{d}y.
+$$
+于是
+\[
+\begin{aligned}
+\iint_{S}z\mathrm{d}S
+&=\iint_{D}(x^{2}+y^{2})\sqrt{1+4x^{2}+4y^{2}}\mathrm{d}x\mathrm{d}y\\
+&=2\pi\int_{0}^{1}r^{3}\sqrt{1+4r^{2}}\mathrm{d}r.
+\end{aligned}
+\]
+令 $u=1+4r^{2}$，则
+\[
+r^{3}\mathrm{d}r=\frac{u-1}{32}\mathrm{d}u.
+\]
+所以
+\[
+\begin{aligned}
+\iint_{S}z\mathrm{d}S
+&=\frac{\pi}{16}\int_{1}^{5}(u-1)u^{\frac12}\mathrm{d}u\\
+&=\frac{\pi}{16}\left[\frac{2}{5}u^{\frac52}-\frac{2}{3}u^{\frac32}\right]_{1}^{5}\\
+&=\frac{\pi(25\sqrt{5}+1)}{60}.
+\end{aligned}
+\]
+\end{custom}
+
+我们留两个类似题目作为练习，并给出解答.
+
+\begin{exercise}
+此即\cite[25.1.3练习题4]{XHM}.求
+\[
+\iint_{S}{(x^{4}-y^{4}+y^{2}z^{2}-z^{2}x^{2}+1)\mathrm{d}S},
+\]
+其中$S$是锥面$z^{2}=x^{2}+y^{2}$被柱面$x^{2}+y^{2}=2x$割下的部分.
+\end{exercise}
+
+\begin{custom}{解}
+锥面$z^{2}=x^{2}+y^{2}$包含上下两叶：
+\[
+S=S_{+}\cup S_{-},\qquad S_{+}:z=\sqrt{x^{2}+y^{2}},\quad S_{-}:z=-\sqrt{x^{2}+y^{2}}.
+\]
+在每一叶上都有$\mathrm{d}S=\sqrt{2}\mathrm{d}x\mathrm{d}y.$ 又因为
+\[
+z^{2}=x^{2}+y^{2},
+\]
+所以被积函数化简为
+\[
+\begin{aligned}
+&x^{4}-y^{4}+y^{2}z^{2}-z^{2}x^{2}+1\\
+&=x^{4}-y^{4}+y^{2}(x^{2}+y^{2})-x^{2}(x^{2}+y^{2})+1\\
+&=1.
+\end{aligned}
+\]
+投影区域为$D=\{(x,y):x^{2}+y^{2}\leqslant 2x\}$，即圆
+$$
+(x-1)^{2}+y^{2}\leqslant 1,
+$$
+其面积为 $\pi$. 因此
+\[
+\begin{aligned}
+\iint_{S}{(x^{4}-y^{4}+y^{2}z^{2}-z^{2}x^{2}+1)\mathrm{d}S}
+&=2\sqrt{2}\iint_{D}1\mathrm{d}x\mathrm{d}y\\
+&=2\sqrt{2}\pi.
+\end{aligned}
+\]
+若题目中约定只取上叶锥面，则结果应为 $\sqrt{2}\pi$.$\hfill{\square}$
+\end{custom}
+
+当然，除了直接计算，对称性也非常重要.
+
+\begin{exercise}
+此即\cite[25.1.3练习题3]{XHM}.求
+\[
+\iint_{S}{(x+y+z)^{2}\mathrm{d}S},
+\]
+其中$S$为单位球面$x^{2}+y^{2}+z^{2}=1$.
+\end{exercise}
+
+\begin{custom}{解}
+展开被积函数：
+\[
+(x+y+z)^{2}=x^{2}+y^{2}+z^{2}+2xy+2yz+2zx.
+\]
+在单位球面上$x^{2}+y^{2}+z^{2}=1.$ 同时，由球面对称性可知
+\[
+\iint_{S}xy\mathrm{d}S=\iint_{S}yz\mathrm{d}S=\iint_{S}zx\mathrm{d}S=0.
+\]
+因此
+$$\iint_{S}(x+y+z)^{2}\mathrm{d}S=\iint_{S}(x^{2}+y^{2}+z^{2})\mathrm{d}S=\iint_{S}1\mathrm{d}S=4\pi.$$
+至此我们得到了答案.$\hfill{\square}$
+\end{custom}
+
+\subsection{第二类曲面积分}
+
+第一类曲面积分只关心曲面上的面积元素 $\mathrm{d}S$，不关心曲面的哪一侧；第二类曲面积分则不同，它必须建立在定向曲面上.
+
+若曲面 $S$ 上可以连续地选取一个单位法向量场 $\boldsymbol{n}$，则称 $S$ 为双侧曲面. 选定其中一个连续法向量方向，就称为给曲面定了向. 球面、柱面、锥面、图形曲面通常都是双侧曲面；而典型的单侧曲面是 M\"obius 带，它无法在整张曲面上连续地区分“正侧”和“反侧”.
+
+设
+\[
+\boldsymbol{n}=(\cos\alpha,\cos\beta,\cos\gamma)
+\]
+为曲面取定一侧的单位法向量. 则第二类曲面积分
+\[
+\iint_{S}P\mathrm{d}y\mathrm{d}z+Q\mathrm{d}z\mathrm{d}x+R\mathrm{d}x\mathrm{d}y
+\]
+可以理解为向量场
+\[
+\boldsymbol{F}=(P,Q,R)
+\]
+穿过定向曲面 $S$ 的通量：
+\[
+\iint_{S}P\mathrm{d}y\mathrm{d}z+Q\mathrm{d}z\mathrm{d}x+R\mathrm{d}x\mathrm{d}y
+=
+\iint_{S}\boldsymbol{F}\cdot \boldsymbol{n}\mathrm{d}S.
+\]
+其中有符号面积元素满足
+\[
+\mathrm{d}y\mathrm{d}z=\cos\alpha\,\mathrm{d}S,\quad
+\mathrm{d}z\mathrm{d}x=\cos\beta\,\mathrm{d}S,\quad
+\mathrm{d}x\mathrm{d}y=\cos\gamma\,\mathrm{d}S.
+\]
+这解释了为什么第二类曲面积分与方向有关：若把曲面的方向反过来，法向量变为 $-\boldsymbol{n}$，积分值也随之变号.
+
+在具体计算中，第二类曲面积分仍然常常化为二重积分. 下面先以最常见的图形曲面为例说明. 设
+\[
+S:z=z(x,y),\quad (x,y)\in D.
+\]
+这时可以用 $x,y$ 作为参数，将曲面参数化为
+\[
+\boldsymbol{r}(x,y)=(x,y,z(x,y)).
+\]
+于是
+\[
+\boldsymbol{r}_{x}=(1,0,z_{x}),\qquad
+\boldsymbol{r}_{y}=(0,1,z_{y}),
+\]
+从而
+\[
+\boldsymbol{r}_{x}\times \boldsymbol{r}_{y}
+=
+\begin{vmatrix}
+\boldsymbol{i}&\boldsymbol{j}&\boldsymbol{k}\\
+1&0&z_{x}\\
+0&1&z_{y}
+\end{vmatrix}
+=(-z_{x},-z_{y},1).
+\]
+这个向量的第三个分量为正，因此它对应曲面的上侧. 也就是说，若 $S$ 取上侧，则
+\[
+\boldsymbol{n}\mathrm{d}S=(-z_{x},-z_{y},1)\mathrm{d}x\mathrm{d}y.
+\]
+这里要特别注意：第二类曲面积分中出现的是
+\[
+\boldsymbol{n}\mathrm{d}S,
+\]
+而不是单独的 $\boldsymbol{n}$ 或单独的 $\mathrm{d}S$. 若把单位法向量和面积元素分别写出，则
+\[
+\boldsymbol{n}
+=\frac{(-z_{x},-z_{y},1)}{\sqrt{1+z_{x}^{2}+z_{y}^{2}}},
+\qquad
+\mathrm{d}S=\sqrt{1+z_{x}^{2}+z_{y}^{2}}\mathrm{d}x\mathrm{d}y,
+\]
+二者相乘后恰好得到
+\[
+\boldsymbol{n}\mathrm{d}S=(-z_{x},-z_{y},1)\mathrm{d}x\mathrm{d}y.
+\]
+所以在第二类曲面积分的投影公式中，不会再额外出现$\sqrt{1+z_{x}^{2}+z_{y}^{2}}.$
+
+另一方面，第二类曲面积分可以看成向量场
+\[
+\boldsymbol{F}=(P,Q,R)
+\]
+穿过曲面的通量，即
+\[
+\iint_{S}P\mathrm{d}y\mathrm{d}z+Q\mathrm{d}z\mathrm{d}x+R\mathrm{d}x\mathrm{d}y
+=
+\iint_{S}\boldsymbol{F}\cdot \boldsymbol{n}\mathrm{d}S.
+\]
+因此，当 $S:z=z(x,y)$ 取上侧时，有
+\[
+\begin{aligned}
+&\iint_{S}P\mathrm{d}y\mathrm{d}z+Q\mathrm{d}z\mathrm{d}x+R\mathrm{d}x\mathrm{d}y\\
+&=\iint_{D}(P,Q,R)\cdot(-z_{x},-z_{y},1)\mathrm{d}x\mathrm{d}y\\
+&=\iint_{D}\left(-Pz_{x}-Qz_{y}+R\right)\mathrm{d}x\mathrm{d}y.
+\end{aligned}
+\]
+其中 $P,Q,R$ 都要在曲面上取值，也就是说，上式中实际应理解为
+\[
+P=P(x,y,z(x,y)),\quad Q=Q(x,y,z(x,y)),\quad R=R(x,y,z(x,y)).
+\]
+
+同一个公式也可以从有向投影面积的角度来理解. 在参数变换
+\[
+(x,y)\mapsto (x,y,z(x,y))
+\]
+下，有
+\[
+\mathrm{d}y\mathrm{d}z
+=
+\frac{\partial(y,z)}{\partial(x,y)}\mathrm{d}x\mathrm{d}y
+=-z_{x}\mathrm{d}x\mathrm{d}y,
+\]
+\[
+\mathrm{d}z\mathrm{d}x
+=
+\frac{\partial(z,x)}{\partial(x,y)}\mathrm{d}x\mathrm{d}y
+=-z_{y}\mathrm{d}x\mathrm{d}y,
+\]
+\[
+\mathrm{d}x\mathrm{d}y
+=
+\frac{\partial(x,y)}{\partial(x,y)}\mathrm{d}x\mathrm{d}y
+=\mathrm{d}x\mathrm{d}y.
+\]
+代入
+\[
+P\mathrm{d}y\mathrm{d}z+Q\mathrm{d}z\mathrm{d}x+R\mathrm{d}x\mathrm{d}y
+\]
+也得到
+\[
+\left(-Pz_{x}-Qz_{y}+R\right)\mathrm{d}x\mathrm{d}y.
+\]
+这说明 $\mathrm{d}y\mathrm{d}z,\mathrm{d}z\mathrm{d}x,\mathrm{d}x\mathrm{d}y$ 本质上分别对应曲面在 $yOz,zOx,xOy$ 平面上的有向投影面积.
+
+若曲面取下侧，则法向量方向与上侧相反，于是
+\[
+\boldsymbol{n}\mathrm{d}S=(z_{x},z_{y},-1)\mathrm{d}x\mathrm{d}y,
+\]
+从而
+\[
+\iint_{S}P\mathrm{d}y\mathrm{d}z+Q\mathrm{d}z\mathrm{d}x+R\mathrm{d}x\mathrm{d}y
+=
+\iint_{D}\left(Pz_{x}+Qz_{y}-R\right)\mathrm{d}x\mathrm{d}y.
+\]
+也就是说，取下侧时，积分值等于取上侧时的相反数.
+
+类似地，若$S:x=x(y,z)$，并取法向量 $x$ 分量为正的一侧，则
+\[
+\boldsymbol{n}\mathrm{d}S=(1,-x_{y},-x_{z})\mathrm{d}y\mathrm{d}z,
+\]
+故
+\[
+\iint_{S}P\mathrm{d}y\mathrm{d}z+Q\mathrm{d}z\mathrm{d}x+R\mathrm{d}x\mathrm{d}y
+=
+\iint_{D_{yz}}\left(P-Qx_{y}-Rx_{z}\right)\mathrm{d}y\mathrm{d}z.
+\]
+若$S:y=y(z,x),$并取法向量 $y$ 分量为正的一侧，则
+\[
+\boldsymbol{n}\mathrm{d}S=(-y_{x},1,-y_{z})\mathrm{d}z\mathrm{d}x,
+\]
+故
+\[
+\iint_{S}P\mathrm{d}y\mathrm{d}z+Q\mathrm{d}z\mathrm{d}x+R\mathrm{d}x\mathrm{d}y
+=
+\iint_{D_{zx}}\left(-Py_{x}+Q-Ry_{z}\right)\mathrm{d}z\mathrm{d}x.
+\]
+
+若曲面由参数方程
+\[
+\boldsymbol{r}(u,v)=(x(u,v),y(u,v),z(u,v)),\quad (u,v)\in D
+\]
+给出，并且取法向量方向与
+\[
+\boldsymbol{r}_{u}\times \boldsymbol{r}_{v}
+\]
+一致，则
+\[
+\boldsymbol{r}_{u}\times \boldsymbol{r}_{v}
+=
+\left(
+\frac{\partial(y,z)}{\partial(u,v)},
+\frac{\partial(z,x)}{\partial(u,v)},
+\frac{\partial(x,y)}{\partial(u,v)}
+\right).
+\]
+记
+\[
+A=\frac{\partial(y,z)}{\partial(u,v)},\quad
+B=\frac{\partial(z,x)}{\partial(u,v)},\quad
+C=\frac{\partial(x,y)}{\partial(u,v)},
+\]
+则
+\[
+\iint_{S}P\mathrm{d}y\mathrm{d}z+Q\mathrm{d}z\mathrm{d}x+R\mathrm{d}x\mathrm{d}y
+=
+\iint_{D}(PA+QB+RC)\mathrm{d}u\mathrm{d}v.
+\]
+若题目规定的方向与 $\boldsymbol{r}_{u}\times \boldsymbol{r}_{v}$ 相反，则在前面加负号. 因此，第二类曲面积分的计算顺序可以概括为三步：第一，判断曲面取哪一侧；第二，选择投影平面或参数方程；第三，把方向转化为符号. 对显式曲面而言，最容易出错的不是偏导数，而是正侧、负侧的判断. 例如 $z=z(x,y)$ 取上侧时使用 $(-z_x,-z_y,1)\mathrm{d}x\mathrm{d}y$，取下侧时整个积分取相反数.
+
+\begin{example}
+\label{eg:2521}
+此即\cite[例题25.2.1]{XHM}. 设$\Sigma$为上半单位球面$z=\sqrt{1-(x^{2}+y^{2})}$，取内侧，求
+\[
+I=\iint_{\Sigma}{\mathrm{d}y\mathrm{d}z+\mathrm{d}z\mathrm{d}x+\mathrm{d}x\mathrm{d}y}.
+\]
+\end{example}
+
+\begin{custom}{解}
+依次记
+\[
+I=I_{1}+I_{2}+I_{3},
+\]
+其中
+\[
+I_{1}=\iint_{\Sigma}\mathrm{d}y\mathrm{d}z,\quad
+I_{2}=\iint_{\Sigma}\mathrm{d}z\mathrm{d}x,\quad
+I_{3}=\iint_{\Sigma}\mathrm{d}x\mathrm{d}y.
+\]
+先看 $I_{1}$. 把上半球面按 $x$ 的符号分为两部分：
+\[
+\Sigma_{1}:x=\sqrt{1-y^{2}-z^{2}},\quad
+\Sigma_{2}:x=-\sqrt{1-y^{2}-z^{2}},
+\]
+其中
+\[
+D_{yz}=\{(y,z):y^{2}+z^{2}\leqslant 1,\ z\geqslant 0\}.
+\]
+由于题目取内侧，$\Sigma_{1}$ 上的法向量 $x$ 分量为负，$\Sigma_{2}$ 上的法向量 $x$ 分量为正. 因此
+\[
+\iint_{\Sigma_{1}}\mathrm{d}y\mathrm{d}z
+=-\iint_{D_{yz}}\mathrm{d}y\mathrm{d}z,
+\]
+而
+\[
+\iint_{\Sigma_{2}}\mathrm{d}y\mathrm{d}z
+=\iint_{D_{yz}}\mathrm{d}y\mathrm{d}z.
+\]
+所以$I_{1}=0.$
+
+类似地，由关于 $yOz$ 与 $zOx$ 平面的对称性可得$I_{2}=0.$
+再看
+\[
+I_{3}=\iint_{\Sigma}\mathrm{d}x\mathrm{d}y.
+\]
+上半球面取内侧时，法向量的 $z$ 分量为负，因此
+\[
+I_{3}=-\iint_{D_{xy}}\mathrm{d}x\mathrm{d}y,
+\]
+其中
+\[
+D_{xy}=\{(x,y):x^{2}+y^{2}\leqslant 1\}.
+\]
+故
+\[
+I_{3}=-\pi.
+\]
+于是
+\[
+I=I_{1}+I_{2}+I_{3}=-\pi.
+\]
+至此我们得到了答案.$\hfill{\square}$
+\end{custom}
+
+上一个例子说明，每一项 $\mathrm{d}y\mathrm{d}z,\mathrm{d}z\mathrm{d}x,\mathrm{d}x\mathrm{d}y$ 都可以看成曲面在相应坐标平面上的有向投影面积. 如果曲面是闭曲面或由多块曲面拼成，通常应先分块，再判断每一块在某个坐标平面上的投影是否退化为零.
+
+\begin{example}
+此即\cite[例题25.2.2]{XHM}. 求
+\[
+I=\iint_{\Sigma}(z+x)\mathrm{d}y\mathrm{d}z+(x+y)\mathrm{d}z\mathrm{d}x+(y+z)\mathrm{d}x\mathrm{d}y,
+\]
+其中 $\Sigma$ 是由柱面 $x^{2}+y^{2}=1$、平面 $z=1$ 以及三个坐标平面围成的立体在第一卦限部分的表面，取外侧.
+\end{example}
+
+\begin{custom}{解}
+把 $\Sigma$ 分成五块：
+\[
+\Sigma=\Sigma_{1}\cup\Sigma_{2}\cup\Sigma_{3}\cup\Sigma_{4}\cup\Sigma_{5},
+\]
+其中 $\Sigma_{1}$ 为柱面部分，$\Sigma_{2}$ 为下底面 $z=0$，$\Sigma_{3}$ 为上底面 $z=1$，$\Sigma_{4}$ 和 $\Sigma_{5}$ 分别为坐标平面上的两个侧面.
+
+记
+\[
+I=I_{1}+I_{2}+I_{3},
+\]
+其中
+\[
+I_{1}=\iint_{\Sigma}(z+x)\mathrm{d}y\mathrm{d}z,\quad
+I_{2}=\iint_{\Sigma}(x+y)\mathrm{d}z\mathrm{d}x,\quad
+I_{3}=\iint_{\Sigma}(y+z)\mathrm{d}x\mathrm{d}y.
+\]
+先计算 $I_{1}$. 对 $\mathrm{d}y\mathrm{d}z$ 而言，只有柱面 $\Sigma_{1}$ 和平面 $x=0$ 上的侧面 $\Sigma_{5}$ 在 $yOz$ 平面上的投影不为零. 在柱面上
+\[
+x=\sqrt{1-y^{2}},\quad 0\leqslant y\leqslant 1,\quad 0\leqslant z\leqslant 1,
+\]
+取外侧时 $x$ 分量为正；在平面 $x=0$ 上取外侧时 $x$ 分量为负. 因此
+\[
+I_{1}=\int_{0}^{1}\int_{0}^{1}
+\left(z+\sqrt{1-y^{2}}\right)\mathrm{d}y\mathrm{d}z
+-\int_{0}^{1}\int_{0}^{1}z\mathrm{d}y\mathrm{d}z=\int_{0}^{1}\int_{0}^{1}\sqrt{1-y^{2}}\mathrm{d}y\mathrm{d}z=\frac{\pi}{4}.
+\]
+类似地，对 $\mathrm{d}z\mathrm{d}x$ 而言，只有柱面和 $y=0$ 上的侧面有贡献，故
+\[
+I_{2}=\frac{\pi}{4}.
+\]
+最后计算 $I_{3}$. 对 $\mathrm{d}x\mathrm{d}y$ 而言，只有上底面和下底面有贡献. 设
+\[
+D=\{(x,y):x^{2}+y^{2}\leqslant 1,\ x\geqslant 0,\ y\geqslant 0\}.
+\]
+下底面 $z=0$ 取外侧时为下侧，上底面 $z=1$ 取外侧时为上侧，因此
+\[
+I_{3}=-\iint_{D}y\mathrm{d}x\mathrm{d}y
++\iint_{D}(y+1)\mathrm{d}x\mathrm{d}y=\iint_{D}1\mathrm{d}x\mathrm{d}y=\frac{\pi}{4}.
+\]
+所以
+\[
+I=I_{1}+I_{2}+I_{3}
+=\frac{3\pi}{4}.
+\]
+至此我们得到了答案.$\hfill{\square}$
+\end{custom}
+
+这个例子有一个很重要的经验：对分片曲面，不一定要逐块写出完整的参数方程. 可以先看某一项对应哪个投影，例如 $\mathrm{d}y\mathrm{d}z$ 只关心到 $yOz$ 平面的有向投影；若某块曲面对该平面的投影面积为零，这一项在该块上就没有贡献.
+
+\begin{example}
+设 $\Sigma$ 为平面 $x+y+z=1$ 在第一卦限内的部分，取上侧，求
+\[
+I=\iint_{\Sigma}x\mathrm{d}y\mathrm{d}z+y\mathrm{d}z\mathrm{d}x+z\mathrm{d}x\mathrm{d}y.
+\]
+\end{example}
+
+\begin{custom}{解}
+将平面写成
+\[
+z=1-x-y.
+\]
+投影区域为
+\[
+D=\{(x,y):x\geqslant 0,\ y\geqslant 0,\ x+y\leqslant 1\}.
+\]
+题目取上侧，故使用公式
+\[
+I=\iint_{D}(-Pz_{x}-Qz_{y}+R)\mathrm{d}x\mathrm{d}y.
+\]
+这里
+\[
+P=x,\quad Q=y,\quad R=z=1-x-y,
+\]
+且$z_{x}=-1,z_{y}=-1.$
+因此
+\[
+I=\iint_{D}\left[-x(-1)-y(-1)+(1-x-y)\right]\mathrm{d}x\mathrm{d}y=\iint_{D}1\mathrm{d}x\mathrm{d}y=\frac{1}{2}.
+\]
+至此我们得到了答案.$\hfill{\square}$
+\end{custom}
+
+\begin{example}
+设 $\Sigma$ 为抛物面
+\[
+z=x^{2}+y^{2},\quad x^{2}+y^{2}\leqslant 1
+\]
+的上侧，求
+\[
+I=\iint_{\Sigma}x\mathrm{d}y\mathrm{d}z+y\mathrm{d}z\mathrm{d}x+z\mathrm{d}x\mathrm{d}y.
+\]
+\end{example}
+
+\begin{custom}{解}
+曲面已经写成
+\[
+z=x^{2}+y^{2},
+\]
+且题目取上侧. 因此
+\[
+I=\iint_{D}(-xz_{x}-yz_{y}+z)\mathrm{d}x\mathrm{d}y,
+\]
+其中
+\[
+D=\{(x,y):x^{2}+y^{2}\leqslant 1\}.
+\]
+又$z_{x}=2x, z_{y}=2y,$
+所以
+\[
+\begin{aligned}
+I
+&=\iint_{D}\left(-2x^{2}-2y^{2}+x^{2}+y^{2}\right)\mathrm{d}x\mathrm{d}y=-\iint_{D}(x^{2}+y^{2})\mathrm{d}x\mathrm{d}y\\
+&=-\int_{0}^{2\pi}\int_{0}^{1}r^{2}\cdot r\mathrm{d}r\mathrm{d}\theta=-\frac{\pi}{2}.
+\end{aligned}
+\]
+至此我们得到了答案.$\hfill{\square}$
+\end{custom}
+
+\subsection{两类曲面积分之间的关系}
+
+第一类曲面积分看起来是在曲面上累加标量，第二类曲面积分看起来是在计算通量，但二者并不是割裂的. 真正把它们联系起来的是曲面的单位法向量. 若 $S$ 是已经定向的双侧曲面，单位法向量为
+\[
+\boldsymbol{n}=(\cos\alpha,\cos\beta,\cos\gamma),
+\]
+则
+\[
+\iint_{S}P\mathrm{d}y\mathrm{d}z+Q\mathrm{d}z\mathrm{d}x+R\mathrm{d}x\mathrm{d}y
+=
+\iint_{S}(P\cos\alpha+Q\cos\beta+R\cos\gamma)\mathrm{d}S.
+\]
+这说明第二类曲面积分本质上就是向量场与单位法向量作内积以后得到的第一类曲面积分.
+
+反过来，若要把
+\[
+\iint_{S}f(x,y,z)\mathrm{d}S
+\]
+看成第二类曲面积分，可以在曲面上令
+\[
+(P,Q,R)=f(\cos\alpha,\cos\beta,\cos\gamma),
+\]
+则
+\[
+P\cos\alpha+Q\cos\beta+R\cos\gamma=f.
+\]
+所以
+\[
+\iint_{S}f\mathrm{d}S
+=
+\iint_{S}P\mathrm{d}y\mathrm{d}z+Q\mathrm{d}z\mathrm{d}x+R\mathrm{d}x\mathrm{d}y.
+\]
+这在一些对称性较强的题目中十分有用.
+
+\begin{example}
+此即\cite[例题25.2.3]{XHM}. 设 $\Sigma$ 为第一卦限中的球面
+\[
+x^{2}+y^{2}+z^{2}=a^{2}
+\]
+的部分，求
+\[
+I=\iint_{\Sigma}xyz(y^{2}z^{2}+z^{2}x^{2}+x^{2}y^{2})\mathrm{d}S.
+\]
+\end{example}
+
+\begin{custom}{解}
+若直接用球面参数计算，式子会比较繁. 这里利用两类曲面积分之间的关系. 为了进行转化，暂取 $\Sigma$ 的外侧作为正向. 球面取外侧时，单位法向量为
+\[
+\boldsymbol{n}=\left(\frac{x}{a},\frac{y}{a},\frac{z}{a}\right).
+\]
+令$P=ay^{3}z^{3},\quad Q=az^{3}x^{3},\quad R=ax^{3}y^{3}$，则
+\[
+P\frac{x}{a}+Q\frac{y}{a}+R\frac{z}{a}=xy^{3}z^{3}+x^{3}yz^{3}+x^{3}y^{3}z=xyz(y^{2}z^{2}+z^{2}x^{2}+x^{2}y^{2}).
+\]
+因此
+\[
+I=a\iint_{\Sigma}y^{3}z^{3}\mathrm{d}y\mathrm{d}z
++a\iint_{\Sigma}z^{3}x^{3}\mathrm{d}z\mathrm{d}x
++a\iint_{\Sigma}x^{3}y^{3}\mathrm{d}x\mathrm{d}y.
+\]
+由于 $\Sigma$ 关于 $x,y,z$ 对称，三项相等，故
+\[
+I=3a\iint_{\Sigma}x^{3}y^{3}\mathrm{d}x\mathrm{d}y.
+\]
+将其投影到 $xOy$ 平面，得到区域
+\[
+D=\{(x,y):x^{2}+y^{2}\leqslant a^{2},\ x\geqslant 0,\ y\geqslant 0\}.
+\]
+于是
+\[
+\begin{aligned}
+I
+&=3a\iint_{D}x^{3}y^{3}\mathrm{d}x\mathrm{d}y\\
+&=3a\int_{0}^{\frac{\pi}{2}}\int_{0}^{a}
+r^{6}\cos^{3}\theta\sin^{3}\theta\cdot r\mathrm{d}r\mathrm{d}\theta\\
+&=3a\cdot \frac{a^{8}}{8}\int_{0}^{\frac{\pi}{2}}\cos^{3}\theta\sin^{3}\theta\mathrm{d}\theta\\
+&=3a\cdot \frac{a^{8}}{8}\cdot \frac{1}{12}\\
+&=\frac{a^{9}}{32}.
+\end{aligned}
+\]
+至此我们得到了结果.$\hfill{\square}$
+\end{custom}
+
+上一个例子是把第一类曲面积分转化为第二类曲面积分来算. 反过来，第二类曲面积分也常常可以先写成向量场通量，再利用法向量把它转化为第一类曲面积分. 这样做的好处是可以直接使用曲面的对称性.
+
+\begin{example}
+此即\cite[例题25.2.4]{XHM}. 求
+\[
+I=\iint_{\Sigma}(y-z)\mathrm{d}y\mathrm{d}z+(z-x)\mathrm{d}z\mathrm{d}x+(x-y)\mathrm{d}x\mathrm{d}y,
+\]
+其中 $\Sigma$ 是球面
+\[
+x^{2}+y^{2}+z^{2}=2Rx
+\]
+被柱面
+\[
+x^{2}+y^{2}=2rx,\qquad 0<r<R
+\]
+截下的位于 $z\geqslant 0$ 的部分，取外侧.
+\end{example}
+
+\begin{custom}{解}
+把球面方程改写为
+\[
+(x-R)^{2}+y^{2}+z^{2}=R^{2}.
+\]
+因此球心为 $(R,0,0)$，半径为 $R$. 取外侧时，单位法向量为
+\[
+\boldsymbol{n}
+=\left(\frac{x-R}{R},\frac{y}{R},\frac{z}{R}\right).
+\]
+令
+\[
+\boldsymbol{F}=(y-z,\ z-x,\ x-y).
+\]
+则原积分就是
+\[
+I=\iint_{\Sigma}\boldsymbol{F}\cdot \boldsymbol{n}\mathrm{d}S.
+\]
+计算内积：
+\[
+\boldsymbol{F}\cdot \boldsymbol{n}=\frac{1}{R}\left[(y-z)(x-R)+(z-x)y+(x-y)z\right]=z-y.
+\]
+所以
+\[
+I=\iint_{\Sigma}(z-y)\mathrm{d}S.
+\]
+由于 $\Sigma$ 关于 $xOz$ 平面对称，而 $y$ 是关于该平面的奇函数，故
+\[
+\iint_{\Sigma}y\mathrm{d}S=0.
+\]
+于是
+\[
+I=\iint_{\Sigma}z\mathrm{d}S.
+\]
+把球面上半部分写成
+\[
+z=\sqrt{2Rx-x^{2}-y^{2}}.
+\]
+其在 $xOy$ 平面上的投影区域为
+\[
+D=\{(x,y):x^{2}+y^{2}\leqslant 2rx\}.
+\]
+又由球面方程可得
+\[
+\mathrm{d}S=\frac{R}{z}\mathrm{d}x\mathrm{d}y.
+\]
+因此
+\[
+I=\iint_{\Sigma}z\mathrm{d}S=\iint_{D}z\cdot \frac{R}{z}\mathrm{d}x\mathrm{d}y=R\iint_{D}\mathrm{d}x\mathrm{d}y.
+\]
+而 $D$ 是圆
+\[
+(x-r)^{2}+y^{2}\leqslant r^{2},
+\]
+面积为 $\pi r^{2}$. 所以$I=\pi Rr^{2}.\hfill{\square}$
+\end{custom}
+
+这一小节的计算方法可以概括如下：第一类曲面积分先找 $\mathrm{d}S$，重点是把曲面面积元素化为平面区域上的面积元素；第二类曲面积分先定方向，重点是把曲面的侧转化为有符号投影或法向量. 能投影时优先投影，曲面本身适合参数化时再参数化；遇到闭曲面或分片曲面时，先判断哪些投影为零，再逐项计算；若表达式和法向量之间存在明显关系，则可以在两类曲面积分之间转换. 从这个角度看，两类曲面积分的核心都是同一件事：把曲面上的问题转化为平面区域上的二重积分，只是第一类关注面积大小，第二类关注面积方向.
+
+\begin{comment}
+\subsection{两类曲面积分的计算}
+曲面积分的计算很大程度上和曲线积分是类似的，目标都是通过参数化来计算.
+
+\begin{example}
+此即\cite[例题25.1.1]{XHM}. 设$S$为$z=\sqrt{x^{2}+y^{2}}$被$x^{2}+y^{2}=2ax$割下的部分，求
+$$I=\iint_{S}{(x^{2}y^{2}+y^{2}z^{2}+z^{2}x^{2})\mathrm{d}S}$$
+\end{example}
+
+\begin{custom}{解}
+只需注意到在直角坐标系中
+$$z^{\prime}_{x}=\frac{x}{z},z^{\prime}_{y}=\frac{y}{z},\sqrt{1+[z^{\prime}_{x}]^{2}+[z^{\prime}_{y}]^{2}}$$
+于是
+$$I=\iint_{S}{(x^{2}y^{2}+y^{2}z^{2}+z^{2}x^{2})\mathrm{d}S}=\iint_{x^{2}+y^{2}\leqslant 2ax}{\sqrt{2}[x^{2}y^{2}+(x^{2}+y^{2})^{2}]\mathrm{d}x\mathrm{d}y}.$$
+用极坐标变换上述二重积分，有
+$$\begin{aligned}I&=\sqrt{2}\int_{-\frac{\pi}{2}}^{\frac{\pi}{2}}{\mathrm{d}\theta\int_{0}^{2a\cos{\theta}}{(r^{4}\cos^{2}{\theta}\sin^{2}{\theta}+r^{4})r\mathrm{d}r}}\\
+&=\sqrt{2}\int_{-\frac{\pi}{2}}^{\frac{\pi}{2}}{(\cos^{2}{\theta}\sin^{2}{\theta}+1)\left(\left.\frac{1}{6}r^{6}\right|_{0}^{2a\cos{\theta}}\right)\mathrm{d}\theta}\\
+&=\frac{29}{8}\sqrt{2}\pi a^{6}.\\\end{aligned}$$
+\end{custom}
+
+我们留一个类似的题目供练习.
+\begin{exercise}
+此即\cite[25.1.3练习题4]{XHM}.求$\iint_{S}{(x^{4}-y^{4}+y^{2}z^{2}-z^{2}x^{2}+1)\mathrm{d}S}$,其中$S$是锥面$z^{2}=x^{2}+y^{2}$被柱面$x^{2}+y^{2}=2x$割下的部分.
+\end{exercise}
+
+当然，除了直接计算，对称性也非常重要，我们留作练习.
+\begin{exercise}
+此即\cite[25.1.3练习题3]{XHM}.求$\iint_{S}{(x+y+z)^{2}\mathrm{d}S}$，其中$S$为单位球面$x^{2}+y^{2}+z^{2}=1$.
+\end{exercise}
+
+对于第二类曲面积分，通常还是会使用投影的方法.
+\begin{example}
+\label{eg:2521}
+此即\cite[例题25.2.1]{XHM}. 设$\Sigma$为上半单位球面$z=\sqrt{1-(x^{2}+y^{2})}$，取内侧，求
+$$I=\iint_{\Sigma}{\mathrm{d}y\mathrm{d}z+\mathrm{d}z\mathrm{d}x+\mathrm{d}x\mathrm{d}y}.$$
+\end{example}
+
+\begin{custom}{解}
+依顺序记$I=I_{1}+I_{2}+I_{3}$. 考虑$I_{1}$，将$\Sigma$分为两部分$\Sigma_{1}\cup\Sigma_{2}$，其中$\Sigma_{1}:x=\sqrt{1-y^{2}-z^{2}},(y,z)\in D_{yz}=\{y^{2}+z^{2}\leqslant 1,z\geqslant 0\}$取后侧，$\Sigma_{2}:x=-\sqrt{1-y^{2}-z^{2}},(y,z)\in D_{yz}$取前侧，于是
+$$I_{1}=\iint_{\Sigma_{1}}{\mathrm{d}y\mathrm{d}z}+\iint_{\Sigma_{2}}{\mathrm{d}y\mathrm{d}z}=-\iint_{D_{yz}}{\mathrm{d}y\mathrm{d}z}+\iint_{D_{yz}}{\mathrm{d}y\mathrm{d}z}=0.$$
+类似有$I_{2}=0,I_{3}=-\pi$.于是$I=-\pi$，我们得到了答案.$\hfill{\square}$
+\end{custom}
+
+
+\subsection{利用Green/Gauss/Stokes公式计算曲线曲面积分}
+我们首先叙述Green公式、Gauss公式以及Stokes公式.
+\begin{theorem}[Green公式]
+设平面有界闭区域$D$的边界为分段光滑的闭曲线，二元函数$P,Q$在$D$上具有连续一阶偏导数，则有
+$$\oint_{\partial D}{P\mathrm{d}x+Q\mathrm{d}y}=\iint_{D}{\left(\frac{\partial Q}{\partial x}-\frac{\partial P}{\partial y}\right)\mathrm{d}x\mathrm{d}y}$$
+其中$\partial D$取正向（诱导定向）.
+\end{theorem}
+
+\begin{theorem}[Gauss公式]
+设空间有界闭区域$\Omega$的边界为分片光滑闭曲面，函数$P,Q,R$在$\Omega$上具有连续一阶偏导数，则
+$$\begin{aligned}\iint_{\partial\Omega}{P\mathrm{d}y\mathrm{d}z+Q\mathrm{d}z\mathrm{d}x+R\mathrm{d}x\mathrm{d}y}&=\iint_{\partial\Omega}{P\cos{\langle n,x\rangle}+Q\cos{\langle n,y\rangle}+R\cos{\langle n,z\rangle}\mathrm{d}S}\\
+&=\iiint_{\Omega}{\left(\frac{\partial P}{\partial x}+\frac{\partial Q}{\partial y}+\frac{\partial R}{\partial z}\right)\mathrm{d}x\mathrm{d}y\mathrm{d}z}\\\end{aligned}$$
+\end{theorem}
+
+\begin{theorem}[Stokes公式]
+设$\Sigma$为光滑的有向曲面，其边界$\partial\Sigma$为分段光滑的闭曲线，如果三元函数$P,Q,R$在$\Sigma$及其在边界上具有连续一阶偏导数，则
+$$\begin{aligned}&\int_{\partial\Sigma}{P\mathrm{d}x+Q\mathrm{d}y+R\mathrm{d}z}\\
+=&\iint_{\Sigma}{\left(\frac{\partial R}{\partial y}-\frac{\partial Q}{\partial z}\right)\mathrm{d}y\mathrm{d}z+\left(\frac{\partial P}{\partial z}-\frac{\partial R}{\partial x}\right)\mathrm{d}z\mathrm{d}x+\left(\frac{\partial Q}{\partial x}-\frac{\partial P}{\partial y}\right)\mathrm{d}x\mathrm{d}y}\\
+=&\iint_{\Sigma}{\left[\left(\frac{\partial R}{\partial y}-\frac{\partial Q}{\partial z}\right)cos{\langle n,x\rangle}+\left(\frac{\partial P}{\partial z}-\frac{\partial R}{\partial x}\right)\cos{\langle n,y\rangle}+\left(\frac{\partial Q}{\partial x}-\frac{\partial P}{\partial y}\right)\cos{\langle n,z\rangle}\right]\mathrm{d}S}\\\end{aligned}$$
+其中$\partial \Sigma$取诱导定向.
+\end{theorem}
+
+\begin{example}
+此即\cite[第八章\S 8练习1(3)]{JC}. 利用Green公式计算第二类曲线积分
+$$\oint_{L}{(-y^{2}+e^{e^{x}})\mathrm{d}x+\arctan{y}\mathrm{d}y}$$
+其中$L$是由两条抛物线$y=x^{2}$和$x=y^{2}$所围区域的边界，取逆时针方向.
+\end{example}
+
+\begin{example}
+此即\cite[例8.8.5]{JC}. 计算曲线积分
+$$I=\oint_{L}{\frac{x\mathrm{d}y-y\mathrm{d}x}{x^{2}+y^{2}}}$$
+其中$L$为一条分段光滑，且不经过原点的简单闭曲线，方向为逆时针.
+\end{example}
+
+\begin{example}
+此即\cite[第八章\S 8练习2(1)]{JC}. 求由抛物线$(x+y)^{2}=ax$和$x$轴围成的平面图形的面积.
+\end{example}
+
+\begin{example}
+此即\cite[第八章\S 8练习2(3)]{JC}. 求由曲线$\left\{\begin{aligned}x&=\frac{1}{2}\sin{2t},\\ y&=\sin{t}\\\end{aligned}(0\leqslant t\leqslant \pi)\right.$围成的平面图形面积.
+\end{example}
+
+\begin{example}
+利用Gauss公式重新计算例\ref{eg:2521}.
+\end{example}
+\end{comment}
+
+\clearpage
+\renewEnvironmentCounter
+\section{2026年5月22日习题课}
+这一讲开始我们逐渐进入函数项级数和幂级数. 这时最重要的变化是：级数中出现了变量，因而同一个级数在不同的点可能有不同的收敛性. 所以以后说一个函数项级数“收敛”时，通常还要同时说明它在哪些点收敛；说一个幂级数有和函数时，也要同时说明这个和函数是在哪个区间内得到的.
+
+从做题角度看，函数项级数和幂级数相关的问题有一条贯穿始终的主线：先确定运算合法的范围，再进行形式运算. 级数相乘时要先知道能否按 Cauchy 乘积重排；函数项级数要先把 $x$ 固定下来判断数项级数；幂级数逐项求导或积分时要先限制在开收敛区间内；Taylor 级数写出来以后，还要进一步检查余项是否趋于零.
+
+\subsection{级数的乘法}
+
+考虑两个数项级数
+$$\sum_{n=0}^{\infty}a_n,\qquad \sum_{n=0}^{\infty}b_n.$$
+在数列的有限和相乘时，每一项都要与另一边的每一项相乘. 对无穷级数也应如此，只是乘出来以后必须按照某种规则重新排列，并且排列的顺序可能会影响最后求和的结果. 最自然的排列方式是按下标和合并，得到 Cauchy 乘积
+\[
+\left(\sum_{n=0}^{\infty}a_n\right)
+\left(\sum_{n=0}^{\infty}b_n\right)
+=
+\sum_{n=0}^{\infty}c_n,
+\qquad
+c_n=\sum_{k=0}^{n}a_kb_{n-k}.
+\]
+也就是说，$c_n$ 收集的是所有满足 $k+(n-k)=n$ 的乘积项. 这里最容易出错的地方，是把乘积级数误写成
+\[
+\sum_{n=0}^{\infty}a_nb_n.
+\]
+这个写法只保留了“同下标相乘”的部分，漏掉了大量交叉项，因此一般不是两个级数的乘积.
+
+关于 Cauchy 乘积的良定性，书上的结论说：如果两个级数都绝对收敛，则它们的 Cauchy 乘积也绝对收敛，并且其和等于两个级数和的乘积. 实际上更一般地，如果其中一个级数绝对收敛，另一个级数收敛，则 Cauchy 乘积仍收敛到两个和的乘积. 后面我们主要在幂级数的绝对收敛区间内使用乘法，因此通常可以放心使用 Cauchy 乘积；但若只知道两个级数条件收敛，就不能仅凭形式展开断定乘积结果.
+
+在幂级数中，Cauchy 乘积的含义更加直观. 若
+\[
+A(x)=\sum_{n=0}^{\infty}a_nx^n,
+\qquad
+B(x)=\sum_{n=0}^{\infty}b_nx^n,
+\]
+则在两个幂级数都绝对收敛的范围内，
+\[
+A(x)B(x)
+=
+\sum_{n=0}^{\infty}\left(\sum_{k=0}^{n}a_kb_{n-k}\right)x^n.
+\]
+因为 $x^n$ 可以由
+\[
+x^0\cdot x^n,\quad x^1\cdot x^{n-1},\quad \ldots,\quad x^n\cdot x^0
+\]
+这些不同来源产生，所以 $x^n$ 的系数必须把这些来源全部加起来.
+
+\begin{example}
+利用级数乘法求
+\[
+\sum_{n=0}^{\infty}(n+1)x^n
+\]
+的和函数，并指出它的收敛域.
+\end{example}
+
+\begin{custom}{解}
+由几何级数知
+\[
+\sum_{n=0}^{\infty}x^n=\frac{1}{1-x},\qquad |x|<1.
+\]
+在 $|x|<1$ 时，该级数绝对收敛，因此可以作 Cauchy 乘积：
+\[
+\left(\sum_{n=0}^{\infty}x^n\right)^2
+=
+\sum_{n=0}^{\infty}\left(\sum_{k=0}^{n}1\right)x^n
+=
+\sum_{n=0}^{\infty}(n+1)x^n.
+\]
+另一方面，左边为
+\[
+\left(\frac{1}{1-x}\right)^2=\frac{1}{(1-x)^2}.
+\]
+所以
+\[
+\sum_{n=0}^{\infty}(n+1)x^n=\frac{1}{(1-x)^2},\qquad |x|<1.
+\]
+端点处还要单独检查. 当 $x=1$ 时，通项为 $n+1$，不趋于零；当 $x=-1$ 时，通项为 $(n+1)(-1)^n$，也不趋于零. 因而收敛域为
+\[
+(-1,1).
+\]
+至此我们得到了结果.$\hfill{\square}$
+\end{custom}
+
+由上例还可以得到常用公式
+\[
+\sum_{n=1}^{\infty}nx^n
+=x\sum_{n=1}^{\infty}nx^{n-1}
+=\frac{x}{(1-x)^2},\qquad |x|<1.
+\]
+使用这类公式时，必须把条件 $|x|<1$ 一起写出. 如果只写和函数而忘记收敛范围，就很容易在端点处误用公式.
+
+\begin{example}
+求下列幂级数乘积展开式中的 $x^n$ 系数，并指出展开式成立的范围：
+\[
+\left(\sum_{n=0}^{\infty}x^n\right)
+\left(\sum_{n=0}^{\infty}(2x)^n\right).
+\]
+\end{example}
+
+\begin{custom}{解}
+先分别看两个几何级数的收敛条件：
+\[
+\sum_{n=0}^{\infty}x^n \text{ 在 } |x|<1 \text{ 时收敛},
+\qquad
+\sum_{n=0}^{\infty}(2x)^n \text{ 在 } |2x|<1 \text{ 时收敛}.
+\]
+因此乘积展开式应先在公共范围$|x|<\frac12$内讨论. 记
+\[
+\left(\sum_{m=0}^{\infty}x^m\right)
+\left(\sum_{k=0}^{\infty}2^kx^k\right)
+=\sum_{n=0}^{\infty}c_nx^n.
+\]
+为了得到 $x^n$ 的系数，需要令 $m+k=n$，于是
+\[
+c_n=\sum_{k=0}^{n}2^k=2^{n+1}-1.
+\]
+所以
+\[
+\left(\sum_{n=0}^{\infty}x^n\right)
+\left(\sum_{n=0}^{\infty}(2x)^n\right)
+=\sum_{n=0}^{\infty}(2^{n+1}-1)x^n,
+\qquad |x|<\frac12.
+\]
+也可从函数角度写成
+\[
+\frac{1}{(1-x)(1-2x)}
+=
+\sum_{n=0}^{\infty}(2^{n+1}-1)x^n,
+\qquad |x|<\frac12.\hfill{\square}
+\]
+
+\end{custom}
+
+\begin{example}
+设
+\[
+\left(\sum_{n=0}^{\infty}x^n\right)
+\left(\sum_{n=0}^{\infty}(-1)^nx^n\right)
+=\sum_{n=0}^{\infty}c_nx^n.
+\]
+求 $c_n$.
+\end{example}
+
+\begin{custom}{解}
+两个几何级数分别在 $|x|<1$ 内绝对收敛，因此在 $|x|<1$ 内可作 Cauchy 乘积. 由系数卷积公式，
+\[
+c_n=\sum_{k=0}^{n}1\cdot (-1)^{n-k}
+=\sum_{j=0}^{n}(-1)^j.
+\]
+于是
+\[
+c_n=\begin{cases}
+1, & n\text{ 为偶数},\\
+0, & n\text{ 为奇数}.
+\end{cases}
+\]
+从函数角度也可以验证：
+\[
+\left(\sum_{n=0}^{\infty}x^n\right)
+\left(\sum_{n=0}^{\infty}(-1)^nx^n\right)
+=\frac{1}{1-x}\cdot\frac{1}{1+x}
+=\frac{1}{1-x^2}.
+\]
+而
+\[
+\frac{1}{1-x^2}=\sum_{m=0}^{\infty}x^{2m},\qquad |x|<1,
+\]
+这正对应于偶次项系数为 $1$、奇次项系数为 $0$. $\hfill{\square}$
+\end{custom}
+
+\subsection{函数项级数的定义和性质}
+形如
+\[
+\sum_{n=1}^{\infty}u_n(x)
+\]
+的级数称为函数项级数，这里每一项 $u_n(x)$ 是 $x$ 的函数. 若这些函数在集合 $D$ 上都有定义，则对每一个固定的 $x\in D$，函数项级数都变成一个数项级数
+\[
+\sum_{n=1}^{\infty}u_n(x).
+\]
+如果这个数项级数收敛，就称函数项级数在该点 $x$ 收敛；所有收敛点组成的集合称为收敛域. 在收敛域上，可以定义和函数
+\[
+S(x)=\sum_{n=1}^{\infty}u_n(x)=\lim_{N\to\infty}S_N(x),\qquad S_N(x)=\sum_{n=1}^{N}u_n(x).
+\]
+这里 $S_N(x)$ 称为部分和函数.
+
+确定函数项级数的收敛域的基本步骤是：先找每一项都有意义的公共定义范围；再把 $x$ 看成固定常数，使用数项级数的判别法；最后对判别法没有覆盖的特殊点单独讨论. 尤其要注意，通项趋于零是收敛的必要条件：若某个 $x$ 使得
+\[
+\lim_{n\to\infty}u_n(x)\neq 0
+\]
+或极限不存在，则该点处级数必发散.
+
+函数项级数还有一个比数项级数多出来的问题：部分和函数 $S_N(x)$ 的极限是逐点取的，还是能在一整个区间上一致控制. 若在集合 $E$ 上，对任意 $\varepsilon>0$，存在 $N$，使得当 $n>N$ 时对所有 $x\in E$ 都有
+\[
+|S_n(x)-S(x)|<\varepsilon,
+\]
+则称级数在 $E$ 上一致收敛. 一致收敛比逐点收敛更强，它可以保证很多性质从部分和传到极限. 例如，若 $u_n(x)$ 在区间上连续，且 $\sum u_n(x)$ 一致收敛，则和函数 $S(x)$ 连续.
+
+常用的判别法是 Weierstrass 判别法：若在 $E$ 上有
+\[
+|u_n(x)|\leqslant M_n,
+\qquad
+\sum_{n=1}^{\infty}M_n \text{ 收敛},
+\]
+则 $\sum u_n(x)$ 在 $E$ 上一致收敛并且绝对收敛.
+
+不过，在求收敛域时，通常首先判断的是逐点收敛；一致收敛更多用于说明和函数是否连续、是否可以逐项积分或逐项求导. 幂级数之所以特别重要，正是因为它在收敛半径内部具有很强的一致收敛性质，从而能自动获得许多良好的运算性质.
+
+\begin{example}
+求函数项级数
+\[
+\sum_{n=1}^{\infty}\frac{1}{1+n^2x^2}
+\]
+的收敛域.
+\end{example}
+
+\begin{custom}{解}
+先看特殊点 $x=0$. 此时通项为
+\[
+\frac{1}{1+n^2\cdot 0^2}=1,
+\]
+所以级数变为
+\[
+\sum_{n=1}^{\infty}1,
+\]
+发散.
+
+当 $x\neq 0$ 时，由于
+\[
+0<\frac{1}{1+n^2x^2}\leqslant \frac{1}{n^2x^2},
+\]
+而
+\[
+\sum_{n=1}^{\infty}\frac{1}{n^2x^2}
+=\frac{1}{x^2}\sum_{n=1}^{\infty}\frac{1}{n^2}
+\]
+收敛，故由比较判别法知原级数收敛.
+
+因此该函数项级数的收敛域为
+\[
+(-\infty,0)\cup(0,+\infty).
+\]
+这个例子中，$x=0$ 处通项的极限行为发生了变化，必须单独讨论. $\hfill{\square}$
+\end{custom}
+
+\begin{example}
+求函数项级数
+\[
+\sum_{n=1}^{\infty}\frac{x^n}{1+x^{2n}}
+\]
+在实数范围内的收敛域.
+\end{example}
+
+\begin{custom}{解}
+由于 $1+x^{2n}>0$，每一项对所有实数 $x$ 都有意义. 分情况讨论.
+
+若 $|x|<1$，则
+\[
+\left|\frac{x^n}{1+x^{2n}}\right|
+\leqslant |x|^n,
+\]
+而 $\sum |x|^n$ 收敛，故原级数绝对收敛.
+
+若 $|x|>1$，则
+\[
+\left|\frac{x^n}{1+x^{2n}}\right|
+=\frac{|x|^n}{1+|x|^{2n}}
+\leqslant \frac{|x|^n}{|x|^{2n}}
+=\frac{1}{|x|^n},
+\]
+而 $\sum |x|^{-n}$ 收敛，故原级数也绝对收敛.
+
+还需检查 $|x|=1$ 的两个点. 当 $x=1$ 时，通项为 $1/2$，不趋于零，级数发散；当 $x=-1$ 时，通项为 $(-1)^n/2$，也不趋于零，级数发散.
+
+综上，收敛域为
+\[
+\mathbb{R}\setminus\{-1,1\}.
+\]
+这个例子说明，一般函数项级数的收敛域不一定是区间. 因此不能把幂级数的“半径”思想直接套到所有函数项级数上.$\hfill{\square}$
+\end{custom}
+
+\begin{example}
+证明函数项级数
+\[
+\sum_{n=1}^{\infty}\frac{\sin nx}{n^2}
+\]
+在 $\mathbb{R}$ 上一致收敛，并说明其和函数连续.
+\end{example}
+
+\begin{custom}{解}
+对任意实数 $x$，都有
+\[
+\left|\frac{\sin nx}{n^2}\right|\leqslant \frac{1}{n^2}.
+\]
+而数项级数
+\[
+\sum_{n=1}^{\infty}\frac{1}{n^2}
+\]
+收敛. 由 Weierstrass 判别法，原函数项级数在 $\mathbb{R}$ 上一致收敛并且绝对收敛.
+
+又因为每一项
+\[
+\frac{\sin nx}{n^2}
+\]
+都是连续函数，而连续函数列的级数在一致收敛时可以把连续性传给和函数，所以
+\[
+S(x)=\sum_{n=1}^{\infty}\frac{\sin nx}{n^2}
+\]
+在 $\mathbb{R}$ 上连续. 这个例子说明，判断和函数性质时，仅知道每一点收敛还不够；一致收敛可以提供更强的控制.$\hfill{\square}$
+\end{custom}
+
+\subsection{幂级数的定义和收敛半径}
+
+幂级数是函数项级数中结构最整齐的一类. 以 $x_0$ 为中心的幂级数可写成
+\[
+\sum_{n=0}^{\infty}a_n(x-x_0)^n.
+\]
+这里 $a_n$ 是常数，$x_0$ 是中心. 若 $x_0=0$，则称为关于 $x$ 的幂级数
+\[
+\sum_{n=0}^{\infty}a_nx^n.
+\]
+
+幂级数的收敛性由 Abel 定理控制.
+
+\begin{theorem}[Abel 定理]
+设幂级数
+\[
+\sum_{n=0}^{\infty}a_n(x-x_0)^n
+\]
+在某点 $x_1$ 收敛. 则对任意满足
+\[
+|x-x_0|<|x_1-x_0|
+\]
+的点 $x$，该幂级数绝对收敛. 反过来，若该幂级数在某点 $x_2$ 发散，则对任意满足
+\[
+|x-x_0|>|x_2-x_0|
+\]
+的点 $x$，该幂级数发散.
+\end{theorem}
+
+这个定理说明：幂级数一旦在某个半径处收敛，就会在更里面绝对收敛；一旦在某个半径处发散，就会在更外面发散. 因而幂级数的收敛域在开区间内部非常规则：存在 $R\in[0,+\infty]$，使得级数在
+\[
+|x-x_0|<R
+\]
+内绝对收敛，在
+\[
+|x-x_0|>R
+\]
+时发散. 这个 $R$ 称为收敛半径. 但端点
+\[
+x=x_0-R,
+\qquad
+x=x_0+R
+\]
+在 $0<R<+\infty$ 时不能由 $R$ 自动决定，必须代回原级数逐一判别. Abel 定理解释了为什么幂级数的收敛域通常是“以中心为核心的区间，再加上可能收敛的端点”. 计算幂级数收敛半径最系统的公式是 Cauchy--Hadamard 定理.
+
+\begin{theorem}[Cauchy--Hadamard 定理]
+对幂级数
+\[
+\sum_{n=0}^{\infty}a_n(x-x_0)^n,
+\]
+令
+\[
+\lambda=\limsup_{n\to\infty}\sqrt[n]{|a_n|}.
+\]
+则收敛半径为
+\[
+R=\frac{1}{\lambda},
+\]
+其中约定 $\lambda=0$ 时 $R=+\infty$，$\lambda=+\infty$ 时 $R=0$.
+\end{theorem}
+
+这个公式本质上来自根值判别法，因为
+\[
+\sqrt[n]{|a_n(x-x_0)^n|}
+=|x-x_0|\sqrt[n]{|a_n|}.
+\]
+当这个上极限小于 $1$ 时绝对收敛；大于 $1$ 时通项不可能趋于零，从而发散. 若普通极限
+\[
+\rho=\lim_{n\to\infty}\left|\frac{a_{n+1}}{a_n}\right|
+\]
+存在，则也常用比值法写成
+\[
+R=\frac{1}{\rho}.
+\]
+这只是 Cauchy--Hadamard 公式在系数比较规则时的一个方便形式. 若系数中有很多零项，或者相邻系数比值不存在，根值形式往往更稳妥. 感兴趣的同学可以验证这两个判别方法互相之间的推出关系，以此比较二者的关系.
+
+求幂级数收敛域时，可以按以下顺序进行：先识别中心 $x_0$；再用比值法或 Cauchy--Hadamard 定理求出 $R$；然后写出开收敛区间；最后把两个端点分别代入原级数，而不是代入已经变形后的和函数公式.
+
+\begin{example}
+求幂级数
+\[
+\sum_{n=1}^{\infty}\frac{(x-2)^n}{n3^n}
+\]
+的收敛半径与收敛域.
+\end{example}
+
+\begin{custom}{解}
+该幂级数以 $x_0=2$ 为中心. 令
+\[
+y=\frac{x-2}{3},
+\]
+原级数化为
+\[
+\sum_{n=1}^{\infty}\frac{y^n}{n}.
+\]
+由比值判别法，
+\[
+\lim_{n\to\infty}
+\left|\frac{y^{n+1}/(n+1)}{y^n/n}\right|
+=|y|.
+\]
+因此当 $|y|<1$ 时收敛，当 $|y|>1$ 时发散. 换回 $x$，得
+\[
+\left|\frac{x-2}{3}\right|<1,
+\]
+即
+\[
+-1<x<5.
+\]
+故收敛半径为
+\[
+R=3.
+\]
+
+下面单独检查端点. 当 $x=5$ 时，原级数变为
+\[
+\sum_{n=1}^{\infty}\frac{1}{n},
+\]
+发散. 当 $x=-1$ 时，原级数变为
+\[
+\sum_{n=1}^{\infty}\frac{(-1)^n}{n},
+\]
+由交错级数判别法收敛.
+
+因此收敛域为
+\[
+[-1,5).
+\]
+注意这里的区间不是以 $0$ 为中心，而是以 $2$ 为中心；端点的开闭也不能仅由半径看出.$\hfill{\square}$
+\end{custom}
+
+\begin{example}
+求幂级数
+\[
+\sum_{n=1}^{\infty}\frac{(2x+1)^n}{n^2}
+\]
+的收敛半径与收敛域.
+\end{example}
+
+\begin{custom}{解}
+先把它写成以某一点为中心的标准形式：
+\[
+2x+1=2\left(x+\frac12\right),
+\]
+于是
+\[
+\sum_{n=1}^{\infty}\frac{(2x+1)^n}{n^2}
+=
+\sum_{n=1}^{\infty}\frac{2^n}{n^2}\left(x+\frac12\right)^n.
+\]
+因此中心为
+\[
+x_0=-\frac12.
+\]
+直接用比值判别法也可得到
+\[
+\lim_{n\to\infty}
+\left|\frac{(2x+1)^{n+1}/(n+1)^2}{(2x+1)^n/n^2}\right|
+=|2x+1|.
+\]
+故开区间内的收敛条件为
+\[
+|2x+1|<1,
+\]
+即
+\[
+-1<x<0.
+\]
+从中心 $-\frac12$ 看，收敛半径为
+\[
+R=\frac12.
+\]
+
+再检查端点. 当 $x=0$ 时，级数为
+\[
+\sum_{n=1}^{\infty}\frac{1}{n^2},
+\]
+收敛. 当 $x=-1$ 时，级数为
+\[
+\sum_{n=1}^{\infty}\frac{(-1)^n}{n^2},
+\]
+绝对收敛. 因此收敛域为
+\[
+[-1,0].
+\]
+这个例子中，如果没有先识别中心，很容易把 $|2x+1|<1$ 误读成半径为 $1$；实际上相对于变量 $x$ 的半径是 $1/2$.$\hfill{\square}$
+\end{custom}
+
+\begin{example}
+利用 Cauchy--Hadamard 定理求幂级数
+\[
+\sum_{n=1}^{\infty}2^n(x-1)^{2n}
+\]
+的收敛半径与收敛域.
+\end{example}
+
+\begin{custom}{解}
+这个级数以 $x_0=1$ 为中心，但它只含有偶次幂. 若把它写成标准形式
+\[
+\sum_{m=0}^{\infty}a_m(x-1)^m,
+\]
+则
+\[
+a_m=\begin{cases}
+2^{m/2}, & m\text{ 为正偶数},\\
+0, & m\text{ 为奇数},
+\end{cases}
+\]
+常数项的取值不影响收敛半径. 于是
+\[
+\sqrt[m]{|a_m|}
+=\begin{cases}
+\sqrt{2}, & m\text{ 为正偶数},\\
+0, & m\text{ 为奇数}.
+\end{cases}
+\]
+因此
+\[
+\lambda=\limsup_{m\to\infty}\sqrt[m]{|a_m|}=\sqrt{2},
+\qquad
+R=\frac{1}{\sqrt{2}}.
+\]
+开收敛区间为
+\[
+\left(1-\frac{1}{\sqrt2},\,1+\frac{1}{\sqrt2}\right).
+\]
+
+端点处，若 $x=1\pm 1/\sqrt2$，则
+\[
+2^n(x-1)^{2n}=2^n\left(\frac{1}{2}\right)^n=1,
+\]
+通项不趋于零，级数发散. 因此收敛域为
+\[
+\left(1-\frac{1}{\sqrt2},\,1+\frac{1}{\sqrt2}\right).
+\]
+这个例子说明，当幂级数缺少许多次数项时，相邻系数比值可能不方便使用，而 Cauchy--Hadamard 定理仍然直接有效.$\hfill{\square}$
+\end{custom}
+
+在极端情形下，幂级数也可能只在中心收敛，或者在整个实轴上收敛. 例如
+\[
+\sum_{n=0}^{\infty}n!(x-1)^n
+\]
+的收敛半径为 $0$，只在 $x=1$ 处收敛；而
+\[
+\sum_{n=0}^{\infty}\frac{(x-1)^n}{n!}
+\]
+的收敛半径为 $+\infty$，对所有实数 $x$ 都收敛. 这些例子提醒我们，半径由系数 $a_n$ 的增长速度决定，而不是由式子中是否出现 $x$ 决定.
+
+\subsection{幂级数的性质}
+
+设幂级数
+\[
+\sum_{n=0}^{\infty}a_n(x-x_0)^n
+\]
+的收敛半径为 $R>0$，其和函数记为
+\[
+S(x)=\sum_{n=0}^{\infty}a_n(x-x_0)^n,
+\qquad |x-x_0|<R.
+\]
+幂级数在开收敛区间内有三条最常用的性质.
+
+第一，和函数在开收敛区间内连续. 更准确地说，对任意 $0<r<R$，幂级数在闭区间
+\[
+[x_0-r,x_0+r]
+\]
+上一致收敛；由于每一项 $a_n(x-x_0)^n$ 都连续，所以和函数 $S(x)$ 在 $|x-x_0|<R$ 内连续.
+
+第二，可以逐项积分. 若 $\alpha,\beta$ 都在开收敛区间内，则
+\[
+\int_{\alpha}^{\beta}S(x)\dd x
+=
+\sum_{n=0}^{\infty}a_n\int_{\alpha}^{\beta}(x-x_0)^n\dd x.
+\]
+特别地，若从中心 $x_0$ 积到 $x$，则
+\[
+\int_{x_0}^{x}S(t)\dd t
+=
+\sum_{n=0}^{\infty}\frac{a_n}{n+1}(x-x_0)^{n+1},
+\qquad |x-x_0|<R.
+\]
+逐项积分后所得幂级数的收敛半径仍为 $R$.
+
+第三，可以逐项求导. 在开收敛区间内，
+\[
+S'(x)=\sum_{n=1}^{\infty}na_n(x-x_0)^{n-1},
+\qquad |x-x_0|<R.
+\]
+逐项求导后所得幂级数的收敛半径也仍为 $R$. 这是因为 $\sqrt[n]{n}\to 1$，多出来的因子 $n$ 不改变 Cauchy--Hadamard 公式中的上极限.
+
+但是，“收敛半径不变”不等于“收敛域完全不变”. 逐项求导或逐项积分后，端点处的收敛性可能发生变化；因此只要题目要求完整收敛域，端点就必须重新检查. 实际做题时，安全的顺序是：先在开收敛区间内逐项运算得到和函数，再回头单独判断端点.
+
+\begin{example}
+求级数
+\[
+\sum_{n=1}^{\infty}nx^{n-1}
+\]
+的和函数与收敛域.
+\end{example}
+
+\begin{custom}{解}
+从几何级数出发：
+\[
+\sum_{n=0}^{\infty}x^n=\frac{1}{1-x},\qquad |x|<1.
+\]
+在开区间 $(-1,1)$ 内可以逐项求导，得到
+\[
+\sum_{n=1}^{\infty}nx^{n-1}
+=\left(\frac{1}{1-x}\right)'
+=\frac{1}{(1-x)^2},
+\qquad |x|<1.
+\]
+该级数的收敛半径仍为 $1$. 端点处，$x=1$ 时通项为 $n$，不趋于零；$x=-1$ 时通项为 $n(-1)^{n-1}$，也不趋于零. 因此收敛域为
+\[
+(-1,1).
+\]
+这里逐项求导只在原幂级数的开收敛区间内保证合法，不能先把等式写到端点再讨论.$\hfill{\square}$
+\end{custom}
+
+\begin{example}
+求级数
+\[
+\sum_{n=1}^{\infty}\frac{x^n}{n}
+\]
+在开收敛区间内的和函数，并给出它在实数范围内的收敛域.
+\end{example}
+
+\begin{custom}{解}
+仍从几何级数出发：
+\[
+\sum_{n=0}^{\infty}t^n=\frac{1}{1-t},\qquad |t|<1.
+\]
+在 $|x|<1$ 时，可在 $0$ 到 $x$ 上逐项积分：
+\[
+\int_0^x\sum_{n=0}^{\infty}t^n\dd t
+=
+\sum_{n=0}^{\infty}\int_0^x t^n\dd t
+=
+\sum_{n=0}^{\infty}\frac{x^{n+1}}{n+1}.
+\]
+另一方面，
+\[
+\int_0^x\frac{1}{1-t}\dd t=-\ln(1-x).
+\]
+因此
+\[
+\sum_{n=1}^{\infty}\frac{x^n}{n}=-\ln(1-x),
+\qquad |x|<1.
+\]
+
+下面检查端点. 当 $x=1$ 时，级数为调和级数
+\[
+\sum_{n=1}^{\infty}\frac{1}{n},
+\]
+发散. 当 $x=-1$ 时，级数为
+\[
+\sum_{n=1}^{\infty}\frac{(-1)^n}{n},
+\]
+由交错级数判别法收敛. 所以原级数在实数范围内的收敛域为
+\[
+[-1,1).
+\]
+需要注意，和函数公式 $-\ln(1-x)$ 是先在 $(-1,1)$ 内由逐项积分得到的；端点 $x=\pm 1$ 的收敛性是另外判定的.$\hfill{\square}$
+\end{custom}
+
+这个例子说明，逐项积分后所得级数的端点表现可能与原来的几何级数不同. 几何级数在 $x=-1$ 处发散，而积分后的级数在 $x=-1$ 处收敛.
+
+\begin{example}
+求和函数
+\[
+S(x)=\sum_{n=1}^{\infty}n^2x^n
+\]
+在其收敛区间内的表达式.
+\end{example}
+
+\begin{custom}{解}
+先由
+\[
+\sum_{n=1}^{\infty}nx^n=\frac{x}{(1-x)^2},\qquad |x|<1
+\]
+出发. 对两边求导，得到
+\[
+\sum_{n=1}^{\infty}n^2x^{n-1}
+=\left(\frac{x}{(1-x)^2}\right)'
+=\frac{1+x}{(1-x)^3},
+\qquad |x|<1.
+\]
+再乘以 $x$，得
+\[
+\sum_{n=1}^{\infty}n^2x^n
+=\frac{x(1+x)}{(1-x)^3},
+\qquad |x|<1.
+\]
+由于通项 $n^2x^n$ 在 $x=1$ 和 $x=-1$ 处均不趋于零，所以收敛域为 $(-1,1)$. 这里的操作顺序是先在开区间内求和，再根据需要检查端点.$\hfill{\square}$
+\end{custom}
+
+\begin{example}
+设
+\[
+S(x)=\sum_{n=0}^{\infty}\frac{x^{2n+1}}{2n+1}.
+\]
+求 $S'(x)$，并由此求 $S(x)$ 在开收敛区间内的表达式.
+\end{example}
+
+\begin{custom}{解}
+先判断收敛半径. 对一般项
+\[
+\frac{x^{2n+1}}{2n+1}
+\]
+可看成由 $\sum x^{2n+1}$ 积分而来，或者直接用根值判别法得到收敛半径为 $1$. 因此先在 $|x|<1$ 内逐项求导：
+\[
+S'(x)=\sum_{n=0}^{\infty}x^{2n}.
+\]
+右边是几何级数，故
+\[
+S'(x)=\frac{1}{1-x^2},\qquad |x|<1.
+\]
+又因为$S(0)=0$，所以在 $|x|<1$ 内，
+\[
+S(x)=\int_0^x\frac{1}{1-t^2}\dd t.
+\]
+计算积分得
+\[
+\int_0^x\frac{1}{1-t^2}\dd t
+=\frac12\ln\frac{1+x}{1-x}.
+\]
+因此
+\[
+\sum_{n=0}^{\infty}\frac{x^{2n+1}}{2n+1}
+=\frac12\ln\frac{1+x}{1-x},
+\qquad |x|<1.
+\]
+本题中，逐项求导得到的几何级数只在 $|x|<1$ 内使用；若要讨论端点，仍需把 $x=\pm1$ 代回原级数另行判断.$\hfill{\square}$
+\end{custom}
+
+\subsection{Taylor 级数的定义}
+
+设函数 $f$ 在点 $x_0$ 的某个邻域内具有各阶导数. 对每个正整数 $n$，可以写出 $f$ 在 $x_0$ 处的 $n$ 阶 Taylor 多项式
+\[
+T_n(x)=\sum_{k=0}^{n}\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k.
+\]
+把这些多项式的次数无限增加，形式上得到幂级数
+\[
+\sum_{n=0}^{\infty}\frac{f^{(n)}(x_0)}{n!}(x-x_0)^n.
+\]
+这个幂级数称为 $f$ 在 $x_0$ 处的 Taylor 级数. 当 $x_0=0$ 时，也称为 Maclaurin 级数.
+
+需要特别强调：写出 Taylor 级数，并不等于已经证明函数可以展开为这个级数. 严格地说，若在某个区间内有
+\[
+f(x)=\sum_{n=0}^{\infty}\frac{f^{(n)}(x_0)}{n!}(x-x_0)^n,
+\]
+才称 $f$ 在该区间内可以展开成以 $x_0$ 为中心的 Taylor 级数. 这件事通常要借助 Taylor 公式的余项来判定.
+
+Taylor 公式写作
+\[
+f(x)=\sum_{k=0}^{n}\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k+R_n(x),
+\]
+其中 $R_n(x)$ 是余项. 若对某个固定的 $x$ 有
+\[
+\lim_{n\to\infty}R_n(x)=0,
+\]
+则 Taylor 多项式 $T_n(x)$ 的极限就是 $f(x)$，也就是说 Taylor 级数在该点收敛到原函数.
+
+常用的 Lagrange 余项形式为
+\[
+R_n(x)=\frac{f^{(n+1)}(\xi)}{(n+1)!}(x-x_0)^{n+1},
+\]
+其中 $\xi$ 位于 $x$ 与 $x_0$ 之间. 因此，判断 Taylor 级数是否表示原函数时，经常需要估计
+\[
+\left|\frac{f^{(n+1)}(\xi)}{(n+1)!}(x-x_0)^{n+1}\right|
+\]
+是否随 $n\to\infty$ 趋于 $0$.
+
+在本讲范围内，Taylor 级数的题目可以按两步理解：第一，把它看成一个幂级数，用前面的方法求收敛半径与收敛域；第二，在希望表示原函数的点上，用 Taylor 余项判断这个幂级数的和是否真的等于 $f(x)$. 这两步缺一不可. 只知道 Taylor 级数作为幂级数收敛，并不能自动说明它的和函数就是原函数.
+
+\begin{example}
+设函数 $f$ 在包含 $x_0$ 的区间 $I$ 内具有各阶导数，且存在常数 $M>0$、$L>0$，使得对任意 $n\geqslant0$ 和任意 $x\in I$，都有
+\[
+|f^{(n)}(x)|\leqslant ML^n.
+\]
+证明 $f$ 在 $x_0$ 处的 Taylor 级数在区间 $I$ 内收敛到 $f(x)$.
+\end{example}
+
+\begin{custom}{解}
+对任意固定的 $x\in I$，由 Taylor 公式有
+\[
+f(x)=\sum_{k=0}^{n}\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k+R_n(x),
+\]
+其中 Lagrange 余项为
+\[
+R_n(x)=\frac{f^{(n+1)}(\xi)}{(n+1)!}(x-x_0)^{n+1},
+\]
+$\xi$ 位于 $x$ 与 $x_0$ 之间. 由题设，
+\[
+|f^{(n+1)}(\xi)|\leqslant ML^{n+1}.
+\]
+因此
+\[
+|R_n(x)|
+\leqslant
+\frac{M L^{n+1}|x-x_0|^{n+1}}{(n+1)!}
+=
+M\frac{\bigl(L|x-x_0|\bigr)^{n+1}}{(n+1)!}.
+\]
+对固定的 $x$，阶乘增长快于任意固定底数的指数增长，所以
+\[
+\frac{\bigl(L|x-x_0|\bigr)^{n+1}}{(n+1)!}\to0.
+\]
+从而
+\[
+R_n(x)\to0.
+\]
+于是
+\[
+f(x)=\sum_{n=0}^{\infty}\frac{f^{(n)}(x_0)}{n!}(x-x_0)^n.
+\]
+这说明 Taylor 级数不仅形式上写得出来，而且在 $I$ 内确实收敛到原函数.$\hfill{\square}$
+\end{custom}
+
+\begin{example}
+设函数 $f$ 在 $x_0$ 的邻域内具有各阶导数，并且
+\[
+f^{(n)}(x_0)=n!\,2^n\qquad (n=0,1,2,\ldots).
+\]
+写出 $f$ 在 $x_0$ 处的 Taylor 级数，并求这个 Taylor 级数作为幂级数的收敛半径.
+\end{example}
+
+\begin{custom}{解}
+由 Taylor 级数的定义，
+\[
+\sum_{n=0}^{\infty}\frac{f^{(n)}(x_0)}{n!}(x-x_0)^n
+=
+\sum_{n=0}^{\infty}\frac{n!\,2^n}{n!}(x-x_0)^n
+=
+\sum_{n=0}^{\infty}2^n(x-x_0)^n.
+\]
+这只是一个几何型幂级数. 其系数为 $a_n=2^n$，故
+\[
+\lambda=\lim_{n\to\infty}\sqrt[n]{|a_n|}=2,
+\qquad
+R=\frac12.
+\]
+因此该 Taylor 级数作为幂级数在
+\[
+|x-x_0|<\frac12
+\]
+内绝对收敛，在
+\[
+|x-x_0|>\frac12
+\]
+时发散. 端点处需要把 $x=x_0\pm\frac12$ 代回级数：此时通项分别为 $1$ 或 $(-1)^n$，均不趋于零，所以两个端点都发散. 收敛域为
+\[
+\left(x_0-\frac12,\,x_0+\frac12\right).
+\]
+本题只根据导数值写出了 Taylor 级数并求出它作为幂级数的收敛域；若要进一步说明它是否等于原函数 $f(x)$，还需要额外估计 Taylor 余项.$\hfill{\square}$
+\end{custom}
+
+\begin{example}
+说明“函数在一点具有各阶导数”并不自动保证它等于自己的 Taylor 级数.
+\end{example}
+
+\begin{custom}{解}
+考虑函数
+\[
+f(x)=
+\begin{cases}
+\mathrm{e}^{-1/x^2}, & x\neq0,\\
+0, & x=0.
+\end{cases}
+\]
+可以证明，对每个 $n$，当 $x\neq0$ 时，$f^{(n)}(x)$ 都可以写成
+\[
+f^{(n)}(x)=P_n\left(\frac1x\right)\mathrm{e}^{-1/x^2},
+\]
+其中 $P_n$ 是某个多项式. 又因为 $\mathrm{e}^{-1/x^2}$ 在 $x\to0$ 时比任何 $|x|$ 的幂都趋于零得更快，所以
+\[
+f^{(n)}(0)=0\qquad(n=0,1,2,\ldots).
+\]
+因此 $f$ 在 $0$ 处的 Taylor 级数为
+\[
+\sum_{n=0}^{\infty}\frac{f^{(n)}(0)}{n!}x^n=0.
+\]
+这个级数当然在所有实数 $x$ 上收敛，其和函数恒为 $0$. 但是当 $x\neq0$ 时，
+\[
+f(x)=\mathrm{e}^{-1/x^2}>0.
+\]
+所以这个 Taylor 级数并不表示原函数. 这个例子提醒我们：Taylor 级数的收敛性和 Taylor 级数是否等于原函数，是两个不同问题；后者必须依赖余项趋于零等额外信息.$\hfill{\square}$
+\end{custom}
+
+\clearpage
+\renewEnvironmentCounter
+\section{5月16日习题课}
+\subsection{Fourier级数及其性质}
+以下总假设$f$是以$2\pi$为周期且在$[-\pi,\pi]$上有定义、Riemann可积的函数，如无特殊说明，总假设函数$f$可以表示为三角级数
+$$f(x)=\frac{a_{0}}{2}+\sum_{k=1}^{\infty}{(a_{k}\cos{kx}+b_{k}\sin{kx})}$$
+在两边同时乘以$\cos{(lx)},l=0,1,\cdots$并在$[-\pi,\pi]$上积分有
+$$\int_{-\pi}^{\pi}{f(x)\cos{(lx)}\mathrm{d}x}=a_{l}\pi$$
+从而可知
+$$a_{k}=\frac{1}{\pi}\int_{-\pi}^{\pi}{f(x)\cos{(kx)}\mathrm{d}x},k=0,1,\cdots.$$
+同理可得
+$$b_{k}=\frac{1}{\pi}\int_{-\pi}^{\pi}{f(x)\sin{(kx)}\mathrm{d}x},k=1,2,\cdots,$$
+此即Euler-Fourier公式.
+
+\begin{theorem}[Euler-Fourier公式]
+设函数$f$满足上述条件，并且可以被写成三角级数
+$$f(x)=\frac{a_{0}}{2}+\sum_{k=1}^{\infty}{(a_{k}\cos{kx}+b_{k}\sin{kx})},$$
+则在形式上有
+$$a_{k}=\frac{1}{\pi}\int_{-\pi}^{\pi}{f(x)\cos{(kx)}\mathrm{d}x},k=0,1,\cdots, b_{k}=\frac{1}{\pi}\int_{-\pi}^{\pi}{f(x)\sin{(kx)}\mathrm{d}x},k=1,2,\cdots,$$
+此时$a_{k},b_{k}$被称为函数$f$的Fourier系数，此即Euler-Fourier公式. 此时形式上记
+$$f(x)\sim \frac{a_{0}}{2}+\sum_{k=1}^{\infty}{(a_{k}\cos{kx}+b_{k}\sin{kx})}$$
+并记Fourier级数的部分和序列为
+$$S_{n}(x)=\frac{a_{0}}{2}+\sum_{k=1}^{n}{(a_{k}\cos{kx}+b_{k}\sin{kx})}$$
+\end{theorem}
+
+当然，书上强调了三角级数不能“武断地”写
+$$f(x)= \frac{a_{0}}{2}+\sum_{k=1}^{\infty}{(a_{k}\cos{kx}+b_{k}\sin{kx})}$$
+而应该写
+$$f(x)\sim \frac{a_{0}}{2}+\sum_{k=1}^{\infty}{(a_{k}\cos{kx}+b_{k}\sin{kx})}$$
+这是因为右端三角级数不必处处收敛，若收敛，也不必处处收敛到函数$f$. 这是因为本质上系数是由积分定义的，而积分本身并不在意函数$f$在某个特定点$x=x_{0}$处的取值.
+
+特别地，当$f$为奇函数时，由上面的推导容易知道$a_{k}\equiv 0,\forall k=0,1,\cdots$，此时
+$$f(x)\sim \sum_{k=1}^{\infty}{b_{k}\sin{(kx)}}.$$
+类似地，当$f$为偶函数时，容易知道$b_{k}\equiv 0,k=1,2,\cdots$，此时
+$$f(x)\sim \frac{a_{0}}{2}+\sum_{k=1}^{\infty}{a_{k}\cos{(kx)}}.$$
+
+由此可得到“正弦级数”和“余弦级数”，以及如何将一个函数展开成正弦级数或余弦级数：考虑定义在半周期$[0,\pi]$上的函数$f(x)$，若要将其展开成“正弦级数”，只需要将其“假想地”延拓/改造为
+$$\tilde{f}(x)=\left\{\begin{aligned}&f(x),&& x> 0\\ &0,&& x=0\\ &-f(-x),&& x<0\\\end{aligned}\right.$$
+则自动地会得到一个正弦级数；同样地，若要将其展开成“余弦级数”，只需要将其“假想地”延拓/改造为
+$$\hat{f}(x)=\left\{\begin{aligned}&f(x),&& x\geq 0\\ &f(-x),&& x<0\\\end{aligned}\right.$$
+即可.
+
+以上讨论了周期为$2\pi$的函数的Fourier级数展开. 一般地，对周期为$2T$的函数$g$，若其在$[-T,T]$上有定义且Riemann可积，则可做变换$x=\frac{T}{\pi}t$使得$\phi(t)=f(x)$是定义在$\mathbb{R}$上的周期为$2\pi$的函数，于是
+$$f(x)\sim \frac{a_{0}}{2}+\sum_{k=1}^{\infty}{\left(a_{n}\cos{(\frac{n\pi}{T}x)}+b_{n}\sin{(\frac{n\pi}{T}x)}\right)}.$$
+其中
+$$a_{n}=\frac{1}{\pi}\int_{-T}^{T}{f(x)\cos{(\frac{n\pi}{T}x)}\mathrm{d}x},b_{n}=\frac{1}{\pi}\int_{-T}^{T}{f(x)\sin{(\frac{n\pi}{T}x)}\mathrm{d}x}$$
+
+除了正常的计算方法之外，在\cite[第十五章]{XHM}中介绍了两个计算Fourier系数的方式. 第一个方法由如下命题保证： 
+\begin{theorem}
+设以$2\pi$为周期的连续函数$f$在$[-\pi,\pi]$上除了有限个点以外可导，又设在补充有限个点的取值后，导函数$f^{\prime}$在$[-\pi,\pi]$上可积且绝对可积，则从$f(x)\sim\frac{a_{0}}{2}+\sum_{k=1}^{\infty}{(a_{k}\cos{(kx)}+b_{k}\sin{kx})}$有
+$$f^{\prime}(x)\sim\left(\frac{a_{0}}{2}\right)^{\prime}+\sum_{k=1}^{\infty}{(a_{k}\cos{kx}+b_{k}\sin{kx})^{\prime}}=\sum_{k=1}^{\infty}{(kb_{k}\cos{kx}-ka_{k}\sin{kx})}.$$
+也即可以逐项求导.
+\end{theorem}
+
+\begin{example}
+此即\cite[例题15.1.2]{XHM}设函数$f(x)=x^{3},x\in(-\pi,\pi)$，求$f$的Fourier级数.
+\end{example}
+
+\subsection{Fourier级数的收敛性}
+Fourier级数的收敛性相当复杂，在数学专业专门有一门课对此进行深刻地研究. 简单而言，书上给出了如下的定理
+\begin{theorem}
+设$f$是以$2T$为周期的函数，且满足下列两个条件之一：\\
+(1)(Dirichlet条件)在$[-T,T]$上分段单调且有界；\\
+(2)(Lipschitz条件)在$[-T,T]$上分段可导.
+则函数$f$的Fourier级数点点收敛，且在$x$处收敛至左极限与右极限的平均值$\frac{1}{2}(f(x+0)+f(x-0))$. 特别地，若$f(x)$在$x$处连续，则$f$的Fourier级数在$x$处收敛于$f(x)$.
+\end{theorem}
+
+此外，Fourier级数还有最佳逼近性质. 
+\begin{theorem}
+设函数$f$在$[-\pi,\pi]$上Riemann可积，则$n$阶三角多项式全体$T$对$f$的最佳逼近恰为$f$的Fourier级数的部分和
+$$S_{n}(x)=\frac{a_{0}}{2}+\sum_{k=1}^{n}{(a_{k}\cos{kx}+b_{k}\sin{kx})}$$
+\end{theorem}
+
+从而有Bessel不等式以及Parseval恒等式
+\begin{theorem}[Bessel不等式]
+设函数$f$在$[-\pi,\pi]$上Riemann可积，则对任意$N\in\mathbb{N}$，有$f$的Fourier系数满足不等式
+$$\frac{a_{0}^{2}}{2}+\sum_{k=1}^{N}{(a_{n}^{2}+b_{n}^{2})}\leqslant \frac{1}{\pi}\int_{-\pi}^{\pi}{f^{2}(x)\mathrm{d}x}$$
+\end{theorem}
+
+\begin{theorem}[Parseval恒等式]
+设函数$f$在$[-\pi,\pi]$上Riemann可积，则$f$的Fourier系数满足不等式
+$$\frac{a_{0}^{2}}{2}+\sum_{k=1}^{\infty}{(a_{n}^{2}+b_{n}^{2})}= \frac{1}{\pi}\int_{-\pi}^{\pi}{f^{2}(x)\mathrm{d}x}$$
+\end{theorem}
+
+基于此，我们可以利用Fourier级数得到很多级数求和的结论.
+\begin{example}
+此即\cite[第九章\S 3习题11]{JC}. 用Parseval恒等式以及\cite[例9.3.1]{JC}的结果证明等式
+$$\sum_{n=1}^{\infty}{\frac{1}{n^{2}}}=\frac{\pi^{2}}{6}.$$
+\end{example}
+
+\begin{example}
+此即\cite[第九章\S 3习题11]{JC}. 用Parseval恒等式以及\cite[例9.3.2]{JC}的结果求
+$$\sum_{n=1}^{\infty}{\frac{1}{(2n-1)^{4}}}.$$
+\end{example}
+
+Parseval恒等式还可以用于积分的计算.
+\begin{example}
+证明
+$$I=\int_{0}^{\frac{\pi}{2}}{(\ln{\cos{x}})^{2}\mathrm{d}x}=\frac{\pi^{3}}{24}+\frac{\pi}{2}\ln^{2}{2}.$$
+\end{example}
+
+\subsection{常微分方程基础}
+详细的内容参考书本或者参考发到群里的《常微分方程》课程笔记. 习题课会讲评\cite[P276/2,3(1)(3)(5)(7)(9)]{JC}.
+
+\clearpage
+\renewEnvironmentCounter
+\section{5月30日习题课}
+\subsection{线性微分方程（组）解的性质}
+考虑高阶线性微分方程
+$$y^{(n)}+a_{1}(x)y^{(n-1)}+\cdots+a_{n-1}(x)y^{\prime}+a_{n}(x)y=f(x).$$
+我们可以通过引入$y_{1}=y,y_{2}=y^{\prime},\cdots,y_{n}=y^{(n-1)}$，从而
+$$y_{2}=y_{1}^{\prime},y_{3}=y_{2}^{\prime},\cdots,y_{n}=y_{n-1}^{\prime}$$
+以及
+$$y_{n}^{\prime}=-a_{1}(x)y_{n}-a_{2}(x)y_{n-1}-\cdots-a_{n}(x)y_{1}+f(x)$$
+从而高阶线性微分方程可等价转化为一阶线性微分方程组
+$$\frac{\mathrm{d}}{\mathrm{d}x}\begin{bmatrix}y_{1}\\ y_{2}\\ y_{3}\\ \vdots \\ y_{n-1}\\ y_{n}\\\end{bmatrix}=\begin{bmatrix}0&1&0&\cdots&0&0\\ 0&0&1&\cdots&0&0\\ \vdots&\vdots&\vdots&\ddots&\vdots&\vdots\\ 0&0&0&\cdots&1&0\\0&0&0&\cdots&0&1\\ -a_{n}(x)&-a_{n-1}(x)&-a_{n-2}(x)&\cdots&-a_{2}(x)&-a_{1}(x)\\\end{bmatrix}\begin{bmatrix}y_{1}\\ y_{2}\\ y_{3}\\ \vdots \\ y_{n-1}\\ y_{n}\\\end{bmatrix}+\begin{bmatrix}0\\ 0\\ 0\\ \vdots \\ 0\\ f(x)\\\end{bmatrix}$$
+
+上述一阶线性微分方程组可以抽象为$\dot{\vec{x}}=A(t)\vec{x}+\vec{f}(t)$，当$\vec{f}(t)=\vec{0}$为零向量时，称上述一阶线性微分方程组为齐次的.
+
+\begin{definition}[基本解组，基本解方阵]
+设$\vec{\varphi_{1}}(t),\cdots,\vec{\varphi_{m}}(t)$是方程组
+$$\frac{\mathrm{d}\vec{x}}{\mathrm{d}t}=A(t)\vec{x},A(t)=(a_{ij}(t))_{n\times n}$$
+的解，则我们称$\{\vec{\varphi_{1}}(t),\cdots,\vec{\varphi_{m}}(t)\}$为解组，对应的矩阵
+$$\begin{bmatrix}\vec{\varphi_{1}}(t)&\cdots&\vec{\varphi_{m}}(t)\\\end{bmatrix}$$
+称为解矩阵.~特别地，当$m=n$时解方阵.
+
+若存在不全为零的$C_{i},i=1,2,\cdots,m$，使得
+$$\sum\limits_{i=1}^{n}{C_{i}\vec{\varphi_{i}}(t)}\equiv 0,~\forall t\in(\alpha,\beta),$$
+则称$\vec{\varphi_{1}}(t),\cdots,\vec{\varphi_{m}}(t)$于$(\alpha,\beta)$上线性相关；
+
+反之，若$\sum\limits_{i=1}^{m}{C_{i}\vec{\varphi_{i}}(t)}\equiv 0,\forall t\in(\alpha,\beta)$当且仅当$C_{i}=0,\forall i=1,2,\cdots,m$，则称$\vec{\varphi_{1}}(t),\cdots,\vec{\varphi_{m}}(t)$线性无关.特别地，若$\{\vec{\varphi_{1}}(t),\cdots,\vec{\varphi_{m}}(t)\}$线性无关，则称为基本解组，对应矩阵分别称为基本解矩阵，基本解方阵.
+\end{definition}
+
+\begin{theorem}
+设
+$$\frac{\mathrm{d}\vec{x}}{\mathrm{d}t}=A(t)\vec{x},A(t)=(a_{ij}(t))_{n\times n},a_{ij}(t)\in\mathrm{C}(\alpha,\beta),$$
+则\\
+$(1)$基本解方阵$\Phi(t)$是存在的；\\
+$(2)\Phi(t)$是基本解方阵当且仅当$\mathrm{det}(\Phi(t))\neq 0,\forall t\in(\alpha,\beta)$；\\
+$(3)\frac{\mathrm{d}\vec{x}}{\mathrm{d}t}=A(t)\vec{x}$的解可以表示为$\vec{x}(t)=\Phi(t)\vec{c}$，其中$\Phi(t)$为基本解方阵；\\
+$(4)(\mathrm{Liouville}\text{公式})W(t)=W(t_{0})\mathrm{exp}\left(\int_{t_{0}}^{t}{\mathrm{tr}(A(s))\mathrm{d}s}\right)$，其中$W(t)=\mathrm{det}(\Phi(t))$称为$\mathrm{Wronsky}$行列式.
+\end{theorem}
+
+\begin{proof}
+$(1)$考虑$n$个初值问题
+$$(\mathrm{cp})_{i}\left\{\begin{aligned}\frac{\mathrm{d}\vec{x}}{\mathrm{d}t}&=A(t)\vec{x}\\ \vec{x}(t_{0})&=\vec{e_{i}}=(0,\cdots,1,\cdots,0)^{T},~t_{0}\in(\alpha,\beta),\\\end{aligned}\right.$$
+则$(\mathrm{cp})_{i}$的解记为$\vec{\varphi_{i}}(t)=\vec{x}(t;t_{0},\vec{e_{i}})$，它们线性无关从而组合在一起能够成为基本解方阵.若不然，则存在不全为零的常数$C_{i}$，使得$\sum\limits_{i=1}^{n}{C_{i}\vec{\varphi_{i}}(t)}\equiv \vec{0},\forall t\in(\alpha,\beta)$.特别地，令$t=t_{0}$，则
+$$\sum_{i=1}^{n}{C_{i}\vec{\varphi_{i}}(t)}=\sum_{i=1}^{n}{C_{i}\vec{e_{i}}}=\vec{0}$$
+这与$\vec{e_{i}}$标准正交基矛盾！从而$\Phi(t):=\begin{bmatrix}\vec{\varphi_{1}}(t)&\cdots&\vec{\varphi_{m}}(t)\\\end{bmatrix}$是基本解方阵.\\
+$(2)$充分性，若$\Phi(t)$非基本解方阵，则由定义，存在不全为零的常数$C_{i}$，使得$\sum{C_{i}\vec{\varphi_{i}}(t)}\equiv 0,\forall t\in(\alpha,\beta)$，这与行列式恒不为零矛盾.\\
+必要性，若$\exists t_{0}\in(\alpha,\beta)$，使得$\mathrm{det}(\Phi(t_{0}))=0$，则$\Phi(t_{0})$奇异，于是$\Phi(t_{0})\vec{c}\equiv \vec{0}$有非零解$\vec{c}$.令$\vec{x}(t):=\Phi(t)\vec{c}$，由$\Phi(t)$基本解矩阵，则$\vec{x}(t)$是方程组的解，并且$\vec{x}(t_{0})=\vec{0}$.注意到这是一个齐次方程组，显然零解为其解，于是由解的存在唯一性定理知$\vec{x}(t)\equiv 0$，于是$\Phi(t)\vec{c}\equiv \vec{0}$，于是得到矛盾！\\
+$(3)$设$\Phi(t)=\begin{bmatrix}\vec{\varphi_{1}}(t)&\cdots&\vec{\varphi_{m}}(t)\\\end{bmatrix}$是基本解方阵，特别地，取$t=t_{0},\Phi(t_{0}):=\begin{bmatrix}\vec{\varphi_{1}}(t_{0})&\cdots&\vec{\varphi_{m}}(t_{0})\\\end{bmatrix}$非异阵，于是$\{\vec{\varphi_{1}}(t_{0}),\cdots,\vec{\varphi_{m}}(t_{0})\}$构成$\mathrm{R}^{n}$中的一组基.设$\vec{x}(t)$是方程组任一解，$\vec{x}(t_{0})\in\mathbbm{R}^{n}\Rightarrow \vec{x_{0}}=\sum_{i=1}^{n}{C_{i}\vec{\varphi_{i}}(t_{0})},\exists C_{i}\in\mathbbm{R}$，考虑
+$$\left\{\begin{aligned}\vec{y}(t)&=\sum_{i=1}^{n}{C_{i}\vec{\varphi_{i}}(t)}\in S\\ \vec{y}(t_{0})&=\vec{x}(t_{0})\\\end{aligned}\right.$$
+从而由解的存在唯一性定理知$\vec{x}(t)\equiv \vec{y}(t)=\Phi(t)\vec{c}$.\\
+$(4)$对$\mathrm{Wronsky}$行列式求导，就有
+$$\begin{aligned}\frac{\mathrm{d}}{\mathrm{d}t}\left|\begin{matrix}\varphi_{11}(t)&\varphi_{12}(t)&\cdots&\varphi_{1n}(t)\\ \vdots &\vdots&\ &\vdots\\ \varphi_{i1}(t)&\varphi_{i2}(t)&\cdots&\varphi_{in}(t)\\ \vdots &\vdots&\ &\vdots\\ \varphi_{n1}(t)&\varphi_{n2}(t)&\cdots&\varphi_{nn}(t)\\\end{matrix}\right|&=\sum_{i=1}^{n}{\left|\begin{matrix}\varphi_{11}(t)&\varphi_{12}(t)&\cdots&\varphi_{1n}(t)\\ \vdots &\vdots&\ &\vdots\\ \varphi_{i1}^{\prime}(t)&\varphi_{i2}^{\prime}(t)&\cdots&\varphi^{\prime}_{in}(t)\\ \vdots &\vdots&\ &\vdots\\ \varphi_{n1}(t)&\varphi_{n2}(t)&\cdots&\varphi_{nn}(t)\\\end{matrix}\right|}\\
+&=\sum_{i=1}^{n}{\left|\begin{matrix}\varphi_{11}(t)&\varphi_{12}(t)&\cdots&\varphi_{1n}(t)\\ \vdots &\vdots&\ &\vdots\\ \sum\limits_{p=1}^{n}{a_{ip}(t)\varphi_{p1}(t)}&\sum\limits_{p=1}^{n}{a_{ip}(t)\varphi_{p2}(t)}&\cdots&\sum\limits_{p=1}^{n}{a_{ip}(t)\varphi_{pn}(t)}\\ \vdots &\vdots&\ &\vdots\\ \varphi_{n1}(t)&\varphi_{n2}(t)&\cdots&\varphi_{nn}(t)\\\end{matrix}\right|}\\
+&=\sum_{i=1}^{n}{a_{ii}(t)|\Phi(t)|}\\\end{aligned}$$
+其中用到了
+$$\frac{\mathrm{d}}{\mathrm{d}t}\vec{\varphi_{j}}(t)=A(t)\vec{\varphi_{j}}(t)\Rightarrow \varphi_{ij}^{\prime}(t)=\sum_{p=1}^{n}{a_{ip}(t)\varphi_{pj}(t)}$$
+以及行列式的行消去律.从而
+$$\frac{\mathrm{d}}{\mathrm{d}t}W(t)=\mathrm{tr}(A(t))W(t)\Rightarrow W(t)=W(t_{0})\mathrm{exp}\left(\int_{t_{0}}^{t}{\mathrm{tr}(A(s))\mathrm{d}s}\right)$$
+于是我们得到证明.
+\end{proof}
+
+更一般地，我们考虑$\frac{\mathrm{d}\vec{x}}{\mathrm{d}t}=A(t)\vec{x}+\vec{f}(t),\vec{x}(t)$是否能表示为$\Phi(t)\vec{c}(t)$，其中$\Phi(t)$为对应齐次方程的基本解组呢？
+$$\frac{\mathrm{d}}{\mathrm{d}t}\vec{x}(t)=\frac{\mathrm{d}\Phi(t)}{\mathrm{d}t}\vec{c}(t)+\Phi(t)\frac{\mathrm{d}\vec{c}(t)}{\mathrm{d}t}=A(t)\Phi(t)\vec{c}(t)+\Phi(t)\frac{\mathrm{d}\vec{c}(t)}{\mathrm{d}t}=A(t)\Phi(t)\vec{c}(t)+\vec{f}(t)$$
+从而
+$$\frac{\mathrm{d}\vec{c}(t)}{\mathrm{d}t}=\Phi^{-1}(t)\vec{f}(t),\vec{c}(t)=\vec{c}+\int_{t_{0}}^{t}{\Phi^{-1}(s)\vec{f}(s)\mathrm{d}s}$$
+于是得到常数变易公式
+$$\vec{x}(t)=\Phi(t)\vec{c}+\int_{t_{0}}^{t}{\Phi(t)\Phi^{-1}(s)\vec{f}(s)\mathrm{d}s}$$
+
+类比常系数线性方程的常数变易公式$\vec{x}(t)=e^{A(t-t_{0})}\vec{x_{0}}+\int_{t_{0}}^{t}{e^{A(t-s)}\vec{f}(s)\mathrm{d}s}$，记$U(t,s)=\Phi(t)\Phi^{-1}(s)$称为状态转移矩阵，则常数变易公式可改写为
+$$\vec{x}(t)=U(t,t_{0})\vec{x_{0}}+\int_{t_{0}}^{t}{U(t,s)\vec{f}(s)\mathrm{d}s}$$
+\begin{theorem}[$U(t,s)$的性质]
+上述$U(t,s)$有如下性质:\\
+$(1)U(t,t)=I$；\\
+$(2)U(t,s)U(s,p)=U(t,p)$；\\
+$(3)U^{-1}(t,s)=U(s,t)$；\\
+$(4)\frac{\mathrm{d}}{\mathrm{d}t}U(t,s)=A(t)U(t,s)$.
+\end{theorem}
+
+\begin{custom}{注}
+基本解方阵$\Phi(t)$的存在性保证，但唯一性不成立.\\
+$(1)$设$\Phi(t),\Psi(t)$均为齐次方程组的基本解矩阵，则$\Phi(t)\equiv \Psi(t)H,\forall t\in(\alpha,\beta)$.\\
+$\bec\frac{\mathrm{d}}{\mathrm{d}t}(\Psi^{-1}(t)\Phi(t))=-\Psi^{-1}\frac{\mathrm{d}\Psi}{\mathrm{d}t}\Psi^{-1}\Phi+\Psi^{-1}\frac{\mathrm{d}\Phi}{\mathrm{d}t}=-\Psi^{-1}A\Psi^{-1}\Psi\Phi+\Psi^{-1}A\Phi=0\Rightarrow \Phi(t)\equiv \Psi(t)H,\forall t\in(\alpha,\beta)$.\\
+$(2)$状态转移矩阵$U(t,s)$的取值与基本解方阵的选取无关.\\
+$\bec U_{\Phi}(t,s)=\Phi(t)\Phi^{-1}(s)=\Psi(t)HH^{-1}\Psi^{-1}(s)=\Psi(t)\Psi^{-1}(s)=U_{\Psi}(t,s)$.
+\end{custom}
+
+\begin{theorem}[线性常微分方程组初值问题解的存在唯一性定理]
+初值问题
+$$(\mathrm{cp})\left\{\begin{aligned}\frac{\mathrm{d}\vec{x}}{\mathrm{d}t}&=A(t)\vec{x}+\vec{f}(t)\\ \vec{x}(t_{0})&=\vec{x_{0}}\\\end{aligned}\right.$$
+的解存在唯一.
+\end{theorem}
+
+\subsection{二阶常系数线性微分方程的求解}
+之前已经研究了一阶常系数线性方程的情形：
+$$\frac{\mathrm{d}x}{\mathrm{d}t}=ax\Rightarrow x(t)=Ce^{at}$$
+一个自然的想法是研究二阶齐次常系数线性方程的情形：
+$$(*)\ddot{x}+a_{1}\dot{x}+a_{2}x=0,a_{1},a_{2}\in\mathbbm{R}$$
+设$x=e^{\lambda t}$，则
+$$\lambda^{2}e^{\lambda t}+a_{1}\lambda e^{\lambda t}+a_{2} e^{\lambda t}=0\Rightarrow \lambda^{2}+a_{1}\lambda+a_{2}=0$$
+方程$\lambda^{2}+a_{1}\lambda+a_{2}=0$称为二阶常系数线性方程的特征方程，它的解$\lambda_{1},\lambda_{2}$称为特征值，当然可能是复数，因此我们首先介绍复值函数.
+
+\begin{definition}[复值函数，复值解]
+设$z(t)$是$(a,b)$上的复值函数，若$z(t)=\alpha(t)+\mathrm{i}\beta(t)$，其中$\alpha(t),\beta(t)$是$(a,b)$上的实值函数，$\mathrm{i}$为虚数单位.复值函数一些概念定义如下：\\
+$(1)$极限：$\lim\limits_{t\to t_{0}}{z(t)}=\lim\limits_{t\to t_{0}}{\alpha(t)}+\mathrm{i}\lim\limits_{t\to t_{0}}{\beta(t)}$；\\
+$(2)$连续：$\lim\limits_{t\to t_{0}}{z(t)}=z(t_{0})$；\\
+$(3)$导数：$z^{\prime}(t_{0})=\dot{z}(t_{0})=\frac{\mathrm{d}}{\mathrm{d}t}z(t)=\alpha^{\prime}(t_{0})+\mathrm{i}\beta^{\prime}(t_{0})$；\\
+$(4)$积分：$\int_{a}^{b}{z(s)\mathrm{d}s}=\int_{a}^{b}{\alpha(s)\mathrm{d}s}+\int_{a}^{b}{\beta(s)\mathrm{d}s}$.\\
+若复值函数$z(t)$满足微分方程，则称之为微分方程的复值解.
+\end{definition}
+
+\begin{theorem}[复值函数的性质]
+复值函数有如下性质：\\
+$1^{\circ}e^{(\alpha+\mathrm{i}\beta)t}=e^{\alpha t}(\cos{\beta t}+\mathrm{i}\sin{\beta t})$；\\
+$2^{\circ}e^{\lambda_{1}t}e^{\lambda_{2}t}=e^{(\lambda_{1}+\lambda_{2})t},\forall \lambda_{1},\lambda_{2}\in\mathbbm{C}$；\\
+$3^{\circ}\overline{(e^{\lambda t})}=e^{\overline{\lambda}t},\forall \lambda\in\mathbbm{C}$.
+\end{theorem}
+
+接下来是非常重要的叠加原理.
+\begin{theorem}[叠加原理]
+设$z_{1}(t),z_{2}(t)$是微分方程$(*)$的解，则$C_{1}z_{1}+C_{2}z_{2}$也是方程$(*)$的解.
+\end{theorem}
+
+接下来我们来求解微分方程$(*)$，设$\lambda_{1},\lambda_{2}$为其特征值：
+$$(*)\frac{\mathrm{d}^{2}x}{\mathrm{d}t^{2}}+a_{1}\frac{\mathrm{d}x}{\mathrm{d}t}+a_{2}x=0\Leftrightarrow \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\mathrm{d}x}{\mathrm{d}t}-\lambda_{1}x\right)-\lambda_{2}\left(\frac{\mathrm{d}x}{\mathrm{t}}-\lambda_{1}x\right)=0$$
+引入
+$$y=\frac{\mathrm{d}x}{\mathrm{d}t}-\lambda_{1}t\Rightarrow \frac{\mathrm{d}y}{\mathrm{d}t}-\lambda_{2}y=0\Rightarrow \frac{\mathrm{d}x}{\mathrm{d}t}-\lambda_{1}x=C_{1}e^{\lambda_{2}t}$$
+同理，引入
+$$z=\frac{\mathrm{d}x}{\mathrm{d}t}-\lambda_{2}t\Rightarrow \frac{\mathrm{d}z}{\mathrm{d}t}-\lambda_{1}z=0\Rightarrow \frac{\mathrm{d}x}{\mathrm{d}t}-\lambda_{2}x=C_{2}e^{\lambda_{1}t}$$
+接下来分类讨论：\\
+$1^{\circ}$若$\lambda_{1}\neq \lambda_{2}$，则上述两式作差可得
+$$(\lambda_{2}-\lambda_{1})x=C_{1}e^{\lambda_{2}t}-C_{2}e^{\lambda_{1}t}\Rightarrow x(t)=\frac{C_{1}}{\lambda_{2}-\lambda_{1}}e^{\lambda_{2}t}+\frac{C_{2}}{\lambda_{1}-\lambda_{2}}e^{\lambda_{1}}t$$
+重新定义常数可得
+$$x(t)=C_{1}e^{\lambda_{1}t}+C_{2}e^{\lambda_{2}t},C_{1},C_{2}\in\mathbbm{C}$$
+$2^{\circ}$若$\lambda_{1}=\lambda_{2}=\lambda$，则
+$$\frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\mathrm{d}x}{\mathrm{d}t}-\lambda x\right)-\lambda\left(\frac{\mathrm{d}x}{\mathrm{d}t}-\lambda x\right)=0\Rightarrow \frac{\mathrm{d}x}{\mathrm{d}t}=\lambda x+C_{1}e^{\lambda t}$$
+这是一个线性方程，从而由常数变易公式
+$$x(t)=e^{\lambda t}\left(C_{2}+\int{e^{-\lambda t}\cdot C_{1}e^{\lambda t}\mathrm{d}t}\right)=(C_{1}t+C_{2})e^{\lambda t},C_{1},C_{2}\in\mathbbm{C}$$
+于是我们有如下结论：
+\begin{theorem}[二阶常系数线性微分方程的复值通解]
+二阶常系数线性微分方程$(*)\ddot{x}+a_{1}\dot{x}+a_{2}x=0,a_{1},a_{2}\in\mathbbm{R}$的复值通解可以表示为
+$$x(t)=\left\{\begin{aligned}&C_{1}e^{\lambda_{1}t}+C_{2}e^{\lambda_{2}t},&&\lambda_{1}\neq \lambda_{2}\\&(C_{1}t+C_{2})e^{\lambda t},&&\lambda_{1}=\lambda_{2}=\lambda\\\end{aligned}\right.$$
+其中$C_{1},C_{2}\in\mathbbm{C}$.
+\end{theorem}
+
+\begin{theorem}[二阶常系数线性微分方程的实值通解]
+二阶常系数线性微分方程$(*)\ddot{x}+a_{1}\dot{x}+a_{2}x=0,a_{1},a_{2}\in\mathbbm{R}$的实值通解可以表示为
+$$x(t)=\left\{\begin{aligned}&C_{1}e^{\lambda_{1}t}+C_{2}e^{\lambda_{2}t},&&\lambda_{1}\neq\lambda_{2}\in\mathbbm{R}\\&(C_{1}+C_{2}t)e^{\lambda t},&&\lambda_{1}=\lambda_{2}=\lambda\\&e^{\alpha t}\left(C_{1}\cos{\beta t}+C_{2}\sin{\beta t}\right),&&\lambda_{1,2}=\alpha\pm\mathrm{i}\beta,\beta\neq 0\\\end{aligned}\right.$$
+其中$C_{1},C_{2}\in\mathbbm{R}$.
+\end{theorem}
+
+\begin{proof}
+实值通解$x(t)$满足$x(t)=\overline{x(t)}$，从而当$\lambda_{1,2}=\alpha\pm\mathrm{i}\beta,\beta\neq 0$时，
+$$C_{1}e^{\lambda_{1}t}+C_{2}e^{\lambda_{2}t}=\overline{C_{1}}e^{\lambda_{2}t}+\overline{C_{2}}e^{\lambda_{1}t}\Rightarrow (C_{1}-\overline{C_{2}})+(C_{2}-\overline{C_{1}})e^{(\lambda_{2}-\lambda_{1})t}=0,\forall t\in\mathbbm{R}$$
+于是求导可得
+$$(\lambda_{2}-\lambda_{1})(C_{2}-\overline{C_{1}})e^{(\lambda_{2}-\lambda_{1})t}=0$$
+于是只能$C_{2}=\overline{C_{1}}$，也即
+$$\left\{\begin{aligned}C_{1}=\frac{1}{2}\left(A+B\mathrm{i}\right)\\C_{2}=\frac{1}{2}\left(A-B\mathrm{i}\right)\\\end{aligned}\right.$$
+其中$A,B\in\mathbbm{R}$，结合复值通解代入计算即得结论.$\hfill{\square}$
+\end{proof}
+
+\begin{example}
+解微分方程$\ddot{x}+\dot{x}+x=0$.
+\end{example}
+
+\begin{custom}{解}
+特征方程$\lambda^{2}+\lambda+1=0$，从而特征值$\lambda_{1,2}=-\frac{1}{2}\pm\frac{\sqrt{3}}{2}\mathrm{i}$，于是：\\
+$(1)$复值通解为
+$$x(t)=C_{1}e^{\left(-\frac{1}{2}+\frac{\sqrt{3}}{2}\mathrm{i}\right)t}+C_{2}e^{\left(-\frac{1}{2}-\frac{\sqrt{3}}{2}\mathrm{i}\right)t},C_{1},C_{2}\in\mathbbm{C}$$
+$(2)$实值通解为
+$$x(t)=e^{-\frac{1}{2}t}\left(C_{1}\cos{\frac{\sqrt{3}}{2}t}+C_{2}\sin{\frac{\sqrt{3}}{2}t}\right),C_{1},C_{2}\in\mathbbm{R}$$
+这即为该微分方程的解.$\hfill{\square}$
+\end{custom}
+
+\begin{example}
+解微分积分方程$\dot{x}+2x+\int_{0}^{t}{x(s)\mathrm{d}s}=0$.
+\end{example}
+
+\begin{custom}{解}
+引入$y=\int_{0}^{t}{x(s)\mathrm{d}s}$，则方程转化为$\ddot{y}+2\dot{y}+y=0$，特征方程$\lambda^{2}+2\lambda+1=0$，从而特征值为$1(2\text{重})$.于是\\
+$(1)$复值通解为$x(t)=(C_{1}t+C_{2})e^{-t},C_{1},C_{2}\in\mathbbm{C}$；\\
+$(2)$实值通解为$x(t)=(C_{1}t+C_{2})e^{-t},C_{1},C_{2}\in\mathbbm{R}$.\\
+注意到当$t=0$时，$\dot{x}(0)+2x(0)=0$，从而$C_{1}+C_{2}=0$.$\hfill{\square}$
+\end{custom}
+
+\begin{theorem}[二阶常系数齐次方程初值问题的解的存在唯一性]
+考虑初值问题$(\mathrm{cp})\left\{\begin{aligned}&\ddot{x}+a_{1}\dot{x}+a_{2}x=0\\&x(0)=s_{0},\dot{x}(0)=v_{0}\\\end{aligned}\right.$，则$(\mathrm{cp})$的解在$(-\infty,+\infty)$上存在且唯一.
+\end{theorem}
+
+\begin{proof}
+分类讨论：\\
+$1^{\circ}$当$\lambda_{1}\neq \lambda_{2}\in\mathbbm{R}$时，$x(t)=C_{1}e^{\lambda_{1}t}+C_{2}e^{\lambda_{2}t}$，从而
+$$\left\{\begin{aligned}x(0)&=C_{1}+C_{2}=s_{0}\\ \dot{x}(0)&=C_{1}\lambda_{1}+C_{2}\lambda_{2}=v_{0}\\\end{aligned}\right.$$
+对应线性方程组的系数矩阵为$\begin{bmatrix}1&1\\ \lambda_{1}&\lambda_{2}\\\end{bmatrix}$，从而存在唯一解.\\
+$2^{\circ}$当$\lambda_{1}= \lambda_{2}=\lambda\in\mathbbm{R}$时，$x(t)=(C_{1}+C_{2}t)e^{\lambda t}$，从而
+$$\left\{\begin{aligned}x(0)&=C_{1}=s_{0}\\ \dot{x}(0)&=C_{1}\lambda+C_{2}=v_{0}\\\end{aligned}\right.$$
+对应线性方程组的系数矩阵为$\begin{bmatrix}1&0\\ \lambda&1\\\end{bmatrix}$，从而存在唯一解.\\
+$3^{\circ}$当$\lambda_{1,2}=\alpha\pm\mathrm{i}\beta,\beta\neq 0$时，$x(t)=e^{\alpha t}\left(C_{1}\cos{\beta t}+C_{2}\sin{\beta t}\right)$，从而
+$$\left\{\begin{aligned}x(0)&=C_{1}=s_{0}\\ \dot{x}(0)&=\alpha C_{1}+C_{2}=v_{0}\\\end{aligned}\right.$$
+对应线性方程组的系数矩阵为$\begin{bmatrix}1&0\\ \alpha&1\\\end{bmatrix}$，从而存在唯一解.\\
+综上所述，$(\mathrm{cp})$的解在$(-\infty,+\infty)$上存在且唯一.$\hfill{\square}$
+\end{proof}
+
+\begin{example}
+方程$(*)$的一切解在什么条件下，满足：\\
+$(1)x(t)\to 0,t\to+\infty$；\\
+$(2)x(t)$在$[0,+\infty)$上都是有界的；\\
+$(3)x(t)$可以在$[0,+\infty)$上无界.
+\end{example}
+
+\begin{custom}{解}
+$(1)$由实值通解的结论，可知\\
+$1^{\circ}$当$\lambda_{1}\neq \lambda_{2}\in\mathbbm{R}$时，需要$\lambda_{1},\lambda_{2}<0$；\\
+$2^{\circ}$当$\lambda_{1}= \lambda_{2}=\lambda\in\mathbbm{R}$时，需要$\lambda<0$；\\
+$3^{\circ}$当$\lambda_{1,2}=\alpha\pm\mathrm{i}\beta,\beta\neq 0$时，需要$\alpha<0$.\\
+于是需要$\mathrm{Re}\{\lambda_{1,2}\}<0$.\\
+$(2)$由实值通解的结论，可知\\
+$1^{\circ}$当$\lambda_{1}\neq \lambda_{2}\in\mathbbm{R}$时，需要$\lambda_{1},\lambda_{2}\le 0$；\\
+$2^{\circ}$当$\lambda_{1}= \lambda_{2}=\lambda\in\mathbbm{R}$时，需要$\lambda<0$；\\
+$3^{\circ}$当$\lambda_{1,2}=\alpha\pm\mathrm{i}\beta,\beta\neq 0$时，需要$\alpha\le 0$.\\
+于是需要$\mathrm{Re}\{\lambda_{1,2}\}\le 0(\lambda_{1}\neq \lambda_{2})$或$\lambda_{1}=\lambda_{2}=\lambda<0$.\\
+$(3)$由实值通解的结论，可知\\
+$1^{\circ}$当$\lambda_{1}\neq \lambda_{2}\in\mathbbm{R}$时，需要$\max{\{\lambda_{1},\lambda_{2}\}}\ge 0$；\\
+$2^{\circ}$当$\lambda_{1}= \lambda_{2}=\lambda\in\mathbbm{R}$时，需要$\lambda\ge 0$；\\
+$3^{\circ}$当$\lambda_{1,2}=\alpha\pm\mathrm{i}\beta,\beta\neq 0$时，需要$\alpha> 0$.\\
+于是需要$\max{\{\mathrm{Re}\lambda_{1},\mathrm{Re}\lambda_{2}\}}>0(\lambda_{1}\neq \lambda_{2})$或$\lambda_{1}=\lambda_{2}=\lambda\ge 0$.$\hfill{\square}$
+\end{custom}
+
+\begin{example}[Euler方程]
+解微分方程$t^{2}\ddot{x}+a_{1}t\dot{x}+a_{2}x=0$.
+\end{example}
+
+\begin{custom}{解}
+两边同时除以$t^{2}$，方程转化为$\ddot{x}+a_{1}\frac{\dot{x}}{t}+a_{2}\frac{x}{t^{2}}=0$，引入$s=\ln{|t|}$，则
+$$\frac{\mathrm{d}x}{\mathrm{d}t}=\frac{\mathrm{d}x}{\mathrm{d}s}\cdot\frac{\mathrm{d}s}{\mathrm{d}t}=\frac{1}{t}\frac{\mathrm{d}x}{\mathrm{d}s},\frac{\mathrm{d}^{2}x}{\mathrm{d}t^{2}}=\frac{\mathrm{d}}{\mathrm{d}s}\left(\frac{1}{t}\frac{\mathrm{d}x}{\mathrm{d}s}\right)\frac{\mathrm{d}s}{\mathrm{d}t}=\frac{1}{t^{2}}\left(\frac{\mathrm{d}^{2}x}{\mathrm{d}s^{2}}-\frac{\mathrm{d}x}{\mathrm{d}s}\right)$$
+于是方程转化为
+$$\frac{\mathrm{d}^{2}x}{\mathrm{d}s^{2}}+(a_{1}-1)\frac{\mathrm{d}x}{\mathrm{d}s}+a_{2}x=0$$
+设$\lambda_{1},\lambda_{2}$为其特征方程$\lambda^{2}+(a_{1}-1)\lambda+a_{2}=0$的两个根，则
+$$x(s)=\left\{\begin{aligned}&C_{1}e^{\lambda_{1}s}+C_{2}e^{\lambda_{2}s},&&\lambda_{1}\neq \lambda_{2}\in\mathbbm{R}\\&(C_{1}+C_{2}s)e^{\lambda s},&&\lambda_{1}=\lambda_{2}=\lambda\\&e^{\alpha s}\left(C_{1}\cos{\beta s}+C_{2}\sin{\beta s}\right),&&\lambda_{1,2}=\alpha\pm\mathrm{i}\beta,\beta\neq 0\\\end{aligned}\right.$$
+将$s=\ln{|t|}$代入，则
+$$x(t)=\left\{\begin{aligned}&C_{1}|t|^{\lambda_{1}}+C_{2}|t|^{\lambda_{2}},&&\lambda_{1}\neq \lambda_{2}\in\mathbbm{R}\\&(C_{1}+C_{2}\ln{|t|})|t|^{\lambda},&&\lambda_{1}=\lambda_{2}=\lambda\\&|t|^{\alpha }\left(C_{1}\cos{\left(\beta \ln{|t|}\right)}+C_{2}\sin{\left(\beta \ln{|t|}\right)}\right),&&\lambda_{1,2}=\alpha\pm\mathrm{i}\beta,\beta\neq 0\\\end{aligned}\right.$$
+其中$C_{1},C_{2}\in\mathbbm{R}$.$\hfill{\square}$
+\end{custom}
+
+\subsection{二阶非齐次常系数线性方程}
+本节中考虑方程$(*)\ddot{x}+a_{1}\dot{x}+a_{2}x=f(t),a_{1},a_{2}\in\mathbbm{R}$，其中$f(t)$为连续函数.
+\begin{theorem}[二阶非齐次常系数线性方程的实值解]
+方程$(*)$的实值解可表示为
+$$x(t)=\left\{\begin{aligned}&C_{1}e^{\lambda_{1}t}+C_{2}e^{\lambda_{2}t}+\int_{0}^{t}{\frac{e^{\lambda_{1}(t-s)}-e^{\lambda_{2}(t-s)}}{\lambda_{1}-\lambda_{2}}f(s)\mathrm{d}s},&&\lambda_{1}\neq \lambda_{2}\in\mathbbm{R}\\&(C_{1}+C_{2}t)e^{\lambda t}+\int_{0}^{t}{(t-s)e^{\lambda(t-s)}f(s)\mathrm{d}s},&&\lambda_{1}=\lambda_{2}=\lambda\\&e^{\alpha t}(C_{1}\cos{\beta t}+C_{2}\sin{\beta t})+\int_{0}^{t}{e^{\alpha(t-s)}\frac{\sin{\beta(t-s)}}{\beta}f(s)\mathrm{d}s},&&\lambda_{1,2}=\alpha\pm\mathrm{i}\beta,\beta\neq 0\\\end{aligned}\right.$$
+\end{theorem}
+
+\begin{proof}
+注意到
+$$\frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\mathrm{d}x}{\mathrm{d}t}-\lambda_{1}x\right)-\lambda_{2}\left(\frac{\mathrm{d}x}{\mathrm{d}t}-\lambda_{1}x\right)=f(t)\Rightarrow \frac{\mathrm{d}x}{\mathrm{d}t}-\lambda_{1}x=C_{1}e^{\lambda_{2}t}+\int_{0}^{t}{e^{\lambda_{2}(t-s)}f(s)\mathrm{d}s}$$
+同理，
+$$\frac{\mathrm{d}x}{\mathrm{d}t}-\lambda_{2}x=C_{2}e^{\lambda_{1}t}+\int_{0}^{t}{e^{\lambda_{1}(t-s)}f(s)\mathrm{d}s}$$
+接下来分类讨论：\\
+$1^{\circ}$若$\lambda_{1}\neq \lambda_{2}\in\mathbbm{R}$，两式作差，有
+$$(\lambda_{2}-\lambda_{1})x=C_{1}e^{\lambda_{2}t}-C_{2}e^{\lambda_{1}t}+\int_{0}^{t}{\left[e^{\lambda_{2}(t-s)}-e^{\lambda_{1}(t-s)}\right]f(s)\mathrm{d}s}$$
+解出$x(t)$并重新定义$C_{1},C_{2}$可知
+$$x(t)=C_{1}e^{\lambda_{1}t}+C_{2}e^{\lambda_{2}t}+\int_{0}^{t}{\frac{e^{\lambda_{1}(t-s)}-e^{\lambda_{2}(t-s)}}{\lambda_{1}-\lambda_{2}}f(s)\mathrm{d}s}$$
+$2^{\circ}$若$\lambda_{1}=\lambda_{2}=\lambda$，则
+$$\frac{\mathrm{d}x}{\mathrm{d}t}-\lambda x=C_{1}e^{\lambda t}+\int_{0}^{t}{e^{\lambda(t-s)}f(s)\mathrm{d}s}$$
+于是
+$$x(t)=C_{2}e^{\lambda t}+\int_{0}^{t}{e^{\lambda(t-s)}\left[C_{1}e^{\lambda s}+\int_{0}^{s}{e^{\lambda(s-p)}f(p)\mathrm{d}p}\right]\mathrm{d}s}$$
+而$\int_{0}^{t}{C_{1}e^{\lambda s}\mathrm{d}s}=C_{1}te^{\lambda t},\int_{0}^{t}{e^{\lambda(t-s)}\int_{0}^{s}{e^{\lambda(s-p)}f(p)\mathrm{d}p}\mathrm{d}s}=\int_{0}^{t}{(t-s)e^{\lambda(t-s)}f(s)\mathrm{d}s}$，于是
+$$x(t)=(C_{1}+C_{2}t)e^{\lambda t}+\int_{0}^{t}{(t-s)e^{\lambda(t-s)}f(s)\mathrm{d}s}$$
+$3^{\circ}$若$\lambda_{1,2}=\alpha\pm\mathrm{i}\beta,\beta\neq 0$，则由$1^{\circ}$求实值解即得.
+\end{proof}
+
+\begin{theorem}
+方程$(*)$的解可以表示为$x(t)=x_{1}(t)+\int_{0}^{t}{K(t-s)f(s)\mathrm{d}s}$，其中$x_{1}(t)$为$(*)$对应的齐次方程的通解，$K(t)$满足
+$$\left\{\begin{aligned}&\ddot{K}(t)+a_{1}K(t)+a_{2}K(t)=0\\&K(0)=0,\dot{K}(0)=1\\\end{aligned}\right.$$
+上述初值问题确定的$K(t)$被称为核函数.
+\end{theorem}
+
+\begin{proof}
+设$x^{*}=\int_{0}^{t}{K(t-s)f(s)\mathrm{d}s}$，则
+$$\frac{\mathrm{d}}{\mathrm{d}t}x^{*}(t)=\frac{\mathrm{d}}{\mathrm{d}t}\int_{0}^{t}{K(t-s)f(s)\mathrm{d}s}=\int_{0}^{t}{\frac{\mathrm{d}}{\mathrm{d}t}K(t-s)f(s)\mathrm{d}s}+K(0)f(t)=\int_{0}^{t}{\frac{\mathrm{d}}{\mathrm{d}t}K(t-s)f(s)\mathrm{d}s}$$
+类似地，有
+$$\frac{\mathrm{d}^{2}}{\mathrm{d}t^{2}}x^{*}(t)=\int_{0}^{t}{\frac{\mathrm{d}^{2}}{\mathrm{d}t^{2}}K(t-s)f(s)\mathrm{d}s}+f(t)$$
+从而$\ddot{x}^{*}(t)+a_{1}\dot{x}^{*}(t)+a_{2}x^{*}(t)=f(t)$.
+\end{proof}
+
+\subsection{高阶常系数线性微分方程的求解$^{*}$}
+考虑
+$$\frac{\mathrm{d}}{\mathrm{d}t}x(t)=f(t)\Leftrightarrow Dx(t)=f(t),D=\frac{\mathrm{d}}{\mathrm{d}t}$$
+设$x^{*}(t)$是方程的解，
+$$x^{*}(t)=\int{f(t)\mathrm{d}t}\Rightarrow Dx^{*}(t)=D\int{f(t)\mathrm{d}t}=f(t)$$
+而
+$$D\cdot B=\mathrm{Id}\Rightarrow D\cdot Bf(t)=f(t)\Rightarrow B=D^{-1}=\frac{1}{D}$$
+于是$D^{-1}$被称为逆算子，形式上$Dx(t)=f(t)\Rightarrow x^{*}(t)=\frac{1}{D}f(t)$.用逆算子表示
+$P_{n}(D)x(t)=f(t)$,就得到$x^{*}(t)=\frac{1}{P_{n}(D)}f(t)$,其中$P_{n}(\lambda)$是$n$次多项式.
+
+\begin{theorem}[逆算子的基本性质]
+逆算子的基本性质如下：\\
+$(1)\frac{1}{P(D)}(cf(t))=c\cdot \frac{1}{P(D)}f(t)$；\\
+$(2)\frac{1}{P(D)}\left[f(t)+g(t)\right]=\frac{1}{P(D)}f(t)+\frac{1}{P(D)}g(t)$；\\
+$(3)P(D)=P_{A}(D)P_{B}(D)$，则$\frac{1}{P(D)}f(t)=\frac{1}{P_{A}(D)}\cdot\frac{1}{P_{B}(D)}f(t)$；\\
+$(4)\frac{1}{P(D)}\sin{\beta t}=\mathrm{Im}\{\frac{1}{P(D)}e^{\mathrm{i}\beta t}\},\frac{1}{P(D)}\cos{\beta t}=\mathrm{Re}\{\frac{1}{P(D)}e^{\mathrm{i}\beta t}\}$
+\end{theorem}
+
+\begin{theorem}[逆算子公式]
+逆算子可以做如下计算：\\
+$(1)\frac{1}{P(D)}e^{\lambda t}=\frac{1}{P(\lambda)}e^{\lambda t}$，其中$P(\lambda)\neq 0$.\\
+$(2)$若$P(-\beta^{2})\neq 0$，则
+$$\frac{1}{P(D^{2})}\sin{\beta t}=\frac{1}{P(-\beta^{2})}\sin{\beta t},\frac{1}{P(D^{2})}\cos{\beta t}=\frac{1}{P(-\beta^{2})}\cos{\beta t}$$
+$(3)\frac{1}{P(D)}e^{\lambda t}f(t)=e^{\lambda t}\frac{1}{P(D+\lambda)}f(t)$.\\
+$(4)$若$f_{k}(t)$是次数最高为$k$次的多项式，$P(0)\neq 0$，则
+$$\frac{1}{P(D)}f_{k}(t)=Q_{k}(D)f_{k}(t)$$
+其中$\mathrm{Id}=P(D)Q_{k}(D)+R_{k+1}(D)$,$R_{k+1}$为系数不为零的项最低为$k+1$次的多项式.
+\end{theorem}
+
+\begin{proof}
+$(1)$注意到
+$$P(D)\left(\frac{1}{P(\lambda)e^{\lambda t}}\right)=\frac{1}{P(\lambda)}\left(P(D)e^{\lambda t}\right)=e^{\lambda t}$$
+从而$\frac{1}{P(D)}e^{\lambda t}=\frac{1}{P(\lambda)}e^{\lambda t}$.\\
+$(2)$利用欧拉公式，有
+$$\begin{aligned}\frac{1}{P(D^{2})}\sin{\beta t}&=\frac{1}{P(D^{2})}\left(\frac{e^{\mathrm{i\beta t}}-e^{-\mathrm{i}\beta t}}{2\mathrm{i}}\right)&&=\frac{1}{2\mathrm{i}}\left[\frac{1}{P(D^{2})}e^{\mathrm{i}\beta t}-\frac{1}{P(D^{2})}e^{-\mathrm{i\beta t}}\right]&&=\frac{1}{P(-\beta^{2})}\sin{\beta t}\\\frac{1}{P(D^{2})}\cos{\beta t}&=\frac{1}{P(D^{2})}\left(\frac{e^{\mathrm{i\beta t}}+e^{-\mathrm{i}\beta t}}{2}\right)&&=\frac{1}{2}\left[\frac{1}{P(D^{2})}e^{\mathrm{i}\beta t}+\frac{1}{P(D^{2})}e^{-\mathrm{i\beta t}}\right]&&=\frac{1}{P(-\beta^{2})}\cos{\beta t}\\\end{aligned}$$
+$(3)$用归纳法证明.当$\mathrm{deg}P(\lambda)=1$时，$P(D)=D-a_{1}$,而
+$$\begin{aligned}(D-a_{1})\left[e^{\lambda^{t}}\frac{1}{P(D+\lambda)}f(t)\right]&=\lambda e^{\lambda t}\frac{1}{P(D+\lambda)}f(t)+e^{\lambda t}D\frac{1}{P(D+\lambda)}f(t)-a_{1}e^{\lambda t}\frac{1}{P(D+\lambda)}f(t)\\&=e^{\lambda t}(D+\lambda-a_{1})\frac{1}{D+\lambda-a_{1}}f(t)=e^{\lambda t}f(t)\\\end{aligned}$$
+从而$\mathrm{deg}P(\lambda)=1$时结论成立，下设$n-1$次时成立，证明$n$次的情形，注意到
+$$P_{n}(D)=(D-\lambda_{1})P_{n-1}(D)$$
+从而
+$$\frac{1}{P_{n}(D)}e^{\lambda t}f(t)=\frac{1}{D-\lambda_{1}}\cdot \frac{1}{P_{n-1}(D)}e^{\lambda t}f(t)=e^{\lambda t}\frac{1}{D+\lambda-\lambda_{1}}\cdot\frac{1}{P_{n-1}(D)}f(t)=e^{\lambda t}\frac{1}{P_{n}(D+\lambda)}f(t)$$
+于是由数学归纳法我们就得到了结论.\\
+$(4)$考虑$\mathrm{Bejour}$定理，$P(\lambda)$与$\lambda^{k+1}$互素，从而
+$$\mathrm{Id}=P(D)Q_{k}(D)+R_{k+1}(D)$$
+于是
+$$f_{k}(t)=P(D)Q_{k}(D)f_{k}(t)+R_{k+1}(D)f_{k}(t)=P(D)Q_{k}(D)f_{k}(t)$$
+从而
+$$\frac{1}{P(D)}f_{k}(t)=Q_{k}(D)f_{k}(t)$$
+我们就得到了结论.
+\end{proof}
+
+\begin{example}
+求解$(D^{4}-4D^{3}+6D^{2}-4D+1)x(t)=(t+1)e^{t}$.
+\end{example}
+
+\begin{custom}{解}
+设$P(D)=D^{4}-4D^{3}+6D^{2}-4D+1=(D-1)^{4}$，方程的通解$x_{1}(t)=(C_{1}+C_{2}t+C_{3}t^{2}+C_{4}t^{3})e^{t},C_{i}\in\mathbbm{R}$,特解
+$$x^{*}(t)=\frac{1}{P(D)}e^{t}(t+1)=e^{t}\frac{1}{P(D+1)}(t+1)=e^{t}\frac{1}{D^{4}}(t+1)=e^{t}\left(\frac{t^{5}}{5!}+\frac{t^{4}}{4!}\right)$$
+从而$x(t)=x_{1}(t)+x^{*}(t)=(C_{1}+C_{2}t+C_{3}t^{2}+C_{4}t^{3}+\frac{1}{4!}t^{4}+\frac{1}{5!}t^{5})e^{t},C_{i}\in\mathbbm{R}$.$\hfill{\square}$
+\end{custom}
+
+\begin{example}
+$$\frac{1}{D-a}f(t)=\frac{1}{D-a}e^{at}\frac{f(t)}{e^{at}}=e^{at}\frac{1}{D}\frac{f(t)}{e^{at}}=e^{at}\int{\frac{f(s)}{e^{as}}\mathrm{d}s}=\int{e^{a(t-s)}f(s)\mathrm{d}s}$$
+\end{example}
+
+\begin{example}
+求$\int{e^{at}\sin{bt}\mathrm{d}t}$.
+\end{example}
+
+\begin{custom}{解}
+$$\int{e^{at}\sin{bt}\mathrm{d}t}=\frac{1}{D}\left(e^{at}\sin{bt}\right)=e^{at}\mathrm{Im}\{\frac{1}{D+a}e^{\mathrm{i}bt}\}=e^{at}\mathrm{Im}\{\frac{1}{a+b\mathrm{i}}e^{\mathrm{i}bt}\}$$
+展开化简即得结论.$\hfill{\square}$
+\end{custom}
+
+\begin{example}
+若$P(\lambda)=0,P(d)=(D-\lambda)^{s}g(D),g(\lambda)\neq 0$，求$\frac{1}{P(D)}e^{\lambda t}$.
+\end{example}
+
+\begin{custom}{解}
+$$\frac{1}{P(D)}e^{\lambda t}=\frac{1}{(D-\lambda)^{s}}\cdot\frac{1}{g(D)}e^{\lambda t}=\frac{1}{(D-\lambda)^{s}}\cdot\frac{1}{g(\lambda)}e^{\lambda t}=\frac{1}{g(\lambda)}e^{\lambda t}\frac{1}{D^{s}}\cdot 1=\frac{e^{\lambda t}}{e(\lambda)}\cdot\frac{t^{s}}{s!}$$
+从而我们求出了$\frac{1}{P(D)}e^{\lambda t}$.$\hfill{\square}$
+\end{custom}
+
+\begin{example}
+求解$(D^{3}-D)x=t$
+\end{example}
+
+\begin{custom}{解}
+注意到$\lambda^{3}-\lambda=\lambda(\lambda-1)(\lambda+1),\lambda_{1}=0,\lambda_{2}=1,\lambda_{3}=-1$，通解$x_{1}(t)=C_{1}+C_{2}e^{t}+C_{3}e^{-t}$，其中$C_{1,2,3}\in\mathbbm{R}$.\\
+特解
+$$x^{*}(t)=\frac{1}{D^{3}-D}t=-\frac{1}{D}\cdot\frac{1}{1-D^{2}}t=-\frac{1}{D}[1+D^{2}+D^{4}+\cdots]t=-\frac{1}{D}t=-\frac{1}{2}t^{2}$$
+从而$x(t)=x_{1}(t)+x^{*}(t)=C_{1}+C_{2}e^{t}+C_{3}e^{-t}-\frac{1}{2}t^{2},C_{i}\in\mathbbm{R}$.$\hfill{\square}$
+\end{custom}
+
+\begin{example}
+求解$(D^{2}+2D+1)x=t^{2}$.
+\end{example}
+
+\begin{custom}{解}
+特征方程$\lambda^{2}+2\lambda+1=0\Rightarrow \lambda_{1,2}=-1$，从而通解$x_{1}(t)=(C_{1}+C_{2}t)e^{-t},C_{1,2}\in\mathbbm{R}$.\\
+特解
+$$\begin{aligned}x^{*}(t)&=\frac{1}{(D+1)^{2}}t^{2}=\frac{1}{1-(-2D-D^{2})}t^{2}\\&=[1+(-2D-D^{2})+(-2D-D^{2})^{2}+\cdots]t^{2}\\&=(1-2D+3D^{2})t^{2}\\&=(t^{4}-2t+6)\\\end{aligned}$$
+从而$x(t)=x_{1}(t)+x^{*}(t)=(t^{2}-4t+6)+(C_{1}+C_{2}t)e^{-t},C_{1,2}\in\mathbbm{R}$.$\hfill{\square}$
+\end{custom}
+
+\begin{example}
+求解$(D^{2}+1)x=te^{t}\sin{t}$.
+\end{example}
+
+\begin{custom}{解}
+特征方程$\lambda^{2}+1=0\Rightarrow\lambda_{1,2}=\pm\mathrm{i}$，从而通解$x_{1}(t)=C_{1}\cos{t}+C_{2}\sin{t},C_{1,2}\in\mathbbm{R}$.\\
+特解
+$$x^{*}(t)=\frac{1}{D^{2}+1}te^{t}\sin{t}=e^{t}\frac{1}{(D+1)^{2}+1}\sin{t}\cdot t=e^{t}\mathrm{Im}\{\frac{1}{(D+1)^{2}+1}\cdot\frac{e^{\mathrm{i}t}-e^{-\mathrm{i}t}}{2\mathrm{i}}t\}$$
+之后继续计算即可.$\hfill{\square}$
+\end{custom}
+\subsection{二阶变系数线性微分方程的求解}
+考虑二阶微分方程
+$$\frac{\mathrm{d}^{2}x}{\mathrm{d}t^{2}}+p(t)\frac{\mathrm{d}x}{\mathrm{d}t}+q(t)x=f(t)$$
+引入$y=\frac{\mathrm{d}x}{\mathrm{d}t}$，我们就可以得到微分方程组
+$$(\#)\left\{\begin{aligned}\frac{\mathrm{d}x}{\mathrm{d}t}&=y\\\frac{\mathrm{d}y}{\mathrm{d}t}&=-q(t)x-p(t)y+f(t)\\\end{aligned}\right.\Rightarrow A(t)=\begin{bmatrix}0&1\\-q(t)&-p(t)\\\end{bmatrix},\vec{f}(t)=\begin{bmatrix}0\\f(t)\\\end{bmatrix}$$
+设$\Phi(t)$是方程组$(\#)$对应齐次方程的基本解方阵，特别地，有
+$$\Phi(t)=\begin{bmatrix}x_{1}(t)&x_{2}(t)\\\dot{x}_{1}(t)&\dot{x}_{2}(t)\\\end{bmatrix}$$
+从而
+$$\begin{bmatrix}x\\y\\\end{bmatrix}=\Phi(t)\vec{c}+\int_{t_{0}}^{t}{\Phi(t)\Phi^{-1}(s)\vec{f}(s)\mathrm{d}s}=\begin{bmatrix}x_{1}(t)&x_{2}(t)\\\dot{x}_{1}(t)&\dot{x}_{2}(t)\\\end{bmatrix}\left(\begin{bmatrix}C_{1}\\C_{2}\\\end{bmatrix}+\int_{t_{0}}^{t}{\frac{\mathrm{d}s}{W(s)}\begin{bmatrix}\dot{x}_{2}(s)&-x_{2}(s)\\-\dot{x}_{1}(s)&x_{1}(s)\\\end{bmatrix}\begin{bmatrix}0\\f(s)\\\end{bmatrix}}\right)$$
+从而
+$$x(t)=C_{1}x_{1}(t)+C_{2}x_{2}(t)+\int_{t_{0}}^{t}{\frac{1}{W(s)}(x_{1}(s)x_{2}(t)-x_{1}(t)x_{2}(s))f(s)\mathrm{d}s}$$
+我们令$K(t,s)=\frac{1}{W(s)}\left|\begin{matrix}x_{1}(s)&x_{2}(s)\\x_{1}(t)&x_{2}(t)\\\end{matrix}\right|$，称为核.
+
+\begin{example}
+解微分方程$t^{2}\frac{\mathrm{d}^{2}x}{\mathrm{d}t^{2}}-2x=t$，其中$x_{1}(t)=t^{2},x_{2}(t)=\frac{1}{t}$是对应的齐次方程的两个解.
+\end{example}
+
+\begin{custom}{解}
+计算Wronsky行列式
+$$W(t)=\mathrm{det}\begin{bmatrix}x_{1}(t)&x_{2}(t)\\\dot{x}_{1}(t)&\dot{x}_{2}(t)\\\end{bmatrix}=\left|\begin{matrix}t^{2}&\frac{1}{t}\\2t&-\frac{1}{t^{2}}\\\end{matrix}\right|=-3\neq 0$$
+从而
+$$x(t)=C_{1}t^{2}+\frac{C_{2}}{t}+\int_{t_{0}}^{t}{-\frac{1}{3}\left|\begin{matrix}s^{2}&\frac{1}{s}\\t^{2}&\frac{1}{t}\\\end{matrix}\right|\frac{1}{s}\mathrm{d}s}$$
+或者引入$s=\ln{|t|}$，求解Euler方程.$\hfill{\square}$
+\end{custom}
+
+一般方程容易得到一部分通解$x_{1}(t)$，但$x_{2}(t)$需要与$x_{1}(t)$无关，这会比较困难，因此我们接下来讨论如何根据$x_{1}$得到$x_{2}(t)$.
+
+考虑Liouville公式
+$$W(t)=W(t_{0})\mathrm{exp}\left(\int_{t_{0}}^{t}{-p(s)\mathrm{d}s}\right)$$
+于是有
+$$x_{1}(t)\dot{x}_{2}(t)-\dot{x}_{1}(t)x_{2}(t)=W(t_{0})\mathrm{exp}\left(\int_{t_{0}}^{t}{-p(s)\mathrm{d}s}\right)$$
+不妨设$x_{1}(t)\neq 0$，于是
+$$\frac{\dot{x}_{2}(t)}{x_{1}(t)}-\frac{\dot{x}_{1}(t)}{x_{1}^{2}(t)}x_{2}(t)=\frac{W(t)}{x_{1}^{2}(t)}\mathrm{exp}\left(\int_{t_{0}}^{t}{-p(s)\mathrm{d}s}\right)=\frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{x_{2}(t)}{x_{1}(t)}\right)$$
+从而由常数变易公式就得到
+$$x_{2}(t)=x_{1}(t)\left(\frac{x_{2}(t_{0})}{x_{1}(t_{0})}+\int_{t_{0}}^{t}{\frac{W(t_{0})}{x_{1}^{2}(s)}\exp{\left(\int_{t_{0}}^{s}{-p(\xi)\mathrm{d}\xi}\right)}\mathrm{d}s}\right)$$
+注意到相差$Cx_{1}(t)$与常数是无所谓的，因此可以得到定积分表示
+$$x_{2}(t)=\int_{t_{0}}^{t}{\frac{x_{1}(t)}{x_{1}^{2}(s)}\exp{\left(\int_{t_{0}}^{s}{-p(\xi)\mathrm{d}\xi}\right)}\mathrm{d}s}$$
+或者不定积分表示
+$$x_{2}(t)=x_{1}(t)\int{\frac{1}{x_{1}^{2}(t)}\exp{\left(\int{-p(t)\mathrm{d}t}\right)}\mathrm{d}t}$$
+\begin{example}
+已知$(t-1)\ddot{x}-t\dot{x}+p(t)x=0$具有基本解$t$和$\varphi(t)$，~求解$p(t)$和$\varphi(t)$.
+\end{example}
+
+
+
+
+
+
+
+
+
+
+\clearpage
+\renewcommand{\refname}{References}
+\addcontentsline{toc}{section}{References}
+\begin{thebibliography}{99}
+\bibitem{JC}金路，童裕孙，於崇华，张万国. 高等数学（第五版）. 高等教育出版社. 2020.
+\bibitem{FDS}金路，徐惠平. 高等数学同步辅导与复习提高. 复旦大学出版社. 2022.
+\bibitem{CJX}陈纪修，於崇华，金路. 数学分析（第3版）. 高等教育出版社. 2019.
+\bibitem{XHM}\boxed{\text{谢惠明}}，恽自求，易法槐，钱定边. 数学分析习题课讲义（第2版）. 高等教育出版社. 2019
+%引用时\cite[page 1]{bookname1}
+\end{thebibliography}
+
+\end{document}
+

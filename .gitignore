@@ -1,0 +1,20 @@
+# macOS
+.DS_Store
+
+# LaTeX intermediate files
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+*.xdv
+*.bbl
+*.blg
+
+# Local/reference materials not intended for publishing
+经济数学基础.pdf
+大学数学I教学大纲.docx
+大学数学I-导数与微分-中值定理讲义.pdf
+

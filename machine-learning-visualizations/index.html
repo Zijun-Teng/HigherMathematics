@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>导数与梯度下降可视化</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1d2433;
+      --muted: #5f6b7a;
+      --line: #d9dee7;
+      --panel: #ffffff;
+      --soft: #f4f6f9;
+      --accent: #1f6feb;
+      --accent-2: #d73a49;
+      --good: #22863a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      background: #eef2f7;
+    }
+
+    header {
+      padding: 24px clamp(16px, 4vw, 44px) 12px;
+      background: #ffffff;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(24px, 3vw, 36px);
+      letter-spacing: 0;
+    }
+
+    header p {
+      margin: 0;
+      max-width: 920px;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    main {
+      padding: 20px clamp(16px, 4vw, 44px) 40px;
+      display: grid;
+      gap: 20px;
+    }
+
+    section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    h2 {
+      margin: 0 0 6px;
+      font-size: 20px;
+    }
+
+    .section-head p,
+    .note {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      min-height: 320px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .controls {
+      display: grid;
+      gap: 14px;
+      align-content: start;
+      padding: 14px;
+      background: var(--soft);
+      border-radius: 8px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    input[type="range"] {
+      width: 100%;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    button,
+    select {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--ink);
+      padding: 8px 12px;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    button.primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .metrics {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: 14px;
+    }
+
+    .metrics li {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px dashed #c8d0dc;
+    }
+
+    .formula {
+      margin: 0;
+      padding: 10px 12px;
+      border-radius: 6px;
+      background: #fff;
+      border: 1px solid var(--line);
+      overflow-x: auto;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #182337;
+    }
+
+    @media (max-width: 860px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      canvas {
+        min-height: 280px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>导数、偏导数与梯度下降</h1>
+    <p>这页演示把讲义中的导数概念放进机器学习语境：导数给出一元函数的下降方向，偏导数给出多参数模型的更新方向，凸性帮助判断优化问题的整体结构。</p>
+  </header>
+
+  <main>
+    <section>
+      <div class="section-head">
+        <div>
+          <h2>一元梯度下降</h2>
+          <p>损失函数取 \(L(w)=\frac12(w-3)^2+0.4\)。红点表示当前参数，蓝线表示当前位置的切线。</p>
+        </div>
+      </div>
+      <div class="grid">
+        <canvas id="curveCanvas" width="900" height="430" aria-label="一元梯度下降曲线"></canvas>
+        <div class="controls">
+          <label>学习率 eta：<strong id="etaText"></strong>
+            <input id="eta" type="range" min="0.02" max="2.30" step="0.02" value="0.28">
+          </label>
+          <label>初始位置 w0：<strong id="startText"></strong>
+            <input id="startW" type="range" min="-4" max="8" step="0.1" value="-3.5">
+          </label>
+          <div class="row">
+            <button class="primary" id="run1">运行</button>
+            <button id="step1">单步</button>
+            <button id="reset1">重置</button>
+          </div>
+          <ul class="metrics">
+            <li><span>当前 w</span><strong id="wText"></strong></li>
+            <li><span>当前损失 L(w)</span><strong id="lossText"></strong></li>
+            <li><span>梯度 L'(w)</span><strong id="gradText"></strong></li>
+            <li><span>迭代次数</span><strong id="iterText"></strong></li>
+          </ul>
+          <p class="formula">更新公式：w ← w - eta · L'(w)</p>
+          <p class="note" id="etaHint"></p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <h2>线性回归中的偏导数</h2>
+          <p>模型为 \(\hat y=wx+b\)，损失函数为所有样本平方误差的平均值。</p>
+        </div>
+      </div>
+      <div class="grid">
+        <canvas id="regCanvas" width="900" height="430" aria-label="线性回归拟合过程"></canvas>
+        <div class="controls">
+          <label>学习率 eta：<strong id="regEtaText"></strong>
+            <input id="regEta" type="range" min="0.005" max="0.18" step="0.005" value="0.055">
+          </label>
+          <div class="row">
+            <button class="primary" id="runReg">运行</button>
+            <button id="stepReg">单步</button>
+            <button id="resetReg">重置</button>
+          </div>
+          <ul class="metrics">
+            <li><span>w</span><strong id="regW"></strong></li>
+            <li><span>b</span><strong id="regB"></strong></li>
+            <li><span>损失</span><strong id="regLoss"></strong></li>
+            <li><span>迭代次数</span><strong id="regIter"></strong></li>
+          </ul>
+          <p class="formula">dL/dw = (2/m) Σ(wx_i+b-y_i)x_i<br>dL/db = (2/m) Σ(wx_i+b-y_i)</p>
+          <p class="note">偏导数分别衡量损失对 w 和 b 的敏感程度，两个参数同步沿负梯度方向更新。</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <h2>凸函数与非凸函数</h2>
+          <p>同一个算法在不同形状的损失函数上表现不同。凸函数更容易保证全局最优，非凸函数可能受初始点影响。</p>
+        </div>
+      </div>
+      <div class="grid">
+        <canvas id="landCanvas" width="900" height="430" aria-label="凸和非凸损失比较"></canvas>
+        <div class="controls">
+          <label>损失函数类型
+            <select id="landType">
+              <option value="convex">凸函数</option>
+              <option value="nonconvex">非凸函数</option>
+            </select>
+          </label>
+          <label>初始位置 x0：<strong id="landStartText"></strong>
+            <input id="landStart" type="range" min="-4" max="4" step="0.1" value="-3.2">
+          </label>
+          <label>学习率 eta：<strong id="landEtaText"></strong>
+            <input id="landEta" type="range" min="0.01" max="0.35" step="0.01" value="0.08">
+          </label>
+          <div class="row">
+            <button class="primary" id="runLand">运行</button>
+            <button id="stepLand">单步</button>
+            <button id="resetLand">重置</button>
+          </div>
+          <ul class="metrics">
+            <li><span>x</span><strong id="landX"></strong></li>
+            <li><span>损失</span><strong id="landLoss"></strong></li>
+            <li><span>梯度</span><strong id="landGrad"></strong></li>
+            <li><span>迭代次数</span><strong id="landIter"></strong></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    function setupCanvas(canvas) {
+      const rect = canvas.getBoundingClientRect();
+      const ratio = window.devicePixelRatio || 1;
+      canvas.width = Math.round(rect.width * ratio);
+      canvas.height = Math.round(rect.height * ratio);
+      const ctx = canvas.getContext("2d");
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      return { ctx, width: rect.width, height: rect.height };
+    }
+
+    function plotFrame(ctx, w, h, xMin, xMax, yMin, yMax) {
+      const pad = { left: 52, right: 22, top: 24, bottom: 44 };
+      const xScale = (w - pad.left - pad.right) / (xMax - xMin);
+      const yScale = (h - pad.top - pad.bottom) / (yMax - yMin);
+      const toX = (x) => pad.left + (x - xMin) * xScale;
+      const toY = (y) => h - pad.bottom - (y - yMin) * yScale;
+
+      ctx.clearRect(0, 0, w, h);
+      ctx.strokeStyle = "#d9dee7";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(pad.left, pad.top);
+      ctx.lineTo(pad.left, h - pad.bottom);
+      ctx.lineTo(w - pad.right, h - pad.bottom);
+      ctx.stroke();
+
+      ctx.fillStyle = "#5f6b7a";
+      ctx.font = "13px sans-serif";
+      ctx.fillText("loss", pad.left - 36, pad.top + 8);
+      ctx.fillText("parameter", w - pad.right - 72, h - 14);
+      return { toX, toY, pad };
+    }
+
+    function drawCurve(ctx, map, f, xMin, xMax, color, width = 2) {
+      ctx.strokeStyle = color;
+      ctx.lineWidth = width;
+      ctx.beginPath();
+      for (let i = 0; i <= 420; i += 1) {
+        const x = xMin + (xMax - xMin) * i / 420;
+        const y = f(x);
+        const px = map.toX(x);
+        const py = map.toY(y);
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+    }
+
+    function dot(ctx, x, y, r, color) {
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    const one = {
+      w: -3.5,
+      iter: 0,
+      path: [],
+      timer: null,
+      f: (w) => 0.5 * (w - 3) * (w - 3) + 0.4,
+      g: (w) => w - 3
+    };
+
+    function resetOne() {
+      one.w = Number($("startW").value);
+      one.iter = 0;
+      one.path = [{ w: one.w, y: one.f(one.w) }];
+      drawOne();
+    }
+
+    function stepOne() {
+      const eta = Number($("eta").value);
+      one.w = one.w - eta * one.g(one.w);
+      one.iter += 1;
+      one.path.push({ w: one.w, y: one.f(one.w) });
+      if (one.path.length > 80) one.path.shift();
+      drawOne();
+    }
+
+    function drawOne() {
+      const { ctx, width, height } = setupCanvas($("curveCanvas"));
+      const map = plotFrame(ctx, width, height, -5, 9, 0, 23);
+      drawCurve(ctx, map, one.f, -5, 9, "#1f6feb", 2.5);
+
+      ctx.strokeStyle = "#9aa6b2";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      one.path.forEach((p, i) => {
+        const px = map.toX(p.w);
+        const py = map.toY(p.y);
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      });
+      ctx.stroke();
+
+      const slope = one.g(one.w);
+      const y0 = one.f(one.w);
+      const tangent = (x) => y0 + slope * (x - one.w);
+      drawCurve(ctx, map, tangent, one.w - 1.6, one.w + 1.6, "#d73a49", 2);
+      dot(ctx, map.toX(one.w), map.toY(y0), 6, "#d73a49");
+      one.path.forEach((p) => dot(ctx, map.toX(p.w), map.toY(p.y), 2.5, "#24292f"));
+
+      $("etaText").textContent = Number($("eta").value).toFixed(2);
+      $("startText").textContent = Number($("startW").value).toFixed(1);
+      $("wText").textContent = one.w.toFixed(4);
+      $("lossText").textContent = y0.toFixed(4);
+      $("gradText").textContent = slope.toFixed(4);
+      $("iterText").textContent = String(one.iter);
+      const eta = Number($("eta").value);
+      $("etaHint").textContent = eta > 2
+        ? "对这个二次函数，eta 大于 2 时会发散；可以观察红点如何越跳越远。"
+        : "对这个二次函数，0 < eta < 2 时会收敛；eta 越接近 1，通常越快。";
+    }
+
+    const data = [
+      [-2.0, -2.6], [-1.4, -1.4], [-0.8, -0.9], [-0.2, 0.2],
+      [0.4, 1.1], [1.0, 1.5], [1.6, 2.6], [2.1, 3.4]
+    ];
+    const reg = { w: -1.1, b: 0.2, iter: 0, timer: null };
+
+    function regLoss(w, b) {
+      return data.reduce((s, [x, y]) => {
+        const e = w * x + b - y;
+        return s + e * e;
+      }, 0) / data.length;
+    }
+
+    function regGrad(w, b) {
+      let dw = 0;
+      let db = 0;
+      data.forEach(([x, y]) => {
+        const e = w * x + b - y;
+        dw += 2 * e * x / data.length;
+        db += 2 * e / data.length;
+      });
+      return { dw, db };
+    }
+
+    function resetReg() {
+      reg.w = -1.1;
+      reg.b = 0.2;
+      reg.iter = 0;
+      drawReg();
+    }
+
+    function stepReg() {
+      const eta = Number($("regEta").value);
+      const { dw, db } = regGrad(reg.w, reg.b);
+      reg.w -= eta * dw;
+      reg.b -= eta * db;
+      reg.iter += 1;
+      drawReg();
+    }
+
+    function drawReg() {
+      const { ctx, width, height } = setupCanvas($("regCanvas"));
+      const map = plotFrame(ctx, width, height, -2.5, 2.5, -4, 5);
+      ctx.fillStyle = "#1f6feb";
+      data.forEach(([x, y]) => dot(ctx, map.toX(x), map.toY(y), 5, "#1f6feb"));
+
+      ctx.strokeStyle = "#d73a49";
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      [-2.5, 2.5].forEach((x, i) => {
+        const y = reg.w * x + reg.b;
+        if (i === 0) ctx.moveTo(map.toX(x), map.toY(y));
+        else ctx.lineTo(map.toX(x), map.toY(y));
+      });
+      ctx.stroke();
+
+      $("regEtaText").textContent = Number($("regEta").value).toFixed(3);
+      $("regW").textContent = reg.w.toFixed(4);
+      $("regB").textContent = reg.b.toFixed(4);
+      $("regLoss").textContent = regLoss(reg.w, reg.b).toFixed(4);
+      $("regIter").textContent = String(reg.iter);
+    }
+
+    const land = { x: -3.2, iter: 0, path: [], timer: null };
+
+    function landFns() {
+      if ($("landType").value === "convex") {
+        return {
+          f: (x) => 0.25 * (x - 1.4) * (x - 1.4) + 0.55,
+          g: (x) => 0.5 * (x - 1.4),
+          yMax: 7
+        };
+      }
+      return {
+        f: (x) => 0.035 * x ** 4 - 0.32 * x * x + 0.25 * x + 2.2,
+        g: (x) => 0.14 * x ** 3 - 0.64 * x + 0.25,
+        yMax: 5.3
+      };
+    }
+
+    function resetLand() {
+      land.x = Number($("landStart").value);
+      land.iter = 0;
+      const { f } = landFns();
+      land.path = [{ x: land.x, y: f(land.x) }];
+      drawLand();
+    }
+
+    function stepLand() {
+      const eta = Number($("landEta").value);
+      const { f, g } = landFns();
+      land.x -= eta * g(land.x);
+      land.iter += 1;
+      land.path.push({ x: land.x, y: f(land.x) });
+      if (land.path.length > 100) land.path.shift();
+      drawLand();
+    }
+
+    function drawLand() {
+      const { f, g, yMax } = landFns();
+      const { ctx, width, height } = setupCanvas($("landCanvas"));
+      const map = plotFrame(ctx, width, height, -4.5, 4.5, 0, yMax);
+      drawCurve(ctx, map, f, -4.5, 4.5, "#1f6feb", 2.5);
+      ctx.strokeStyle = "#9aa6b2";
+      ctx.beginPath();
+      land.path.forEach((p, i) => {
+        if (i === 0) ctx.moveTo(map.toX(p.x), map.toY(p.y));
+        else ctx.lineTo(map.toX(p.x), map.toY(p.y));
+      });
+      ctx.stroke();
+      land.path.forEach((p) => dot(ctx, map.toX(p.x), map.toY(p.y), 2.5, "#24292f"));
+      dot(ctx, map.toX(land.x), map.toY(f(land.x)), 6, "#d73a49");
+
+      $("landStartText").textContent = Number($("landStart").value).toFixed(1);
+      $("landEtaText").textContent = Number($("landEta").value).toFixed(2);
+      $("landX").textContent = land.x.toFixed(4);
+      $("landLoss").textContent = f(land.x).toFixed(4);
+      $("landGrad").textContent = g(land.x).toFixed(4);
+      $("landIter").textContent = String(land.iter);
+    }
+
+    function toggleTimer(key, step, button) {
+      const state = key === "one" ? one : key === "reg" ? reg : land;
+      if (state.timer) {
+        clearInterval(state.timer);
+        state.timer = null;
+        button.textContent = "运行";
+        return;
+      }
+      button.textContent = "暂停";
+      state.timer = setInterval(step, 140);
+    }
+
+    $("reset1").addEventListener("click", resetOne);
+    $("step1").addEventListener("click", stepOne);
+    $("run1").addEventListener("click", () => toggleTimer("one", stepOne, $("run1")));
+    $("eta").addEventListener("input", drawOne);
+    $("startW").addEventListener("input", resetOne);
+
+    $("resetReg").addEventListener("click", resetReg);
+    $("stepReg").addEventListener("click", stepReg);
+    $("runReg").addEventListener("click", () => toggleTimer("reg", stepReg, $("runReg")));
+    $("regEta").addEventListener("input", drawReg);
+
+    $("resetLand").addEventListener("click", resetLand);
+    $("stepLand").addEventListener("click", stepLand);
+    $("runLand").addEventListener("click", () => toggleTimer("land", stepLand, $("runLand")));
+    $("landType").addEventListener("change", resetLand);
+    $("landStart").addEventListener("input", resetLand);
+    $("landEta").addEventListener("input", drawLand);
+
+    window.addEventListener("resize", () => {
+      drawOne();
+      drawReg();
+      drawLand();
+    });
+
+    resetOne();
+    resetReg();
+    resetLand();
+  </script>
+</body>
+</html>
