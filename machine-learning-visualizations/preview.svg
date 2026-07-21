@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760">
+  <defs>
+    <style>
+      .bg { fill: #eef2f7; }
+      .card { fill: #ffffff; stroke: #d7deea; stroke-width: 2; }
+      .axis { stroke: #94a3b8; stroke-width: 2; }
+      .curve { fill: none; stroke: #1f6feb; stroke-width: 4; }
+      .red { fill: #d73a49; stroke: #d73a49; }
+      .blue { fill: #1f6feb; stroke: #1f6feb; }
+      .green { fill: #22863a; stroke: #22863a; }
+      .path { fill: none; stroke: #64748b; stroke-width: 3; stroke-dasharray: 8 7; }
+      .fit { stroke: #d73a49; stroke-width: 4; }
+      .err { stroke: #94a3b8; stroke-width: 3; stroke-dasharray: 5 5; }
+      text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; fill: #172033; }
+      .title { font-size: 34px; font-weight: 700; }
+      .subtitle { font-size: 18px; fill: #5c6675; }
+      .h2 { font-size: 23px; font-weight: 700; }
+      .small { font-size: 16px; fill: #5c6675; }
+      .formula { font-size: 18px; fill: #172033; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1200" height="760"/>
+  <text class="title" x="50" y="58">讲义机器学习例题可视化</text>
+  <text class="subtitle" x="50" y="92">对应讲义新增的三个例题：一元梯度下降、两样本线性回归、单样本平方损失凸性</text>
+
+  <rect class="card" x="44" y="126" width="350" height="560" rx="14"/>
+  <text class="h2" x="68" y="170">例 1：一元梯度下降</text>
+  <text class="formula" x="68" y="202">L(w)=1/2(w-3)^2</text>
+  <line class="axis" x1="82" y1="575" x2="360" y2="575"/>
+  <line class="axis" x1="82" y1="575" x2="82" y2="250"/>
+  <path class="curve" d="M92 288 C130 430, 180 540, 232 568 C265 585, 316 505, 356 286"/>
+  <path class="path" d="M116 310 L156 431 L190 510 L218 552 L240 568 L258 570"/>
+  <circle class="red" cx="116" cy="310" r="8"/>
+  <circle class="red" cx="156" cy="431" r="7"/>
+  <circle class="red" cx="190" cy="510" r="7"/>
+  <circle class="red" cx="218" cy="552" r="7"/>
+  <circle class="green" cx="250" cy="572" r="8"/>
+  <line class="green" x1="250" y1="260" x2="250" y2="575" stroke-width="3"/>
+  <text class="small" x="236" y="602">w=3</text>
+  <text class="small" x="68" y="635">0 &lt; eta &lt; 2 时，路径收敛到最小点。</text>
+  <text class="small" x="68" y="662">eta 太大时会震荡甚至发散。</text>
+
+  <rect class="card" x="425" y="126" width="350" height="560" rx="14"/>
+  <text class="h2" x="449" y="170">例 2：线性回归偏导数</text>
+  <text class="formula" x="449" y="202">样本：(1,2),(2,3)</text>
+  <line class="axis" x1="470" y1="575" x2="735" y2="575"/>
+  <line class="axis" x1="470" y1="575" x2="470" y2="250"/>
+  <circle class="blue" cx="560" cy="420" r="9"/>
+  <circle class="blue" cx="650" cy="320" r="9"/>
+  <text class="small" x="570" y="410">(1,2)</text>
+  <text class="small" x="660" y="310">(2,3)</text>
+  <line class="fit" x1="485" y1="528" x2="730" y2="260"/>
+  <line class="err" x1="560" y1="420" x2="560" y2="446"/>
+  <line class="err" x1="650" y1="320" x2="650" y2="348"/>
+  <text class="formula" x="449" y="625">J(w,b)=1/4[(w+b-2)^2+(2w+b-3)^2]</text>
+  <text class="small" x="449" y="656">从 (0,0) 出发，梯度为 (-4,-5/2)。</text>
+
+  <rect class="card" x="806" y="126" width="350" height="560" rx="14"/>
+  <text class="h2" x="830" y="170">例 3：平方损失凸性</text>
+  <text class="formula" x="830" y="202">L(w)=1/2(wx-y)^2</text>
+  <line class="axis" x1="850" y1="575" x2="1120" y2="575"/>
+  <line class="axis" x1="850" y1="575" x2="850" y2="250"/>
+  <path class="curve" d="M862 295 C910 420, 950 520, 990 565 C1030 610, 1080 445, 1120 292"/>
+  <line class="green" x1="990" y1="260" x2="990" y2="575" stroke-width="3"/>
+  <circle class="green" cx="990" cy="565" r="8"/>
+  <circle class="red" cx="910" cy="420" r="8"/>
+  <line class="red" x1="880" y1="475" x2="956" y2="335" stroke-width="4"/>
+  <text class="small" x="972" y="603">w=y/x</text>
+  <text class="formula" x="830" y="632">L'(w)=x(wx-y),  L''(w)=x^2 >= 0</text>
+  <text class="small" x="830" y="662">二阶导数非负，所以关于 w 下凸。</text>
+</svg>
+

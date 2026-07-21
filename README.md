@@ -36,6 +36,10 @@ xelatex -interaction=nonstopmode '大学数学I-完整讲义.tex'
 
 ## 机器学习可视化示例
 
+仓库首页可直接预览：
+
+![讲义机器学习例题可视化预览](machine-learning-visualizations/preview.svg)
+
 GitHub Pages 在线入口：
 
 <https://zijun-teng.github.io/HigherMathematics/>
@@ -44,6 +48,7 @@ GitHub Pages 在线入口：
 
 - `index.html`：GitHub Pages 入口，会自动跳转到可视化页面。
 - `machine-learning-visualizations/index.html`：讲义例题可视化页面源码。
+- `machine-learning-visualizations/preview.svg`：GitHub README 中直接显示的静态预览图。
 
 页面包含三个与讲义正文对应的课堂演示：
 
@@ -55,4 +60,4 @@ GitHub Pages 在线入口：
 
 参考书 PDF、教学大纲 docx 和 LaTeX 编译中间文件未纳入仓库提交范围。若后续需要加入课程参考资料，建议确认版权和分发权限后再单独处理。
 
-若 GitHub Pages 链接暂时打不开，通常是刚推送后还在部署，等待一两分钟并刷新即可。部署状态可在仓库的 Actions 页面查看。
+交互版网页已经推送到 `gh-pages` 分支。若 GitHub Pages 链接显示 404，需要在仓库 `Settings -> Pages` 中将 Source 设为 `Deploy from a branch`，Branch 选择 `gh-pages`，目录选择 `/root`，保存后等待一两分钟即可。
