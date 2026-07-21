@@ -36,11 +36,14 @@ xelatex -interaction=nonstopmode '大学数学I-完整讲义.tex'
 
 ## 机器学习可视化示例
 
-直接在浏览器中打开：
+GitHub Pages 在线入口：
 
-```text
-machine-learning-visualizations/index.html
-```
+<https://zijun-teng.github.io/HigherMathematics/>
+
+也可以在仓库中查看源码：
+
+- `index.html`：GitHub Pages 入口，会自动跳转到可视化页面。
+- `machine-learning-visualizations/index.html`：讲义例题可视化页面源码。
 
 页面包含三个与讲义正文对应的课堂演示：
 
@@ -51,3 +54,5 @@ machine-learning-visualizations/index.html
 ## 说明
 
 参考书 PDF、教学大纲 docx 和 LaTeX 编译中间文件未纳入仓库提交范围。若后续需要加入课程参考资料，建议确认版权和分发权限后再单独处理。
+
+若 GitHub Pages 链接暂时打不开，通常是刚推送后还在部署，等待一两分钟并刷新即可。部署状态可在仓库的 Actions 页面查看。
