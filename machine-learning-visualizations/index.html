@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>讲义机器学习例题可视化</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #5c6675;
+      --line: #d7deea;
+      --soft: #f5f7fb;
+      --panel: #ffffff;
+      --blue: #1f6feb;
+      --red: #d73a49;
+      --green: #22863a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      background: #eef2f7;
+    }
+
+    header {
+      padding: 24px clamp(16px, 4vw, 44px) 14px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--line);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(24px, 3vw, 34px);
+      letter-spacing: 0;
+    }
+
+    p {
+      line-height: 1.75;
+    }
+
+    header p {
+      margin: 0;
+      max-width: 980px;
+      color: var(--muted);
+    }
+
+    main {
+      display: grid;
+      gap: 20px;
+      padding: 20px clamp(16px, 4vw, 44px) 44px;
+    }
+
+    section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    h2 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+
+    .lead {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(285px, 1fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    canvas {
+      width: 100%;
+      min-height: 360px;
+      display: block;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .controls {
+      display: grid;
+      gap: 14px;
+      align-content: start;
+      padding: 14px;
+      background: var(--soft);
+      border-radius: 8px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--ink);
+      padding: 8px 12px;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    button.primary {
+      color: #fff;
+      border-color: var(--blue);
+      background: var(--blue);
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .metrics {
+      display: grid;
+      gap: 8px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      font-size: 14px;
+    }
+
+    .metrics li {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px dashed #c8d0dc;
+    }
+
+    .formula {
+      margin: 0;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      overflow-x: auto;
+      font: 13px/1.65 "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      color: #182337;
+    }
+
+    .note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 860px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      canvas {
+        min-height: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>讲义机器学习例题可视化</h1>
+    <p>本页只实现讲义中新增的机器学习相关例题：一元梯度下降、两样本线性回归的偏导数更新、单样本平方损失的凸性。每个模块都对应讲义中的公式，方便课堂演示或学生课下自查。</p>
+  </header>
+
+  <main>
+    <section>
+      <h2>讲义例 1：一元梯度下降</h2>
+      <p class="lead">讲义例题：设损失函数 \(L(w)=\frac12(w-3)^2\)，用 \(w_{k+1}=w_k-\eta L'(w_k)\) 讨论 \(0<\eta<2\) 时的收敛性。</p>
+      <div class="grid">
+        <canvas id="gdCanvas" width="900" height="440" aria-label="L(w)=1/2(w-3)^2 的梯度下降"></canvas>
+        <div class="controls">
+          <label>学习率 eta：<strong id="gdEtaText"></strong>
+            <input id="gdEta" type="range" min="0.02" max="2.40" step="0.02" value="0.30">
+          </label>
+          <label>初始值 w0：<strong id="gdStartText"></strong>
+            <input id="gdStart" type="range" min="-4" max="8" step="0.1" value="-3">
+          </label>
+          <div class="row">
+            <button class="primary" id="gdRun">运行</button>
+            <button id="gdStep">单步</button>
+            <button id="gdReset">重置</button>
+          </div>
+          <ul class="metrics">
+            <li><span>w_k</span><strong id="gdW"></strong></li>
+            <li><span>L(w_k)</span><strong id="gdLoss"></strong></li>
+            <li><span>L'(w_k)</span><strong id="gdGrad"></strong></li>
+            <li><span>迭代次数</span><strong id="gdIter"></strong></li>
+          </ul>
+          <p class="formula">L'(w)=w-3<br>w_{k+1}-3=(1-eta)(w_k-3)</p>
+          <p class="note" id="gdHint"></p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>讲义例 2：两个样本的线性回归</h2>
+      <p class="lead">讲义例题：对两个样本 \((1,2),(2,3)\)，线性模型 \(\hat y=wx+b\) 的损失函数为 \(J(w,b)=\frac14[(w+b-2)^2+(2w+b-3)^2]\)。</p>
+      <div class="grid">
+        <canvas id="regCanvas" width="900" height="440" aria-label="两个样本线性回归梯度下降"></canvas>
+        <div class="controls">
+          <label>学习率 eta：<strong id="regEtaText"></strong>
+            <input id="regEta" type="range" min="0.01" max="0.35" step="0.01" value="0.10">
+          </label>
+          <div class="row">
+            <button class="primary" id="regRun">运行</button>
+            <button id="regStep">单步</button>
+            <button id="regReset">重置到 (0,0)</button>
+          </div>
+          <ul class="metrics">
+            <li><span>w</span><strong id="regW"></strong></li>
+            <li><span>b</span><strong id="regB"></strong></li>
+            <li><span>J(w,b)</span><strong id="regLoss"></strong></li>
+            <li><span>梯度</span><strong id="regGrad"></strong></li>
+            <li><span>迭代次数</span><strong id="regIter"></strong></li>
+          </ul>
+          <p class="formula">dJ/dw=1/2[(w+b-2)+2(2w+b-3)]<br>dJ/db=1/2[(w+b-2)+(2w+b-3)]</p>
+          <p class="note">初始点为 \((0,0)\) 时，讲义计算得到 \(\nabla J(0,0)=(-4,-5/2)\)，第一次更新为 \((4\eta,5\eta/2)\)。</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>讲义例 3：单样本平方损失的凸性</h2>
+      <p class="lead">讲义例题：设 \(L(w)=\frac12(wx-y)^2\)，其中 \(x,y\) 为常数，讨论 \(L\) 关于 \(w\) 的凸性。</p>
+      <div class="grid">
+        <canvas id="convexCanvas" width="900" height="440" aria-label="单样本平方损失凸性"></canvas>
+        <div class="controls">
+          <label>样本 x：<strong id="cxText"></strong>
+            <input id="cx" type="range" min="-3" max="3" step="0.1" value="2">
+          </label>
+          <label>样本 y：<strong id="cyText"></strong>
+            <input id="cy" type="range" min="-4" max="4" step="0.1" value="3">
+          </label>
+          <label>当前 w：<strong id="cwText"></strong>
+            <input id="cw" type="range" min="-4" max="4" step="0.1" value="-1">
+          </label>
+          <ul class="metrics">
+            <li><span>L(w)</span><strong id="cLoss"></strong></li>
+            <li><span>L'(w)</span><strong id="cGrad"></strong></li>
+            <li><span>L''(w)</span><strong id="cSecond"></strong></li>
+            <li><span>最小点</span><strong id="cMin"></strong></li>
+          </ul>
+          <p class="formula">L'(w)=x(wx-y)<br>L''(w)=x^2 >= 0</p>
+          <p class="note" id="cHint"></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    function canvasContext(canvas) {
+      const rect = canvas.getBoundingClientRect();
+      const ratio = window.devicePixelRatio || 1;
+      canvas.width = Math.round(rect.width * ratio);
+      canvas.height = Math.round(rect.height * ratio);
+      const ctx = canvas.getContext("2d");
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      return { ctx, width: rect.width, height: rect.height };
+    }
+
+    function frame(ctx, width, height, xMin, xMax, yMin, yMax, xLabel = "w", yLabel = "loss") {
+      const pad = { left: 56, right: 24, top: 24, bottom: 46 };
+      const sx = (width - pad.left - pad.right) / (xMax - xMin);
+      const sy = (height - pad.top - pad.bottom) / (yMax - yMin);
+      const toX = (x) => pad.left + (x - xMin) * sx;
+      const toY = (y) => height - pad.bottom - (y - yMin) * sy;
+
+      ctx.clearRect(0, 0, width, height);
+      ctx.strokeStyle = "#d7deea";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(pad.left, pad.top);
+      ctx.lineTo(pad.left, height - pad.bottom);
+      ctx.lineTo(width - pad.right, height - pad.bottom);
+      ctx.stroke();
+
+      ctx.fillStyle = "#5c6675";
+      ctx.font = "13px sans-serif";
+      ctx.fillText(yLabel, pad.left - 42, pad.top + 8);
+      ctx.fillText(xLabel, width - pad.right - 18, height - 15);
+      return { toX, toY };
+    }
+
+    function drawCurve(ctx, map, f, xMin, xMax, color, lineWidth = 2.4) {
+      ctx.strokeStyle = color;
+      ctx.lineWidth = lineWidth;
+      ctx.beginPath();
+      for (let i = 0; i <= 520; i += 1) {
+        const x = xMin + (xMax - xMin) * i / 520;
+        const y = f(x);
+        if (i === 0) ctx.moveTo(map.toX(x), map.toY(y));
+        else ctx.lineTo(map.toX(x), map.toY(y));
+      }
+      ctx.stroke();
+    }
+
+    function dot(ctx, x, y, radius, color) {
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function line(ctx, x1, y1, x2, y2, color, width = 2) {
+      ctx.strokeStyle = color;
+      ctx.lineWidth = width;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    }
+
+    const gd = {
+      w: -3,
+      iter: 0,
+      path: [],
+      timer: null,
+      f: (w) => 0.5 * (w - 3) * (w - 3),
+      grad: (w) => w - 3
+    };
+
+    function resetGd() {
+      gd.w = Number($("gdStart").value);
+      gd.iter = 0;
+      gd.path = [{ w: gd.w, y: gd.f(gd.w) }];
+      drawGd();
+    }
+
+    function stepGd() {
+      const eta = Number($("gdEta").value);
+      gd.w = gd.w - eta * gd.grad(gd.w);
+      gd.iter += 1;
+      gd.path.push({ w: gd.w, y: gd.f(gd.w) });
+      if (gd.path.length > 100) gd.path.shift();
+      drawGd();
+    }
+
+    function drawGd() {
+      const { ctx, width, height } = canvasContext($("gdCanvas"));
+      const map = frame(ctx, width, height, -5, 9, 0, 22, "w", "L(w)");
+      drawCurve(ctx, map, gd.f, -5, 9, "#1f6feb");
+
+      ctx.strokeStyle = "#8c98a8";
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      gd.path.forEach((p, i) => {
+        const x = map.toX(p.w);
+        const y = map.toY(p.y);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+      gd.path.forEach((p) => dot(ctx, map.toX(p.w), map.toY(p.y), 2.4, "#172033"));
+
+      const slope = gd.grad(gd.w);
+      const y0 = gd.f(gd.w);
+      drawCurve(ctx, map, (x) => y0 + slope * (x - gd.w), gd.w - 1.4, gd.w + 1.4, "#d73a49", 2);
+      dot(ctx, map.toX(gd.w), map.toY(y0), 6, "#d73a49");
+      line(ctx, map.toX(3), map.toY(0), map.toX(3), map.toY(20), "#22863a", 1.5);
+
+      const eta = Number($("gdEta").value);
+      $("gdEtaText").textContent = eta.toFixed(2);
+      $("gdStartText").textContent = Number($("gdStart").value).toFixed(1);
+      $("gdW").textContent = gd.w.toFixed(4);
+      $("gdLoss").textContent = y0.toFixed(4);
+      $("gdGrad").textContent = slope.toFixed(4);
+      $("gdIter").textContent = String(gd.iter);
+      $("gdHint").textContent = eta > 2
+        ? "eta > 2 时 |1-eta|>1，本例会发散；这正对应讲义证明中的条件限制。"
+        : "0 < eta < 2 时 |1-eta|<1，迭代会收敛到最小点 w=3。";
+    }
+
+    const samples = [[1, 2], [2, 3]];
+    const reg = { w: 0, b: 0, iter: 0, timer: null };
+
+    function regLoss(w, b) {
+      const e1 = w + b - 2;
+      const e2 = 2 * w + b - 3;
+      return 0.25 * (e1 * e1 + e2 * e2);
+    }
+
+    function regGrad(w, b) {
+      const e1 = w + b - 2;
+      const e2 = 2 * w + b - 3;
+      return {
+        dw: 0.5 * (e1 + 2 * e2),
+        db: 0.5 * (e1 + e2)
+      };
+    }
+
+    function resetReg() {
+      reg.w = 0;
+      reg.b = 0;
+      reg.iter = 0;
+      drawReg();
+    }
+
+    function stepReg() {
+      const eta = Number($("regEta").value);
+      const g = regGrad(reg.w, reg.b);
+      reg.w -= eta * g.dw;
+      reg.b -= eta * g.db;
+      reg.iter += 1;
+      drawReg();
+    }
+
+    function drawReg() {
+      const { ctx, width, height } = canvasContext($("regCanvas"));
+      const map = frame(ctx, width, height, 0, 3, 0, 4, "x", "y");
+      samples.forEach(([x, y]) => {
+        dot(ctx, map.toX(x), map.toY(y), 6, "#1f6feb");
+        ctx.fillStyle = "#172033";
+        ctx.font = "13px sans-serif";
+        ctx.fillText(`(${x},${y})`, map.toX(x) + 8, map.toY(y) - 8);
+      });
+
+      line(ctx, map.toX(0), map.toY(reg.b), map.toX(3), map.toY(3 * reg.w + reg.b), "#d73a49", 2.5);
+
+      samples.forEach(([x, y]) => {
+        const pred = reg.w * x + reg.b;
+        line(ctx, map.toX(x), map.toY(y), map.toX(x), map.toY(pred), "#8c98a8", 1.4);
+        dot(ctx, map.toX(x), map.toY(pred), 4, "#d73a49");
+      });
+
+      const g = regGrad(reg.w, reg.b);
+      $("regEtaText").textContent = Number($("regEta").value).toFixed(2);
+      $("regW").textContent = reg.w.toFixed(4);
+      $("regB").textContent = reg.b.toFixed(4);
+      $("regLoss").textContent = regLoss(reg.w, reg.b).toFixed(4);
+      $("regGrad").textContent = `(${g.dw.toFixed(3)}, ${g.db.toFixed(3)})`;
+      $("regIter").textContent = String(reg.iter);
+    }
+
+    function convexParams() {
+      return {
+        x: Number($("cx").value),
+        y: Number($("cy").value),
+        w: Number($("cw").value)
+      };
+    }
+
+    function convexLoss(w, x, y) {
+      return 0.5 * (w * x - y) * (w * x - y);
+    }
+
+    function convexGrad(w, x, y) {
+      return x * (w * x - y);
+    }
+
+    function drawConvex() {
+      const { x, y, w } = convexParams();
+      const f = (t) => convexLoss(t, x, y);
+      let yMax = 1;
+      for (let i = 0; i <= 100; i += 1) {
+        const t = -4 + 8 * i / 100;
+        yMax = Math.max(yMax, f(t));
+      }
+      yMax = Math.min(Math.max(yMax * 1.08, 4), 80);
+      const { ctx, width, height } = canvasContext($("convexCanvas"));
+      const map = frame(ctx, width, height, -4, 4, 0, yMax, "w", "L(w)");
+      drawCurve(ctx, map, f, -4, 4, "#1f6feb");
+
+      const grad = convexGrad(w, x, y);
+      const loss = f(w);
+      drawCurve(ctx, map, (t) => loss + grad * (t - w), Math.max(-4, w - 1.2), Math.min(4, w + 1.2), "#d73a49", 2);
+      dot(ctx, map.toX(w), map.toY(loss), 6, "#d73a49");
+
+      if (Math.abs(x) > 1e-9) {
+        const minW = y / x;
+        if (minW >= -4 && minW <= 4) {
+          line(ctx, map.toX(minW), map.toY(0), map.toX(minW), map.toY(yMax * 0.92), "#22863a", 1.4);
+        }
+        $("cMin").textContent = `w=y/x=${minW.toFixed(4)}`;
+        $("cHint").textContent = "x 不为 0 时，L''(w)=x^2>0，图像是严格凸抛物线，最小点唯一。";
+      } else {
+        $("cMin").textContent = "任意 w";
+        $("cHint").textContent = "x=0 时，L(w)=1/2 y^2 是常数函数，仍为下凸，但不严格凸。";
+      }
+
+      $("cxText").textContent = x.toFixed(1);
+      $("cyText").textContent = y.toFixed(1);
+      $("cwText").textContent = w.toFixed(1);
+      $("cLoss").textContent = loss.toFixed(4);
+      $("cGrad").textContent = grad.toFixed(4);
+      $("cSecond").textContent = (x * x).toFixed(4);
+    }
+
+    function toggle(state, step, button) {
+      if (state.timer) {
+        clearInterval(state.timer);
+        state.timer = null;
+        button.textContent = "运行";
+        return;
+      }
+      button.textContent = "暂停";
+      state.timer = setInterval(step, 150);
+    }
+
+    $("gdRun").addEventListener("click", () => toggle(gd, stepGd, $("gdRun")));
+    $("gdStep").addEventListener("click", stepGd);
+    $("gdReset").addEventListener("click", resetGd);
+    $("gdEta").addEventListener("input", drawGd);
+    $("gdStart").addEventListener("input", resetGd);
+
+    $("regRun").addEventListener("click", () => toggle(reg, stepReg, $("regRun")));
+    $("regStep").addEventListener("click", stepReg);
+    $("regReset").addEventListener("click", resetReg);
+    $("regEta").addEventListener("input", drawReg);
+
+    ["cx", "cy", "cw"].forEach((id) => $(id).addEventListener("input", drawConvex));
+
+    window.addEventListener("resize", () => {
+      drawGd();
+      drawReg();
+      drawConvex();
+    });
+
+    resetGd();
+    resetReg();
+    drawConvex();
+  </script>
+</body>
+</html>
